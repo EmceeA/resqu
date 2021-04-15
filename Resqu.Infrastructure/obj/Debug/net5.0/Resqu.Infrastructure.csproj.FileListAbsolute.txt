@@ -1,0 +1,12 @@
+C:\Users\HFET\source\repos\Resqu.API\Resqu.Infrastructure\bin\Debug\net5.0\Resqu.Infrastructure.deps.json
+C:\Users\HFET\source\repos\Resqu.API\Resqu.Infrastructure\bin\Debug\net5.0\Resqu.Infrastructure.dll
+C:\Users\HFET\source\repos\Resqu.API\Resqu.Infrastructure\bin\Debug\net5.0\ref\Resqu.Infrastructure.dll
+C:\Users\HFET\source\repos\Resqu.API\Resqu.Infrastructure\bin\Debug\net5.0\Resqu.Infrastructure.pdb
+C:\Users\HFET\source\repos\Resqu.API\Resqu.Infrastructure\obj\Debug\net5.0\Resqu.Infrastructure.csprojAssemblyReference.cache
+C:\Users\HFET\source\repos\Resqu.API\Resqu.Infrastructure\obj\Debug\net5.0\Resqu.Infrastructure.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\HFET\source\repos\Resqu.API\Resqu.Infrastructure\obj\Debug\net5.0\Resqu.Infrastructure.AssemblyInfoInputs.cache
+C:\Users\HFET\source\repos\Resqu.API\Resqu.Infrastructure\obj\Debug\net5.0\Resqu.Infrastructure.AssemblyInfo.cs
+C:\Users\HFET\source\repos\Resqu.API\Resqu.Infrastructure\obj\Debug\net5.0\Resqu.Infrastructure.csproj.CoreCompileInputs.cache
+C:\Users\HFET\source\repos\Resqu.API\Resqu.Infrastructure\obj\Debug\net5.0\Resqu.Infrastructure.dll
+C:\Users\HFET\source\repos\Resqu.API\Resqu.Infrastructure\obj\Debug\net5.0\ref\Resqu.Infrastructure.dll
+C:\Users\HFET\source\repos\Resqu.API\Resqu.Infrastructure\obj\Debug\net5.0\Resqu.Infrastructure.pdb
