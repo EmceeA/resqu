@@ -83,6 +83,19 @@ namespace Resqu.Core.Dto
         public string NextOfKinPhone { get; set; }
         public string VendorCode { get; set; }
     }
+    
+    public class RequestListDto
+    {
+
+        public string VendorLocation { get; set; }
+        public string CustomerLocation { get; set; }
+
+        public string VendorCode { get; set; }
+        public string CustomerPhone { get; set; }
+        public string RequestType { get; set; }
+
+
+    }
 
     public class CustomerListDto
     {

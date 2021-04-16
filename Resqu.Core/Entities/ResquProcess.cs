@@ -38,6 +38,10 @@ namespace Resqu.Core.Entities
         public string VendorLocation { get; set; }
         public string CustomerLocation { get; set; }
 
+        public string VendorCode { get; set; }
+        public string CustomerPhone { get; set; }
+        public string RequestType { get; set; }
+
     }
 
 

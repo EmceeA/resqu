@@ -51,6 +51,17 @@ namespace Resqu.API.Controllers
             return Ok(bannedCustomer);
         }
 
+        [HttpGet]
+        public async Task<IActionResult> RequestList()
+        {
+            var requestList = await _customer.RequestList();
+            if (requestList.Count == 0)
+            {
+                return Ok(new { message = "No List of Request"});
+            }
+            return Ok(requestList);
+        }
+
 
         [HttpGet]
         public async Task<IActionResult> VendorList()
@@ -58,7 +69,7 @@ namespace Resqu.API.Controllers
             var vendors = await _customer.VendorList();
             if (vendors.Count == 0)
             {
-                return Ok(new { message = "No List of Vendors" });
+                return Ok(new { message = "No List of Vendors"});
             }
             return Ok(vendors);
         }
@@ -98,6 +109,17 @@ namespace Resqu.API.Controllers
                 return Ok(banCustomer);
             }
             return BadRequest(banCustomer);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> AddExpertiseCategory(ExpertiseCategoryDto expertise)
+        {
+            var expertiseCategory = await _customer.AddExpertiseCategory(expertise);
+            if (expertiseCategory.Status == true && expertiseCategory.Message == "ExpertiseCategory Added Successfully")
+            {
+                return Ok(expertiseCategory);
+            }
+            return BadRequest(expertiseCategory);
         }
 
 

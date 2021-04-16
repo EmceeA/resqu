@@ -167,5 +167,48 @@ namespace Resqu.Core.Services
             }
             return customers;
         }
+
+        public async Task<UpdateCustomerResponseDto> AddExpertiseCategory(ExpertiseCategoryDto expertise)
+        {
+            try
+            {
+                var expertiseCate = new ExpertiseCategory
+                {
+                    Name = expertise.Name
+                };
+                 _context.ExpertiseCategories.Add(expertiseCate);
+                await _context.SaveChangesAsync();
+                return new UpdateCustomerResponseDto
+                {
+                    Message = "ExpertiseCategory Added Successfully",
+                    Status = true
+                };
+            }
+            catch (System.Exception ex)
+            {
+                return new UpdateCustomerResponseDto
+                {
+                    Message =ex.Message,
+                    Status = false
+                };
+            }
+        }
+
+        public async Task<List<RequestListDto>> RequestList()
+        {
+            var allRequest = await _context.Requests.Select(d => new RequestListDto
+            {
+                VendorLocation = d.VendorLocation,
+                CustomerLocation = d.CustomerLocation,
+                CustomerPhone = d.CustomerPhone,
+                RequestType = d.RequestType,
+                VendorCode = d.RequestType
+            }).ToListAsync();
+            if (allRequest == null)
+            {
+                return null;
+            }
+            return allRequest;
+        }
     }
 }
