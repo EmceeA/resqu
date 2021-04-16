@@ -19,6 +19,7 @@ namespace Resqu.Core.Interface
         Task<List<VendorListDto>> VendorList();
         Task<List<RequestListDto>> RequestList();
         Task<List<CustomerListDto>> CustomerList();
+        Task<UpdateCustomerResponseDto> AddExpertise(ExpertiseDto expertise);
         Task<UpdateCustomerResponseDto> AddExpertiseCategory(ExpertiseCategoryDto expertise);
 
         

@@ -97,6 +97,18 @@ namespace Resqu.Core.Dto
 
     }
 
+
+    //public string Name { get; set; }
+
+    //public int? ExpertiseCategoryId { get; set; }
+    //public ExpertiseCategory GetExpertiseCategory { get; set; }
+
+    public class ExpertiseDto
+    {
+        public string ExpertiseName { get; set; }
+
+        public int? ExpertiseCategoryId { get; set; }
+    }
     public class CustomerListDto
     {
         public string PhoneNumber { get; set; }

@@ -123,5 +123,17 @@ namespace Resqu.API.Controllers
         }
 
 
+        [HttpPost]
+        public async Task<IActionResult> AddExpertise(ExpertiseDto expertise)
+        {
+            var expertiser = await _customer.AddExpertise(expertise);
+            if (expertiser.Status == true && expertiser.Message == "Added Successfully")
+            {
+                return Ok(expertiser);
+            }
+            return BadRequest(expertiser);
+        }
+
+
     }
 }

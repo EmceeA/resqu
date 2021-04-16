@@ -2,6 +2,7 @@
 using Resqu.Core.Dto;
 using Resqu.Core.Entities;
 using Resqu.Core.Interface;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -209,6 +210,35 @@ namespace Resqu.Core.Services
                 return null;
             }
             return allRequest;
+        }
+
+        public async Task<UpdateCustomerResponseDto> AddExpertise(ExpertiseDto expertiser)
+        {
+            try
+            {
+                var exp = new Expertise
+                {
+                    CreatedBy = "",
+                    DateCreated = DateTime.Now,
+                    Name = expertiser.ExpertiseName,
+                };
+                _context.Expertises.Add(exp);
+                await _context.SaveChangesAsync();
+                return new UpdateCustomerResponseDto
+                {
+                    Message = "Successfully Added",
+                    Status = true
+                };
+            }
+            catch (Exception ex)
+            {
+                return new UpdateCustomerResponseDto
+                {
+                    Message = ex.Message,
+                    Status = false
+                };
+            }
+            
         }
     }
 }
