@@ -16,7 +16,7 @@ namespace Resqu.Core.Migrations
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
-                .HasAnnotation("ProductVersion", "5.0.5")
+                .HasAnnotation("ProductVersion", "5.0.6")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
             modelBuilder.Entity("Resqu.Core.Entities.CardPayment", b =>
@@ -168,6 +168,9 @@ namespace Resqu.Core.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<decimal>("Cost")
+                        .HasColumnType("decimal(18,2)");
+
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
 
@@ -194,8 +197,6 @@ namespace Resqu.Core.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ExpertiseCategoryId");
-
                     b.ToTable("Expertises");
                 });
 
@@ -206,10 +207,15 @@ namespace Resqu.Core.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<int?>("ExpertiseId")
+                        .HasColumnType("int");
+
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("ExpertiseId");
 
                     b.ToTable("ExpertiseCategories");
                 });
@@ -334,12 +340,57 @@ namespace Resqu.Core.Migrations
                     b.ToTable("ResquProcesses");
                 });
 
+            modelBuilder.Entity("Resqu.Core.Entities.Transaction", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<decimal>("Amount")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<string>("CustomerName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PaymentType")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<decimal>("PhoneNumber")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<string>("ServiceDate")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ServiceType")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Status")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("SubCategory")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("TransactionRef")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("VendorName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Transactions");
+                });
+
             modelBuilder.Entity("Resqu.Core.Entities.Vendor", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("CompanyName")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ContactAddress")
                         .HasColumnType("nvarchar(max)");
@@ -356,6 +407,15 @@ namespace Resqu.Core.Migrations
                     b.Property<string>("EmailAddress")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int?>("ExpertiseId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("FirstName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("IdentificationNumber")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<bool>("IsBan")
                         .HasColumnType("bit");
 
@@ -365,7 +425,13 @@ namespace Resqu.Core.Migrations
                     b.Property<bool>("IsFullyVerified")
                         .HasColumnType("bit");
 
-                    b.Property<string>("NextOfKin")
+                    b.Property<string>("LastName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("MeansOfIdentification")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("MiddleName")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("NextOfKinAddress")
@@ -377,6 +443,12 @@ namespace Resqu.Core.Migrations
                     b.Property<string>("NextOfKinPhone")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("NextOfKinRelationship")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PhoneNo")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("PhoneNumber")
                         .HasColumnType("nvarchar(max)");
 
@@ -386,7 +458,7 @@ namespace Resqu.Core.Migrations
                     b.Property<string>("VendorCode")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("VendorName")
+                    b.Property<string>("VendorPicture")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("isVerified")
@@ -394,7 +466,63 @@ namespace Resqu.Core.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("ExpertiseId");
+
                     b.ToTable("Vendors");
+                });
+
+            modelBuilder.Entity("Resqu.Core.Entities.VendorAccount", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<decimal>("Balance")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Currency")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("DateCreated")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("DateModified")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("DateOfBirth")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsBan")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsFullyVerified")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsModified")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("MobileNo")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("VendorName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("WalletId")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("isVerified")
+                        .HasColumnType("bit");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("VendorAccounts");
                 });
 
             modelBuilder.Entity("Resqu.Core.Entities.WalletPayment", b =>
@@ -458,13 +586,11 @@ namespace Resqu.Core.Migrations
                     b.Navigation("Vendor");
                 });
 
-            modelBuilder.Entity("Resqu.Core.Entities.Expertise", b =>
+            modelBuilder.Entity("Resqu.Core.Entities.ExpertiseCategory", b =>
                 {
-                    b.HasOne("Resqu.Core.Entities.ExpertiseCategory", "GetExpertiseCategory")
-                        .WithMany()
-                        .HasForeignKey("ExpertiseCategoryId");
-
-                    b.Navigation("GetExpertiseCategory");
+                    b.HasOne("Resqu.Core.Entities.Expertise", null)
+                        .WithMany("GetExpertiseCategory")
+                        .HasForeignKey("ExpertiseId");
                 });
 
             modelBuilder.Entity("Resqu.Core.Entities.Otp", b =>
@@ -512,6 +638,15 @@ namespace Resqu.Core.Migrations
                     b.Navigation("GetVendor");
                 });
 
+            modelBuilder.Entity("Resqu.Core.Entities.Vendor", b =>
+                {
+                    b.HasOne("Resqu.Core.Entities.Expertise", "Expertise")
+                        .WithMany()
+                        .HasForeignKey("ExpertiseId");
+
+                    b.Navigation("Expertise");
+                });
+
             modelBuilder.Entity("Resqu.Core.Entities.WalletPayment", b =>
                 {
                     b.HasOne("Resqu.Core.Entities.Customer", "Customer")
@@ -525,6 +660,11 @@ namespace Resqu.Core.Migrations
                     b.Navigation("Customer");
 
                     b.Navigation("Vendor");
+                });
+
+            modelBuilder.Entity("Resqu.Core.Entities.Expertise", b =>
+                {
+                    b.Navigation("GetExpertiseCategory");
                 });
 #pragma warning restore 612, 618
         }

@@ -80,7 +80,7 @@ namespace Resqu.API.Controllers
             {
                 return BadRequest(ModelState);
             }
-            var register = await _customer.CustomerSignIn(signUp);
+            var register = await _customer.SignInCustomer(signUp);
             var claims = new[]
         {
             new Claim(ClaimTypes.Name,signUp.PhoneNumber),

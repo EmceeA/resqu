@@ -1,13 +1,15 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Resqu.Core.Constants;
 using Resqu.Core.Dto;
 using Resqu.Core.Entities;
 using Resqu.Core.Interface;
+using Serilog;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
+using static Newtonsoft.Json.JsonConvert;
 namespace Resqu.Core.Services
 {
     public class CustomerService : ICustomer
@@ -15,10 +17,55 @@ namespace Resqu.Core.Services
         private readonly ResquContext _context;
 
         private readonly IOtp _otp;
-        public CustomerService(ResquContext context, IOtp otp)
+        private readonly ICacheService _cache;
+        public CustomerService(ResquContext context, IOtp otp, ICacheService cache)
         {
             _context = context;
             _otp = otp;
+            _cache = cache;
+        }
+
+        public async Task<CustomerSignInResponse> SignInCustomer(CustomerSignInRequest signInModel)
+        {
+            CustomerSignInResponse response = null;
+            string custCacheId = ConstantValue.USER_LOGIN_CACHE + signInModel.PhoneNumber + signInModel.Pin;
+            var cachedString = _cache.GetCachedValue(custCacheId, ConstantValue.CACHE_KEY_APP_DEFAULT).Result;
+            //string cachedString = null;
+
+        ApiCall:
+            if (string.IsNullOrEmpty(cachedString))
+            {
+                response = CustomerSignIn(signInModel).Result;
+                if (response == null)
+                {
+                    return new CustomerSignInResponse
+                    {
+                        
+                    };
+                }
+                await _cache.CacheValue(custCacheId, SerializeObject(response), ConstantValue.CACHE_KEY_APP_DEFAULT, 60);
+                return response;
+            }
+            else
+            {
+                try
+                {
+                    //response = Validate(model).Result;
+                    response = DeserializeObject<CustomerSignInResponse>(cachedString);
+                    Log.Information($"CacheResponse:{SerializeObject(response)}");
+                    if (response == null)
+                    {
+                        throw new Exception();
+                    }
+                }
+                catch (Exception)
+                {
+                    cachedString = string.Empty;
+                    goto ApiCall;
+                }
+            }
+            Log.Information($"Customer Login: {response}");
+            return response;
         }
 
         public async Task<CustomerSignInResponse> CustomerSignIn(CustomerSignInRequest signInModel)
@@ -48,6 +95,7 @@ namespace Resqu.Core.Services
                     Response = "Oops, You have been banned; Kindly Contact the Administrator"
                 };
             }
+
             return new CustomerSignInResponse
             {
                 EmailAddress = getUser.EmailAddress,

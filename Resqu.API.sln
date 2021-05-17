@@ -3,13 +3,15 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.31025.194
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Resqu.API", "Resqu.API\Resqu.API.csproj", "{413903B0-6249-42E3-AA29-E27C1DAF4575}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Resqu.API", "Resqu.API\Resqu.API.csproj", "{413903B0-6249-42E3-AA29-E27C1DAF4575}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Resqu.Infrastructure", "Resqu.Infrastructure\Resqu.Infrastructure.csproj", "{147C1D09-0DC2-45C5-95CD-FBD10D520442}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Resqu.Infrastructure", "Resqu.Infrastructure\Resqu.Infrastructure.csproj", "{147C1D09-0DC2-45C5-95CD-FBD10D520442}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Resqu.Core", "Resqu.Core\Resqu.Core.csproj", "{211A8885-367B-4213-BBC7-9AA3C50DDA4A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Resqu.Core", "Resqu.Core\Resqu.Core.csproj", "{211A8885-367B-4213-BBC7-9AA3C50DDA4A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Resque.Test", "Resque.Test\Resque.Test.csproj", "{316DDBD6-FEA5-4879-8FCC-AECF178353D7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Resque.Test", "Resque.Test\Resque.Test.csproj", "{316DDBD6-FEA5-4879-8FCC-AECF178353D7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Resq.Web", "Resq.Web\Resq.Web.csproj", "{71830346-F4E2-4F09-84C9-36ABA9982229}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,10 @@ Global
 		{316DDBD6-FEA5-4879-8FCC-AECF178353D7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{316DDBD6-FEA5-4879-8FCC-AECF178353D7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{316DDBD6-FEA5-4879-8FCC-AECF178353D7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{71830346-F4E2-4F09-84C9-36ABA9982229}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{71830346-F4E2-4F09-84C9-36ABA9982229}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{71830346-F4E2-4F09-84C9-36ABA9982229}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{71830346-F4E2-4F09-84C9-36ABA9982229}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

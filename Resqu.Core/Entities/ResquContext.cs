@@ -19,5 +19,7 @@ namespace Resqu.Core.Entities
         public DbSet<CashPayment> CashPayments { get; set; }
         public DbSet<Request> Requests { get; set; }
         public DbSet<ResquProcess> ResquProcesses { get; set; }
+        public DbSet<Transaction> Transactions { get; set; }
+        public DbSet<VendorAccount> VendorAccounts { get; set; }
     }
 }

@@ -14,6 +14,7 @@ using Resqu.Core.Entities;
 using Resqu.Core.Interface;
 using Resqu.Core.Services;
 using Resqu.Core.Utility;
+using StackExchange.Redis;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -43,6 +44,9 @@ namespace Resqu.API
             services.AddSingleton<IJwtAuthManager, JwtAuthManager>();
             services.AddSingleton<IJwtAuthManager, JwtAuthManager>();
             services.AddScoped<IOtp, OtpService>();
+            services.AddScoped<IWallet, WalletService>();
+            services.AddScoped<ICacheService, RedisCacheService>();
+            services.AddSingleton<IConnectionMultiplexer>(x => ConnectionMultiplexer.Connect(Configuration.GetSection("Redis:Server").Value));
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Resqu.API", Version = "v1" });

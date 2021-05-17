@@ -8,6 +8,7 @@ namespace Resqu.Core.Interface
     {
         Task<CustomerSignUpResponseDto> CustomerSignUp(CustomerSignUpRequestDto signUpModel);
         Task<CustomerSignInResponse> CustomerSignIn(CustomerSignInRequest signInModel);
+        Task<CustomerSignInResponse> SignInCustomer(CustomerSignInRequest signInModel);
        
         Task<UpdateCustomerResponseDto> ActivateCustomerProfile(UpdateCustomerRequestDto requestDto);
         
@@ -16,6 +17,10 @@ namespace Resqu.Core.Interface
     public interface IVendor
     {
         Task<CustomerSignUpResponseDto> RegisterVendor(CustomerSignUpRequestDto signUpModel);
+
+        //Task<CustomerSignUpResponseDto> RegisterVendor(CustomerSignUpRequestDto signUpModel);
+
+
     }
 
 }

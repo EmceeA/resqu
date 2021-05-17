@@ -1,8 +1,9 @@
 C:\Users\HFET\source\repos\Resqu.API\Resqu.Core\bin\Debug\net5.0\Resqu.Core.deps.json
+C:\Users\HFET\source\repos\Resqu.API\Resqu.Core\bin\Debug\net5.0\Resqu.Core.runtimeconfig.json
+C:\Users\HFET\source\repos\Resqu.API\Resqu.Core\bin\Debug\net5.0\Resqu.Core.runtimeconfig.dev.json
 C:\Users\HFET\source\repos\Resqu.API\Resqu.Core\bin\Debug\net5.0\Resqu.Core.dll
 C:\Users\HFET\source\repos\Resqu.API\Resqu.Core\bin\Debug\net5.0\ref\Resqu.Core.dll
 C:\Users\HFET\source\repos\Resqu.API\Resqu.Core\bin\Debug\net5.0\Resqu.Core.pdb
-C:\Users\HFET\source\repos\Resqu.API\Resqu.Core\obj\Debug\net5.0\Resqu.Core.csprojAssemblyReference.cache
 C:\Users\HFET\source\repos\Resqu.API\Resqu.Core\obj\Debug\net5.0\Resqu.Core.GeneratedMSBuildEditorConfig.editorconfig
 C:\Users\HFET\source\repos\Resqu.API\Resqu.Core\obj\Debug\net5.0\Resqu.Core.AssemblyInfoInputs.cache
 C:\Users\HFET\source\repos\Resqu.API\Resqu.Core\obj\Debug\net5.0\Resqu.Core.AssemblyInfo.cs
@@ -10,6 +11,5 @@ C:\Users\HFET\source\repos\Resqu.API\Resqu.Core\obj\Debug\net5.0\Resqu.Core.cspr
 C:\Users\HFET\source\repos\Resqu.API\Resqu.Core\obj\Debug\net5.0\Resqu.Core.dll
 C:\Users\HFET\source\repos\Resqu.API\Resqu.Core\obj\Debug\net5.0\ref\Resqu.Core.dll
 C:\Users\HFET\source\repos\Resqu.API\Resqu.Core\obj\Debug\net5.0\Resqu.Core.pdb
-C:\Users\HFET\source\repos\Resqu.API\Resqu.Core\bin\Debug\net5.0\Resqu.Core.runtimeconfig.json
-C:\Users\HFET\source\repos\Resqu.API\Resqu.Core\bin\Debug\net5.0\Resqu.Core.runtimeconfig.dev.json
 C:\Users\HFET\source\repos\Resqu.API\Resqu.Core\obj\Debug\net5.0\Resqu.Core.genruntimeconfig.cache
+C:\Users\HFET\source\repos\Resqu.API\Resqu.Core\obj\Debug\net5.0\Resqu.Core.csprojAssemblyReference.cache

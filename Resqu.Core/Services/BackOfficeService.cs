@@ -138,12 +138,12 @@ namespace Resqu.Core.Services
                 ContactAddress = c.ContactAddress,
                 EmailAddress = c.EmailAddress,
                 NextOfKinAddress = c.NextOfKinAddress,
-                NextOfKin = c.NextOfKin,
+                NextOfKin = c.NextOfKinRelationship,
                 NextOfKinName = c.NextOfKinName,
                 NextOfKinPhone = c.NextOfKinPhone,
                 PhoneNumber = c.PhoneNumber,
                 VendorCode = c.VendorCode,
-                VendorName = c.VendorName
+                VendorName = c.CompanyName
             }).ToListAsync();
             if (vendors == null)
             {
@@ -239,6 +239,11 @@ namespace Resqu.Core.Services
                 };
             }
             
+        }
+
+        public Task<UpdateCustomerResponseDto> AddVendor()
+        {
+            throw new NotImplementedException();
         }
     }
 }

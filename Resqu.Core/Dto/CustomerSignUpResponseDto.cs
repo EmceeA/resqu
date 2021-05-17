@@ -48,6 +48,21 @@ namespace Resqu.Core.Dto
         public string Email { get; set; }
     }
 
+    public class Vendor
+    {
+
+        public string PhoneNumber { get; set; }
+        public string VendorName { get; set; }
+        public string EmailAddress { get; set; }
+        public string ContactAddress { get; set; }
+        public string NextOfKin { get; set; }
+        public string NextOfKinName { get; set; }
+        public string NextOfKinAddress { get; set; }
+        public string NextOfKinPhone { get; set; }
+        public string VendorCode { get; set; }
+        public string Pin { get; set; }
+    }
+
     public class UpdateCustomerResponseDto
     {
         public string Message { get; set; }
@@ -121,11 +136,7 @@ namespace Resqu.Core.Dto
     }
 
 
-    public class ExpertiseDto
-    {
-        public string Name { get; set; }
-    }
-
+   
     public class ExpertiseCategoryDto
     {
         public string Name { get; set; }
