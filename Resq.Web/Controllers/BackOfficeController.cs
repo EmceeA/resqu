@@ -135,6 +135,28 @@ namespace Resq.Web.Controllers
                 return View();
 
         }
+
+        public ActionResult Services()
+        {
+            var serviceList = new List<Service>();
+            
+            var services = _context.Expertises.ToList();
+            foreach (var service in services)
+            {
+                var subCategories = _context.ExpertiseCategories.Where(e => e.ExpertiseId == service.Id).ToList().Count();
+
+                var serv = new Service
+                {
+                    ServiceType = service.Name,
+                    SubCategory = subCategories
+                };
+
+                serviceList.Add(serv);
+            }
+
+            ViewBag.Services = serviceList;
+            return View();
+        }
         // GET: BackOffice/Details/5
         public async Task<IActionResult> Details(long? id)
         {

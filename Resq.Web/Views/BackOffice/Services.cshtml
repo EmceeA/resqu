@@ -1,0 +1,18 @@
+﻿@using Resq.Web.ViewModels
+@{
+    ViewData["Title"] = "Dashboard";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<div>
+    <p>Services</p>
+    <br />
+    @foreach (Service services in ViewBag.Services)
+    {
+        <div>
+            <p>Service Type: @services.ServiceType</p>
+            <p>SubCategory : @services.SubCategory</p>
+        </div>
+    }
+</div>

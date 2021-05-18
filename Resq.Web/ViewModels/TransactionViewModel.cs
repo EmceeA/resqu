@@ -42,6 +42,12 @@ namespace Resq.Web.ViewModels
         public string Description { get; set; }
     }
 
+    public class Service
+    {
+        public string ServiceType { get; set; }
+        public int SubCategory { get; set; }
+    }
+
     public class AvailableServiceDetailViewModel
     {
         public string ServiceType { get; set; }
