@@ -180,6 +180,9 @@ namespace Resqu.Core.Migrations
                     b.Property<DateTime?>("DateModified")
                         .HasColumnType("datetime2");
 
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int?>("ExpertiseCategoryId")
                         .HasColumnType("int");
 
@@ -347,9 +350,6 @@ namespace Resqu.Core.Migrations
                         .HasColumnType("bigint")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<decimal>("Amount")
-                        .HasColumnType("decimal(18,2)");
-
                     b.Property<string>("CustomerName")
                         .HasColumnType("nvarchar(max)");
 
@@ -358,6 +358,12 @@ namespace Resqu.Core.Migrations
 
                     b.Property<decimal>("PhoneNumber")
                         .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal>("PlatformCharge")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<string>("RatingComment")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ServiceDate")
                         .HasColumnType("nvarchar(max)");
@@ -371,13 +377,30 @@ namespace Resqu.Core.Migrations
                     b.Property<string>("SubCategory")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<decimal>("TotalAmount")
+                        .HasColumnType("decimal(18,2)");
+
                     b.Property<string>("TransactionRef")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("TransactionType")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<decimal>("VendorAmount")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<int?>("VendorId")
+                        .HasColumnType("int");
 
                     b.Property<string>("VendorName")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("VendorRating")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("VendorId");
 
                     b.ToTable("Transactions");
                 });
@@ -636,6 +659,15 @@ namespace Resqu.Core.Migrations
                     b.Navigation("GetRequest");
 
                     b.Navigation("GetVendor");
+                });
+
+            modelBuilder.Entity("Resqu.Core.Entities.Transaction", b =>
+                {
+                    b.HasOne("Resqu.Core.Entities.Vendor", "Vendor")
+                        .WithMany()
+                        .HasForeignKey("VendorId");
+
+                    b.Navigation("Vendor");
                 });
 
             modelBuilder.Entity("Resqu.Core.Entities.Vendor", b =>

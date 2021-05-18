@@ -8,7 +8,9 @@ namespace Resqu.Core.Entities
 {
     public class Transaction: WalletPaymentAudit
     {
-        public decimal Amount { get; set; }
+        public decimal VendorAmount { get; set; }
+        public decimal PlatformCharge { get; set; }
+        public decimal TotalAmount { get; set; }
         public decimal PhoneNumber { get; set; }
         public string Status { get; set; }
         public string TransactionRef { get; set; }
@@ -19,8 +21,14 @@ namespace Resqu.Core.Entities
         public string ServiceDate { get; set; }
         public string CustomerName { get; set; }
         public string VendorName { get; set; }
+        
+        public int? VendorId { get; set; }
+        public Vendor Vendor { get; set; }
         public string PaymentType { get; set; }
 
+
+        public int VendorRating { get; set; }
+        public string RatingComment { get; set; }
 
     }
 }

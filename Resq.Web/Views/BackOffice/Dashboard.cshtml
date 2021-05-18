@@ -1,0 +1,59 @@
+﻿@using Resq.Web.ViewModels
+@{
+    ViewData["Title"] = "Dashboard";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Dashboard</h1>
+<div>@ViewBag.TodaysDate</div>
+
+<div>TotalAmountEarned : @ViewBag.TotalAmountEarned</div>
+<div>
+    <p>Service Category: @ViewBag.ServiceCategory</p>
+    <p>Service SubCategory: @ViewBag.ServiceSubCategory</p>
+    <p>Vendors: @ViewBag.Vendors</p>
+    <p>Customers: @ViewBag.Customers</p>
+</div>
+
+<div>
+    <p>Available Services</p>
+    <br />
+    @foreach (AvailableServiceDetailViewModel services in ViewBag.AvailableService)
+    {
+        <div>
+            <p>Service Type: @services.ServiceType</p>
+            <p>Description : @services.Description</p>
+            <p>Number Of Users: @services.NumberOfUsers</p>
+            <p>Number Of Vendors: @services.NumberOfVendors</p>
+        </div>
+    }
+</div>
+
+<div>
+    <p>Top 10 Vendors</p>
+    <br />
+    @foreach (TopVendor services in ViewBag.TopVendors)
+    {
+        <div>
+            <p>Picture: @services.Picture</p>
+            <p>VendorName : @services.VendorName</p>
+            <p>Number Of Request: @services.NumberOfRequest</p>
+        </div>
+    }
+</div>
+
+
+<div>
+    <p>Reviews</p>
+    <br />
+    @foreach (Review review in ViewBag.Reviews)
+    {
+        <div>
+            <p>Picture: @review.Picture</p>
+            <p>VendorName : @review.VendorName</p>
+            <p>Rating: @review.Rating</p>
+            <p>Description: @review.Description</p>
+            <p>Sub Category: @review.SubCategory</p>
+        </div>
+    }
+</div>
