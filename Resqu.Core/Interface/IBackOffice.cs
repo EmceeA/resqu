@@ -24,6 +24,8 @@ namespace Resqu.Core.Interface
 
         Task<UpdateCustomerResponseDto> AddVendor();
 
+        Task<UserLoginResponse> Login(UserLoginDto loginDto);
+
         
     }
 }

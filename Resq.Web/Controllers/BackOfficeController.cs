@@ -8,16 +8,18 @@ using Microsoft.EntityFrameworkCore;
 using Resq.Web.ViewModels;
 using Resqu.Core.Dto;
 using Resqu.Core.Entities;
+using Resqu.Core.Interface;
 
 namespace Resq.Web.Controllers
 {
     public class BackOfficeController : Controller
     {
         private readonly ResquContext _context;
-
-        public BackOfficeController(ResquContext context)
+        private IBackOffice _back;
+        public BackOfficeController(ResquContext context, IBackOffice back)
         {
             _context = context;
+            _back = back;
         }
 
         // GET: BackOffice
@@ -25,13 +27,46 @@ namespace Resq.Web.Controllers
         {
             return View(await _context.Transactions.ToListAsync());
         }
-        public ActionResult Dashboard()
+       
+
+        [HttpGet]
+
+        public async Task<IActionResult> Login()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Login(UserLoginDto loginDto)
+        {
+            var result = await _back.Login(loginDto);
+            if (result.Status == true)
+            {
+                return RedirectToAction("BackOfficeDashboard");
+            }
+            return RedirectToAction("Login");
+        }
+
+
+        [HttpGet]
+
+        public IActionResult AddService()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult AddService(ExpertiseDto expertiseDto)
+        {
+            return View();
+        }
+
+        public ActionResult BackOfficeDashboard()
         {
             ViewBag.ServiceCategory = _context.Expertises.ToList().Count();
             ViewBag.ServiceSubCategory = _context.ExpertiseCategories.ToList().Count();
-            ViewBag.Vendors = _context.Vendors.Where(d=>d.IsBan == false && d.IsDeleted == false).ToList().Count();
-            ViewBag.Customers = _context.Customers.Where(e=>e.IsBan == false && e.IsDeleted == false).ToList().Count();
-
+            ViewBag.Vendors = _context.Vendors.Where(d => d.IsBan == false && d.IsDeleted == false).ToList().Count();
+            ViewBag.Customers = _context.Customers.Where(e => e.IsBan == false && e.IsDeleted == false).ToList().Count();
             List<Resqu.Core.Dto.Vendor> vendors = new List<Resqu.Core.Dto.Vendor>();
             var getVendors = _context.Vendors.ToList();
 
@@ -66,7 +101,7 @@ namespace Resq.Web.Controllers
             }
 
 
-           
+
             var availableServices = new List<AvailableServiceDetailViewModel>();
             var getAllTransactions = _context.Transactions.ToList();
             var getAllExpertise = _context.Expertises.ToList();
@@ -76,20 +111,33 @@ namespace Resq.Web.Controllers
                 {
                     if (transact.ServiceType == expert.Name)
                     {
+                        var getExpertIdByName = _context.Expertises.Where(w => w.Name == transact.ServiceType).Select(g => g.Id).SingleOrDefault();
+                        var getSubCategory = _context.ExpertiseCategories.Where(s => s.ExpertiseId == getExpertIdByName).ToList().Count();
                         var service = new AvailableServiceDetailViewModel
                         {
+                            SubCategory = getSubCategory,
                             Description = expert.Description,
                             NumberOfUsers = _context.Transactions.Where(e => e.CustomerName == transact.CustomerName).Distinct().Count(),
-                            NumberOfVendors = _context.Vendors.Where(c=>c.ExpertiseId == expert.Id).ToList().Count(),
+                            NumberOfVendors = _context.Vendors.Where(c => c.ExpertiseId == expert.Id).ToList().Count(),
                             ServiceType = expert.Name
                         };
 
                         availableServices.Add(service);
                     }
-                    
+
                 }
             }
-            ViewBag.AvailableService = availableServices;
+            var  Services = availableServices.Select(s=> new AvailableServiceDetailViewModel { Description =s.Description, NumberOfUsers = s.NumberOfUsers,
+            NumberOfVendors = s.NumberOfVendors,
+            ServiceType = s.ServiceType, SubCategory = s.SubCategory}).ToList();
+            HashSet<AvailableServiceDetailViewModel> availableServiceDetails = new HashSet<AvailableServiceDetailViewModel>();
+
+            foreach (var available in Services)
+            {
+                availableServiceDetails.Add(available);
+            }
+            ViewBag.AvailableService = availableServiceDetails.ToList();
+
             var vendorList = _context.Vendors.ToList();
             var topVendorList = new List<TopVendor>();
             foreach (var vendo in vendorList)
@@ -108,19 +156,22 @@ namespace Resq.Web.Controllers
 
             foreach (var vendo in vendorList)
             {
+                var rating = _context.Transactions.Where(e => e.VendorId == vendo.Id && e.ServiceType == vendo.Expertise.Name).Select(s => s.VendorRating).FirstOrDefault();
+                var completedRequests = _context.Requests.Where(c => c.VendorId.Value == vendo.Id && c.RequestStatus == "Completed").ToList().Count();
                 var ratings = new Review
                 {
                     Picture = vendo.VendorPicture,
-                    Rating = _context.Transactions.Where(e=>e.VendorId == vendo.Id && e.ServiceType == vendo.Expertise.Name).Select(s=>s.VendorRating).FirstOrDefault(),
-                    SubCategory  = vendo.Expertise.Name,
+                    Rating = rating,
+                    SubCategory = vendo.Expertise.Name,
                     Description = vendo.Expertise.Description,
-                    VendorName = vendo.CompanyName
+                    VendorName = vendo.CompanyName,
+                    CompletedRequest = completedRequests
                 };
                 reviewList.Add(ratings);
             }
 
-            ViewBag.TopVendors = topVendorList.OrderByDescending(e=>e.NumberOfRequest).Take(10); 
-            ViewBag.Reviews = reviewList.OrderByDescending(e=>e.Rating).Take(20); 
+            ViewBag.TopVendors = topVendorList.OrderByDescending(e => e.NumberOfRequest).Take(10);
+            ViewBag.Reviews = reviewList.OrderByDescending(e => e.Rating).Take(20);
             //ViewBag.Reviews
             //{
             //    new AvailableServiceDetailViewModel
@@ -130,12 +181,11 @@ namespace Resq.Web.Controllers
             //};
 
             ViewBag.TodaysDate = DateTime.Now.ToString("dd MMM yyyy");
-            ViewBag.TotalAmountEarned = _context.Transactions.Select(c=>c.PlatformCharge).ToList().Sum();
+            ViewBag.TotalAmountEarned = _context.Transactions.Select(c => c.PlatformCharge).ToList().Sum();
             //var getTransactions = _context.Transactions.Where()
-                return View();
+            return View();
 
         }
-
         public ActionResult Services()
         {
             var serviceList = new List<Service>();
@@ -155,6 +205,8 @@ namespace Resq.Web.Controllers
             }
 
             ViewBag.Services = serviceList;
+
+            ViewBag.ServiceCount = serviceList.Count();
             return View();
         }
         // GET: BackOffice/Details/5

@@ -10,6 +10,8 @@ namespace Resqu.Core.Entities
         }
 
         public DbSet<Customer> Customers { get; set; }
+        public DbSet<BackOfficeRole> BackOfficeRoles { get; set; }
+        public DbSet<BackOfficeUser> BackOfficeUsers { get; set; }
         public DbSet<Otp> Otps { get; set; }
         public DbSet<Vendor> Vendors { get; set; }
         public DbSet<Expertise> Expertises { get; set; }

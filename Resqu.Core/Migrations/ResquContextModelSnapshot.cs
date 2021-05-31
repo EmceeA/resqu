@@ -19,6 +19,65 @@ namespace Resqu.Core.Migrations
                 .HasAnnotation("ProductVersion", "5.0.6")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+            modelBuilder.Entity("Resqu.Core.Entities.BackOfficeRole", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("PageName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PageUrl")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("RoleName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("BackOfficeRoles");
+                });
+
+            modelBuilder.Entity("Resqu.Core.Entities.BackOfficeUser", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<long?>("BackOfficeRoleId")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("Email")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("FirstName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("LastName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Password")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Phone")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<long>("RoleId")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("UserName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("BackOfficeRoleId");
+
+                    b.ToTable("BackOfficeUsers");
+                });
+
             modelBuilder.Entity("Resqu.Core.Entities.CardPayment", b =>
                 {
                     b.Property<long>("Id")
@@ -277,11 +336,17 @@ namespace Resqu.Core.Migrations
                     b.Property<int?>("GetExpertiseId")
                         .HasColumnType("int");
 
+                    b.Property<string>("RequestStatus")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("RequestType")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("VendorCode")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("VendorId")
+                        .HasColumnType("int");
 
                     b.Property<string>("VendorLocation")
                         .HasColumnType("nvarchar(max)");
@@ -291,6 +356,8 @@ namespace Resqu.Core.Migrations
                     b.HasIndex("GetExpertiseCategoryId");
 
                     b.HasIndex("GetExpertiseId");
+
+                    b.HasIndex("VendorId");
 
                     b.ToTable("Requests");
                 });
@@ -594,6 +661,15 @@ namespace Resqu.Core.Migrations
                     b.ToTable("WalletPayments");
                 });
 
+            modelBuilder.Entity("Resqu.Core.Entities.BackOfficeUser", b =>
+                {
+                    b.HasOne("Resqu.Core.Entities.BackOfficeRole", "BackOfficeRole")
+                        .WithMany()
+                        .HasForeignKey("BackOfficeRoleId");
+
+                    b.Navigation("BackOfficeRole");
+                });
+
             modelBuilder.Entity("Resqu.Core.Entities.CashPayment", b =>
                 {
                     b.HasOne("Resqu.Core.Entities.Customer", "Customer")
@@ -639,9 +715,15 @@ namespace Resqu.Core.Migrations
                         .WithMany()
                         .HasForeignKey("GetExpertiseId");
 
+                    b.HasOne("Resqu.Core.Entities.Vendor", "Vendor")
+                        .WithMany()
+                        .HasForeignKey("VendorId");
+
                     b.Navigation("GetExpertise");
 
                     b.Navigation("GetExpertiseCategory");
+
+                    b.Navigation("Vendor");
                 });
 
             modelBuilder.Entity("Resqu.Core.Entities.ResquProcess", b =>

@@ -42,6 +42,10 @@ namespace Resqu.Core.Entities
         public string CustomerPhone { get; set; }
         public string RequestType { get; set; }
 
+        public Vendor Vendor { get; set; }
+        public int?  VendorId { get; set; }
+        public string RequestStatus { get; set; }
+
     }
 
 

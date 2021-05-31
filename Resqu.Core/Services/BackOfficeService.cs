@@ -245,5 +245,64 @@ namespace Resqu.Core.Services
         {
             throw new NotImplementedException();
         }
+
+        public async Task<UserLoginResponse> Login(UserLoginDto loginDto)
+        {
+            try
+            {
+                var usersLogin = _context.BackOfficeUsers.Where(c => c.UserName == loginDto.UserName).FirstOrDefault();
+                if (usersLogin == null)
+                {
+                    return new UserLoginResponse
+                    {
+                        Response = "User does not exist",
+                        Status = false
+                    };
+                }
+                if (usersLogin.Password != loginDto.Password)
+                {
+                    return new UserLoginResponse
+                    {
+                        Response = "Username or password does not exist",
+                        Status = false
+                    };
+                }
+
+                else
+                {
+                    if (usersLogin.Password == loginDto.Password)
+                    {
+                        List<RoleUrl> getRoleName = _context.BackOfficeRoles.Where(d => d.Id == usersLogin.RoleId).Select(e => new RoleUrl
+                        {
+                            PageName = e.PageName,
+                            PageUrl = e.PageUrl
+                        }).ToList();
+                        return new UserLoginResponse
+                        {
+                            FirstName = usersLogin.FirstName,
+                            LastName = usersLogin.LastName,
+                            Response = "Successful",
+                            RoleName = _context.BackOfficeRoles.Where(i => i.Id == usersLogin.RoleId).Select(w => w.RoleName).FirstOrDefault(),
+                            RoleUrls = getRoleName,
+                            Token = "jajsjhsjs",
+                            UserName = usersLogin.UserName,
+                            Status = true
+                        };
+                    }
+                }
+
+                return new UserLoginResponse
+                {
+                    Response = "An Error Occurred",
+                    Status = false
+                };
+            }
+            catch (Exception ex)
+            {
+
+                throw;
+            }
+            
+        }
     }
 }

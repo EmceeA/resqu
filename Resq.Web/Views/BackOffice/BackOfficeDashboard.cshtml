@@ -1,0 +1,194 @@
+﻿@using Resq.Web.ViewModels
+@{
+    ViewData["Title"] = "BackOfficeDashboard";
+    Layout = "~/Views/Shared/_LayoutDashboard.cshtml";
+}
+
+
+<!-- PAGE CONTAINER-->
+<div class="page-container">
+    <!-- MAIN CONTENT-->
+    <div class="main-content">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-lg-9 mt-3">
+                    <div class="row pt-4 justify-content-between align-items-end">
+                        <div class="col-lg-6">
+                            <h4>Dashboard</h4>
+                            <p class="mt-2">Here’s what’s happening on the application today.</p>
+                        </div>
+                        <div class="col-xl-2 col-lg-4">
+                            <div class="date-div p-4">
+                                <span>@DateTime.Now.ToString("dd MMM yyyy")</span>
+                                <div class="px-2">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="18.896" height="17.051" viewBox="0 0 18.896 17.051">
+                                        <g id="calendar" transform="translate(0 -25)">
+                                            <path id="Path_8217" data-name="Path 8217"
+                                                  d="M18.9,30.315V28.137a1.663,1.663,0,0,0-1.661-1.661h-.221v2.03a.554.554,0,0,1-1.107,0V25.554a.554.554,0,1,0-1.107,0v.923H11.109v2.03a.554.554,0,1,1-1.107,0V25.554a.554.554,0,0,0-1.107,0v.923H5.2v2.03a.554.554,0,0,1-1.107,0V25.554a.554.554,0,1,0-1.107,0v.923H1.661A1.663,1.663,0,0,0,0,28.137v2.178Z"
+                                                  fill="#ffa700" />
+                                            <path id="Path_8218" data-name="Path 8218"
+                                                  d="M0,199v8.968a1.663,1.663,0,0,0,1.661,1.661H17.236a1.663,1.663,0,0,0,1.661-1.661V199Zm5.315,7.677H4.134a.554.554,0,0,1,0-1.107H5.315a.554.554,0,0,1,0,1.107Zm0-2.362H4.134a.554.554,0,1,1,0-1.107H5.315a.554.554,0,1,1,0,1.107Zm0-2.362H4.134a.554.554,0,0,1,0-1.107H5.315a.554.554,0,0,1,0,1.107Zm4.724,4.724H8.858a.554.554,0,0,1,0-1.107h1.181a.554.554,0,0,1,0,1.107Zm0-2.362H8.858a.554.554,0,1,1,0-1.107h1.181a.554.554,0,1,1,0,1.107Zm0-2.362H8.858a.554.554,0,0,1,0-1.107h1.181a.554.554,0,0,1,0,1.107Zm4.724,4.724H13.582a.554.554,0,0,1,0-1.107h1.181a.554.554,0,0,1,0,1.107Zm0-2.362H13.582a.554.554,0,1,1,0-1.107h1.181a.554.554,0,1,1,0,1.107Zm0-2.362H13.582a.554.554,0,0,1,0-1.107h1.181a.554.554,0,0,1,0,1.107Z"
+                                                  transform="translate(0 -167.578)" fill="#ffa700" />
+                                        </g>
+                                    </svg>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mt-4">
+                        <div class="col-lg-12">
+                            <div class="au-card">
+                                <div class="au-card-inner">
+                                    <div class="row justify-content-between align-items-center">
+                                        <div class="col-lg-3">
+                                            <div>
+                                                <h3>@ViewBag.ServiceCategory</h3>
+                                                <p class="mt-3">Service Category</p>
+                                            </div>
+                                            <div class="mt-5">
+                                                <h3>@ViewBag.ServiceSubCategory</h3>
+                                                <p class="mt-3">Service Sub-Category</p>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-4">
+                                            <div class="d-flex flex-column align-items-center">
+                                                <img src="~/dashboard/assets/images/orange-circle.svg" class="img-fluid" alt="">
+                                                <h3 class="mt-2">₦@ViewBag.TotalAmountEarned</h3>
+                                                <p class="text-center">Total Amount Earned</p>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-3 d-flex flex-column">
+                                            <div>
+                                                <h3>@ViewBag.Vendors</h3>
+                                                <p class="mt-3">Vendors</p>
+                                            </div>
+                                            <div class="mt-5">
+                                                <h3>@ViewBag.Customers</h3>
+                                                <p class="mt-3">Customers</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-6 mt-4">
+                            <h5>Top 10 Vendors</h5>
+                            <div class="vendors-div bg-white mt-3">
+                                @foreach (Review review in ViewBag.Reviews)
+                                {
+                                    <div class="row justify-content-between align-items-end p-3">
+
+                                        <div class="col-lg-7">
+                                            <div class="d-flex align-items-center">
+                                                <img src="~/images/@review.Picture" class="img-cir" alt="" style="border-radius:50px; width:52px; height:52px">
+                                                <div class="px-2">
+                                                    <h5>@review.VendorName</h5>
+                                                    <p>@review.CompletedRequest Completed Request(s)</p>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-lg-4 col-xl-3">
+                                            <button class="btn view-btn text-light">
+                                                View &#62;
+                                            </button>
+                                        </div>
+                                        
+                                    </div>
+                                }
+                                </div>
+                            
+                        </div>
+                        <div class="col-lg-6 mt-4">
+                            <h5>Available Services</h5>
+                            <div class="available-services bg-white mt-3">
+                                <div class="row justify-content-between align-items-center p-3">
+                                    <div class="col-lg-4 mt-2">
+                                        <div class="grey-box"></div>
+                                    </div>
+                                    @foreach (AvailableServiceDetailViewModel review in ViewBag.AvailableService)
+                                    {
+                                        @:<div class="col-lg-8 mt-2">
+                                            <h4>@review.ServiceType</h4>
+                                            <p class="mt-2 font-sm2">@review.Description</p>
+                                            @:<table class="table-text mt-2">
+                                                <thead></thead>
+                                                @:<tbody>
+                                                    <tr>
+                                                        <td>Sub-Category:</td>
+                                                        <th>@review.SubCategory</th>
+                                                    </tr>
+                                                    @:<tr>
+                                                        @:<td>No. Of Vendors:</th>
+                                                        <th>@review.NumberOfVendors</th>
+                                                    @:</tr>
+                                                    @:<tr>
+                                                        @:<td>No. Of Users:</th>
+                                                        <th>@review.NumberOfUsers</th>
+                                                    @:</tr>
+                                                @:</tbody>
+                                            @:</table>
+                                        @:</div>
+                                    }
+                                </div>
+                            </div>
+                            
+                        </div>
+                    </div>
+                </div>
+                <aside class="col-lg-3 bg-white flex-column flex-grow-1 mt-3" style="overflow-y: scroll;">
+                    <div class="h-100 bg-white">
+                        <div class="profile-div mt-5">
+                            <img src="~/dashboard/assets/images/profileImg-big.svg" class="img-fluid" alt="">
+                            <h4 class="mt-3">Good Morning, Tolulope</h4>
+                            <div class="d-flex align-items-center flex-wrap">
+                                <div class="px-2">
+                                    <p class="mb-0 font-sm2">toluolaleru@yahoo.com</p>
+                                </div>
+                                <div class="vertical-line"></div>
+                                <a href="#" class="text-blue font-sm2 px-2">Logout</a>
+                            </div>
+                        </div>
+                        <div class="reviews-div mt-5 px-3">
+                            <h4>Reviews</h4>
+                            @foreach (Review review in ViewBag.Reviews)
+                            {
+                                <div class="row justify-content-between align-items-end mt-4">
+                                    <div class="col-lg-9 px-0">
+
+                                        <div class="d-flex align-items-center">
+                                            <img src="~/images/@review.Picture" class="img-fluid" alt="" style="border-radius:50px; width:52px; height:52px">
+                                            <div class="px-2">
+                                                <h6>@review.VendorName, @review.SubCategory</h6>
+
+                                                <div class="d-grid grid-row">
+                                                    @for (int i = 1; i <= review.Rating; i++)
+                                                    {
+                                                        <img src="~/dashboard/assets/images/star-green.svg" class="img-fluid" alt="">
+
+
+                                                    }
+                                                    <span class="mb-0 text-dark">@Convert.ToDecimal(@review.Rating).ToString()</span>
+                                                </div>
+
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                    <div class="col-lg-3 px-0">
+                                        <p class="font-sm2">1 day ago</p>
+                                    </div>
+                                    
+                                </div>
+                            }
+                            </div>
+                    </div>
+                </aside>
+            </div>
+        </div>
+    </div>
+    <!-- END MAIN CONTENT-->
+    <!-- END PAGE CONTAINER-->
+</div>

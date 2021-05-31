@@ -11,6 +11,8 @@ using Resq.Web.Data;
 using Resq.Web.Interface;
 using Resq.Web.Services;
 using Resqu.Core.Entities;
+using Resqu.Core.Interface;
+using Resqu.Core.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -30,7 +32,8 @@ namespace Resq.Web
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddScoped<IVendor, VendorService>();
+            services.AddTransient<Resq.Web.Interface.IVendor, VendorService>();
+            services.AddScoped<Resqu.Core.Interface.IBackOffice, BackOfficeService>();
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(
                     Configuration.GetConnectionString("DefaultConnection")));
@@ -64,12 +67,13 @@ namespace Resq.Web
 
             app.UseAuthentication();
             app.UseAuthorization();
+            app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(
                     name: "default",
-                    pattern: "{controller=Home}/{action=Index}/{id?}");
+                    pattern: "{controller=BackOffice}/{action=Login}/{id?}");
                 endpoints.MapRazorPages();
             });
         }

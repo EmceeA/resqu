@@ -40,6 +40,7 @@ namespace Resq.Web.ViewModels
         public string SubCategory { get; set; }
         public int Rating { get; set; }
         public string Description { get; set; }
+        public int CompletedRequest { get; set; }
     }
 
     public class Service
@@ -48,13 +49,23 @@ namespace Resq.Web.ViewModels
         public int SubCategory { get; set; }
     }
 
-    public class AvailableServiceDetailViewModel
+    public class AvailableServiceDetailViewModel :IEquatable<AvailableServiceDetailViewModel>
     {
         public string ServiceType { get; set; }
-        //public string CustomerName { get; set; }
+        public int SubCategory { get; set; }
         public int NumberOfVendors { get; set; }
         public int NumberOfUsers { get; set; }
         public string Description { get; set; }
+
+        public bool Equals(AvailableServiceDetailViewModel other)
+        {
+            return this.ServiceType.Equals(other.ServiceType);
+        }
+
+        public override int GetHashCode()
+        {
+            return this.ServiceType.GetHashCode();
+        }
     }
 
     public class TransactionDetail

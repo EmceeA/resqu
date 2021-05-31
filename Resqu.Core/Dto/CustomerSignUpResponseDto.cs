@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Resqu.Core.Entities;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -69,6 +70,39 @@ namespace Resqu.Core.Dto
         public bool Status { get; set; }
     }
 
+    public class UserRegistrationDto
+    {
+       
+        public string UserName { get; set; }
+        public string Password { get; set; }
+
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
+        public string Email { get; set; }
+        public string Phone { get; set; }
+    }
+
+    public class UserLoginDto
+    {
+        [Required(ErrorMessage ="Username is required")]
+        public string UserName { get; set; }
+        [Required(ErrorMessage = "[Password is required")]
+        public string Password { get; set; }
+    }
+
+    public class UserLoginResponse
+    {
+        public string UserName { get; set; }
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
+        public string Token { get; set; }
+        public string Response { get; set; }
+        public List<RoleUrl> RoleUrls { get; set; }
+
+        public string RoleName { get; set; }
+        public bool Status { get; set; }
+    }
+
 
     public class CustomerSignInResponse
     {
@@ -113,6 +147,7 @@ namespace Resqu.Core.Dto
     }
 
 
+
     //public string Name { get; set; }
 
     //public int? ExpertiseCategoryId { get; set; }
@@ -121,7 +156,8 @@ namespace Resqu.Core.Dto
     public class ExpertiseDto
     {
         public string ExpertiseName { get; set; }
-
+        public string Description { get; set; }
+        public decimal Cost { get; set; }
         public int? ExpertiseCategoryId { get; set; }
     }
     public class CustomerListDto
