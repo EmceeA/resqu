@@ -263,7 +263,7 @@ namespace Resqu.Core.Services
                 {
                     return new UserLoginResponse
                     {
-                        Response = "Username or password does not exist",
+                        Response = "Username or password is not correct",
                         Status = false
                     };
                 }
@@ -275,10 +275,13 @@ namespace Resqu.Core.Services
                         List<RoleUrl> getRoleName = _context.BackOfficeRoles.Where(d => d.Id == usersLogin.RoleId).Select(e => new RoleUrl
                         {
                             PageName = e.PageName,
-                            PageUrl = e.PageUrl
+                            PageUrl = e.PageUrl,
+                            PageNameClass = e.PageNameClass,
+                            PageUrlClass = e.PageUrlClass
                         }).ToList();
-                        return new UserLoginResponse
-                        {
+                        return new UserLoginResponse 
+                        { 
+                            Email = usersLogin.Email,
                             FirstName = usersLogin.FirstName,
                             LastName = usersLogin.LastName,
                             Response = "Successful",
@@ -286,7 +289,10 @@ namespace Resqu.Core.Services
                             RoleUrls = getRoleName,
                             Token = "jajsjhsjs",
                             UserName = usersLogin.UserName,
-                            Status = true
+                            Status = true,
+                            Phone = usersLogin.Phone,
+                            RoleId = usersLogin.RoleId
+                            
                         };
                     }
                 }

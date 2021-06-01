@@ -1,4 +1,5 @@
-﻿using Resqu.Core.Entities;
+﻿using Microsoft.AspNetCore.Http;
+using Resqu.Core.Entities;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -80,13 +81,14 @@ namespace Resqu.Core.Dto
         public string LastName { get; set; }
         public string Email { get; set; }
         public string Phone { get; set; }
+        public IFormFile ProfilePicture { get; set; }
     }
 
     public class UserLoginDto
     {
         [Required(ErrorMessage ="Username is required")]
         public string UserName { get; set; }
-        [Required(ErrorMessage = "[Password is required")]
+        [Required(ErrorMessage = "Password is required")]
         public string Password { get; set; }
     }
 
@@ -98,8 +100,10 @@ namespace Resqu.Core.Dto
         public string Token { get; set; }
         public string Response { get; set; }
         public List<RoleUrl> RoleUrls { get; set; }
-
+        public string Phone { get; set; }
+        public long RoleId { get; set; }
         public string RoleName { get; set; }
+        public string Email { get; set; }
         public bool Status { get; set; }
     }
 

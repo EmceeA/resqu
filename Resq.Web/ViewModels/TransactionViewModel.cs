@@ -49,6 +49,15 @@ namespace Resq.Web.ViewModels
         public int SubCategory { get; set; }
     }
 
+
+    public class RoleUrl
+    {
+        public string PageName { get; set; }
+        public string PageNameClass { get; set; }
+        public string PageUrl { get; set; }
+        public string PageUrlClass { get; set; }
+
+    }
     public class AvailableServiceDetailViewModel :IEquatable<AvailableServiceDetailViewModel>
     {
         public string ServiceType { get; set; }

@@ -1,4 +1,6 @@
-﻿<!DOCTYPE html>
+﻿@using Resqu.Core.Entities
+
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -51,7 +53,15 @@
             <nav class="navbar-mobile">
                 <div class="container-fluid">
                     <ul class="navbar-mobile__list list-unstyled">
+                        @foreach (RoleUrl item in ViewBag.PageUrls)
+                        {
                         <li class="has-sub">
+                            <a class="@item.PageUrlClass" href="@item.PageUrl">
+                                <i class="@item.PageName"></i>@item.PageName
+                            </a>
+                        </li>
+                        }
+                        @*<li class="has-sub">
                             <a class="dashboard" href="../../BackOffice/BackOfficeDashboard">
                                 <i class="fas fa-dashboard"></i>Dashboard
                             </a>
@@ -80,7 +90,7 @@
                             <a href="wallet.html">
                                 <i class="fas fa-wallet"></i>Wallet
                             </a>
-                        </li>
+                        </li>*@
                     </ul>
                 </div>
             </nav>
@@ -111,7 +121,18 @@
             <div class="menu-sidebar__content js-scrollbar1">
                 <nav class="navbar-sidebar">
                     <ul class="list-unstyled navbar__list">
-                        <li class="active mt-2 mb-3">
+                        @foreach (RoleUrl item in ViewBag.PageUrls)
+                        {
+                        <li class="has-sub">
+                            <a class="@item.PageUrlClass" href="@item.PageUrl">
+                                <i data-feather="Dashboard" class="@item.PageNameClass"></i>@item.PageName
+                            </a>
+                            <a class="" href="">
+                                <i class=""></i>
+                            </a>
+                        </li>
+                        }
+                        @*<li class="active mt-2 mb-3">
                             <a class="js-arrow" href="../../BackOffice/BackOfficeDashboard">
                                 <i data-feather="Dashboard" class="mr-3"></i>Dashboard
                             </a>
@@ -140,7 +161,7 @@
                             <a class="js-arrow" href="#">
                                 <i data-feather="log-out" class="mr-3"></i>Wallet
                             </a>
-                        </li>
+                        </li>*@
                         <li class="log-out-btn mb-3">
                             <div class="p-4 profile-settings">
                                 <div class="d-flex align-items-center">

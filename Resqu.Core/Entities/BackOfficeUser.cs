@@ -21,6 +21,7 @@ namespace Resqu.Core.Entities
         public string LastName { get; set; }
         public string Email { get; set; }
         public string Phone { get; set; }
+        public string ProfilePicture { get; set; }
         public long RoleId { get; set; }
 
         public BackOfficeRole BackOfficeRole { get; set; }
@@ -31,7 +32,10 @@ namespace Resqu.Core.Entities
     public class RoleUrl
     {
         public string PageName { get; set; }
+        public string PageNameClass { get; set; }
         public string PageUrl { get; set; }
+        public string PageUrlClass { get; set; }
+
     }
 
     public class BackOfficeRole
@@ -44,6 +48,10 @@ namespace Resqu.Core.Entities
 
 
         public string PageName { get; set; }
+        public string PageNameClass { get; set; }
         public string PageUrl { get; set; }
+        public string PageUrlClass { get; set; }
+
+
     }
 }

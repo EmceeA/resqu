@@ -68,3 +68,6 @@ C:\Users\HFET\source\repos\Resqu.API\Resqu.API\obj\Debug\net5.0\Resqu.API.dll
 C:\Users\HFET\source\repos\Resqu.API\Resqu.API\obj\Debug\net5.0\ref\Resqu.API.dll
 C:\Users\HFET\source\repos\Resqu.API\Resqu.API\obj\Debug\net5.0\Resqu.API.pdb
 C:\Users\HFET\source\repos\Resqu.API\Resqu.API\obj\Debug\net5.0\Resqu.API.genruntimeconfig.cache
+C:\Users\HFET\source\repos\Resqu.API\Resqu.API\bin\Debug\net5.0\Microsoft.AspNetCore.Http.Features.dll
+C:\Users\HFET\source\repos\Resqu.API\Resqu.API\bin\Debug\net5.0\Microsoft.Extensions.Primitives.dll
+C:\Users\HFET\source\repos\Resqu.API\Resqu.API\bin\Debug\net5.0\System.IO.Pipelines.dll

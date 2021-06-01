@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -15,11 +16,13 @@ namespace Resq.Web.Controllers
     public class BackOfficeController : Controller
     {
         private readonly ResquContext _context;
+        //private readonly IHttpContextAccessor _http;
         private IBackOffice _back;
         public BackOfficeController(ResquContext context, IBackOffice back)
         {
             _context = context;
             _back = back;
+            //_http = http;
         }
 
         // GET: BackOffice
@@ -27,7 +30,15 @@ namespace Resq.Web.Controllers
         {
             return View(await _context.Transactions.ToListAsync());
         }
+
+        public async Task<IActionResult> Logout()
+        {
+            HttpContext.Session.Clear();
+            return RedirectToAction("Login");
+        }
        
+
+
 
         [HttpGet]
 
@@ -39,9 +50,32 @@ namespace Resq.Web.Controllers
         [HttpPost]
         public async Task<IActionResult> Login(UserLoginDto loginDto)
         {
+            
+            if (!ModelState.IsValid)
+            {
+                return View();
+            }
             var result = await _back.Login(loginDto);
+            if (result.Status == false && result.Response == "User does not exist")
+            {
+                ViewBag.Message = result.Response;
+                return View("Login");
+            }
+
+            if (result.Status == false && result.Response == "Username or password is not correct")
+            {
+                ViewBag.Message = result.Response;
+                return View("Login");
+            }
             if (result.Status == true)
             {
+                HttpContext.Session.SetString("firstName", result.FirstName);
+                HttpContext.Session.SetString("lastName", result.LastName);
+                HttpContext.Session.SetString("role", result.RoleName);
+                HttpContext.Session.SetString("userName", result.UserName);
+                HttpContext.Session.SetString("phone", result.Phone);
+                HttpContext.Session.SetString("email", result.Email);
+                HttpContext.Session.SetString("roleId", result.RoleId.ToString());
                 return RedirectToAction("BackOfficeDashboard");
             }
             return RedirectToAction("Login");
@@ -63,6 +97,10 @@ namespace Resq.Web.Controllers
 
         public ActionResult BackOfficeDashboard()
         {
+            if (HttpContext.Session.GetString("userName") == null)
+            {
+                return RedirectToAction("Login");
+            }
             ViewBag.ServiceCategory = _context.Expertises.ToList().Count();
             ViewBag.ServiceSubCategory = _context.ExpertiseCategories.ToList().Count();
             ViewBag.Vendors = _context.Vendors.Where(d => d.IsBan == false && d.IsDeleted == false).ToList().Count();
@@ -137,7 +175,12 @@ namespace Resq.Web.Controllers
                 availableServiceDetails.Add(available);
             }
             ViewBag.AvailableService = availableServiceDetails.ToList();
-
+            ViewBag.UserName = HttpContext.Session.GetString("userName");
+            ViewBag.FirstName = HttpContext.Session.GetString("firstName");
+            ViewBag.LastName = HttpContext.Session.GetString("lastName");
+            ViewBag.Role = HttpContext.Session.GetString("role");
+            ViewBag.Phone = HttpContext.Session.GetString("phone");
+            ViewBag.Email = HttpContext.Session.GetString("email");
             var vendorList = _context.Vendors.ToList();
             var topVendorList = new List<TopVendor>();
             foreach (var vendo in vendorList)
@@ -179,6 +222,14 @@ namespace Resq.Web.Controllers
 
             //    }
             //};
+            string roleId = HttpContext.Session.GetString("roleId");
+            ViewBag.PageUrls = _context.BackOfficeRoles.Where(b => b.RoleName == HttpContext.Session.GetString("role")).Select(p => new Resqu.Core.Entities.RoleUrl
+            {
+                PageName = p.PageName,
+                PageUrl = p.PageUrl,
+                PageNameClass = p.PageNameClass,
+                PageUrlClass = p.PageUrlClass
+            }).ToList();
 
             ViewBag.TodaysDate = DateTime.Now.ToString("dd MMM yyyy");
             ViewBag.TotalAmountEarned = _context.Transactions.Select(c => c.PlatformCharge).ToList().Sum();
