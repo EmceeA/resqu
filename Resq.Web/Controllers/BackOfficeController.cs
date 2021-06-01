@@ -95,6 +95,11 @@ namespace Resq.Web.Controllers
             return View();
         }
 
+        [HttpGet]
+        public IActionResult EmptyService()
+        {
+            return View();
+        }
         public ActionResult BackOfficeDashboard()
         {
             if (HttpContext.Session.GetString("userName") == null)
@@ -228,7 +233,9 @@ namespace Resq.Web.Controllers
                 PageName = p.PageName,
                 PageUrl = p.PageUrl,
                 PageNameClass = p.PageNameClass,
-                PageUrlClass = p.PageUrlClass
+                PageUrlClass = p.PageUrlClass,
+                ActionName = p.ActionName,
+                ControllerName = p.ControllerName
             }).ToList();
 
             ViewBag.TodaysDate = DateTime.Now.ToString("dd MMM yyyy");
@@ -258,6 +265,10 @@ namespace Resq.Web.Controllers
             ViewBag.Services = serviceList;
 
             ViewBag.ServiceCount = serviceList.Count();
+            if (serviceList.Count == 0)
+            {
+                return RedirectToAction("EmptyService");
+            }
             return View();
         }
         // GET: BackOffice/Details/5

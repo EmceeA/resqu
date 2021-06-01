@@ -35,6 +35,8 @@ namespace Resqu.Core.Entities
         public string PageNameClass { get; set; }
         public string PageUrl { get; set; }
         public string PageUrlClass { get; set; }
+        public string ControllerName { get; set; }
+        public string ActionName { get; set; }
 
     }
 
@@ -47,7 +49,10 @@ namespace Resqu.Core.Entities
         public string RoleName { get; set; }
 
 
+
         public string PageName { get; set; }
+        public string ControllerName { get; set; }
+        public string ActionName { get; set; }
         public string PageNameClass { get; set; }
         public string PageUrl { get; set; }
         public string PageUrlClass { get; set; }

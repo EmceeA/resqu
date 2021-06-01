@@ -277,7 +277,9 @@ namespace Resqu.Core.Services
                             PageName = e.PageName,
                             PageUrl = e.PageUrl,
                             PageNameClass = e.PageNameClass,
-                            PageUrlClass = e.PageUrlClass
+                            PageUrlClass = e.PageUrlClass,
+                            ActionName = e.ActionName,
+                            ControllerName = e.ControllerName
                         }).ToList();
                         return new UserLoginResponse 
                         { 

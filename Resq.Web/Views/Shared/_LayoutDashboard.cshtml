@@ -56,9 +56,12 @@
                         @foreach (RoleUrl item in ViewBag.PageUrls)
                         {
                         <li class="has-sub">
-                            <a class="@item.PageUrlClass" href="@item.PageUrl">
-                                <i class="@item.PageName"></i>@item.PageName
+                            <a asp-action="@item.ActionName" asp-controller="@item.ControllerName" class="@item.PageUrlClass">
+                            <i class="@item.PageName"></i>@item.PageName
                             </a>
+                            @*<a class="@item.PageUrlClass" href="@item.PageUrl">
+                                <i class="@item.PageName"></i>@item.PageName
+                            </a>*@
                         </li>
                         }
                         @*<li class="has-sub">
@@ -124,13 +127,15 @@
                         @foreach (RoleUrl item in ViewBag.PageUrls)
                         {
                         <li class="has-sub">
-                            <a class="@item.PageUrlClass" href="@item.PageUrl">
-                                <i data-feather="Dashboard" class="@item.PageNameClass"></i>@item.PageName
+                            <a asp-action="@item.ActionName" asp-controller="@item.ControllerName" class="@item.PageUrlClass">
+                                <i class="@item.PageName"></i>@item.PageName
                             </a>
-                            <a class="" href="">
-                                <i class=""></i>
-                            </a>
+                            @*<a class="@item.PageUrlClass" href="@item.PageUrl">
+            <i data-feather="Dashboard" class="@item.PageNameClass"></i>@item.PageName
+        </a>*@
                         </li>
+                        <br />
+
                         }
                         @*<li class="active mt-2 mb-3">
                             <a class="js-arrow" href="../../BackOffice/BackOfficeDashboard">

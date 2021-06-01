@@ -78,7 +78,7 @@ namespace Resq.Web
             {
                 endpoints.MapControllerRoute(
                     name: "default",
-                    pattern: "{controller=BackOffice}/{action=Login}/{id?}");
+                    pattern: "{controller=BackOffice}/{action=EmptyService}/{id?}");
                 endpoints.MapRazorPages();
             });
         }
