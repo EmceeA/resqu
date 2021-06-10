@@ -57,7 +57,7 @@
                         {
                         <li class="has-sub">
                             <a asp-action="@item.ActionName" asp-controller="@item.ControllerName" class="@item.PageUrlClass">
-                            <i class="@item.PageName"></i>@item.PageName
+                            <i class="@item.PageNameClass"></i>@item.PageName
                             </a>
                             @*<a class="@item.PageUrlClass" href="@item.PageUrl">
                                 <i class="@item.PageName"></i>@item.PageName
@@ -122,13 +122,13 @@
                 </button>
             </div>
             <div class="menu-sidebar__content js-scrollbar1">
-                <nav class="navbar-sidebar">
+                <nav class="navbar-sidebar"> 
                     <ul class="list-unstyled navbar__list">
                         @foreach (RoleUrl item in ViewBag.PageUrls)
                         {
                         <li class="has-sub">
                             <a asp-action="@item.ActionName" asp-controller="@item.ControllerName" class="@item.PageUrlClass">
-                                <i class="@item.PageName"></i>@item.PageName
+                                <i class="@item.PageNameClass"></i>@item.PageName
                             </a>
                             @*<a class="@item.PageUrlClass" href="@item.PageUrl">
             <i data-feather="Dashboard" class="@item.PageNameClass"></i>@item.PageName
@@ -170,9 +170,9 @@
                         <li class="log-out-btn mb-3">
                             <div class="p-4 profile-settings">
                                 <div class="d-flex align-items-center">
-                                    <img src="~/dashboard/assets/images/profileImg.svg" class="img-fluid" alt="">
+                                    <img src="~/images/@ViewBag.ProfileImage"   width="52" height="52" class="img-fluid" alt="" style="border-radius:50px">
                                     <div class="px-2">
-                                        <p class="font-sm3">Tolulope Olaleru</p>
+                                        <p class="font-sm3">@ViewBag.FirstName @ViewBag.LastName</p>
                                         <a href="#" class="font-sm3 text-light">Profile settings</a>
                                     </div>
                                 </div>

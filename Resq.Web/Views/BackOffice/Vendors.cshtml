@@ -1,0 +1,129 @@
+﻿@using Resq.Web.ViewModels
+
+@{
+    ViewData["Title"] = "Vendors";
+    Layout = "~/Views/Shared/_LayoutServices.cshtml";
+}
+<div class="main-content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-lg-12 mt-4">
+                <h4>Services</h4>
+            </div>
+        </div>
+        <div class="row mt-4">
+            <div class="col-lg-12">
+                <div class="bg-white add-service-div p-4">
+                    <div class="row align-items-center justify-content-between">
+                        <div class="col-lg-4 col-xl-3">
+                            <div class="row align-items-center">
+                                <div class="col-lg-3">
+                                    <h6>Filter:</h6>
+                                </div>
+                                <div class="col-lg-6 col-xl-5 px-0">
+                                    <div class="form-group mb-0">
+                                        <select class="filter-field"></select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-3">
+                            <h4 class="text-center">TOTAL: @ViewBag.Vendors.Count</h4>
+                        </div>
+                        <div class="col-lg-5 col-xl-5">
+                            <div class="row">
+                                <div class="col-lg-8">
+                                    <input type="text" class="input-field-search">
+                                </div>
+                                <div class="col-lg-4">
+                                    <button class="btn btn-search">Search</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mt-4">
+            <div class="col-lg-12">
+                <div class="bg-white add-service-div py-5 mb-5" style="height:73vh">
+                    <div class="table-responsive">
+                        <table class="table table-vendors">
+                            <thead>
+                                <tr>
+                                    <th>S/N</th>
+                                    <th>Vendor’s Name</th>
+                                    <th>Service Category</th>
+                                    <th>Gender</th>
+                                    <th>Phone Number</th>
+                                    <th>Email Address</th>
+                                    <th>Completed Requests</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (VendorsViewModel item in ViewBag.Vendors)
+                                {
+
+                                <tr>
+                                    <td>S/N
+                                    </td>
+                                    <td>@item.VendorName</td>
+                                    <td>@item.ServiceCategory</td>
+                                    <td>@item.Gender</td>
+                                    <td>@item.PhoneNumber</td>
+                                    <td>@item.EmailAddress</td>
+                                    <td>@item.CompletedRequest</td>
+                                    <td><a asp-action="VendorDetails" asp-controller="BackOffice" asp-route-id=@item.Id>View details</a></td>
+                                </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

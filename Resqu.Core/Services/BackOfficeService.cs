@@ -1,9 +1,11 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
 using Resqu.Core.Dto;
 using Resqu.Core.Entities;
 using Resqu.Core.Interface;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -12,7 +14,7 @@ namespace Resqu.Core.Services
     public class BackOfficeService : IBackOffice
     {
         private readonly ResquContext _context;
-
+       
         public BackOfficeService(ResquContext context)
         {
             _context = context;
@@ -26,7 +28,7 @@ namespace Resqu.Core.Services
                 {
                     Message = "The Customer does not Exist",
                     Status = false
-                };
+                };  
             }
             if (customer.IsBan == true)
             {
@@ -241,10 +243,7 @@ namespace Resqu.Core.Services
             
         }
 
-        public Task<UpdateCustomerResponseDto> AddVendor()
-        {
-            throw new NotImplementedException();
-        }
+        
 
         public async Task<UserLoginResponse> Login(UserLoginDto loginDto)
         {
@@ -311,6 +310,43 @@ namespace Resqu.Core.Services
                 throw;
             }
             
+        }
+
+        public async Task<UpdateCustomerResponseDto> AddService(ExpertiseDto expertiseDto)
+        {
+            try
+            {
+                var expert = new Expertise
+                {
+                    
+                    Cost = expertiseDto.Cost,
+                    Description = expertiseDto.Description,
+                    Name = _context.Expertises.Where(d=>d.Id == expertiseDto.ExpertiseId).Select(e=>e.Name).FirstOrDefault(),
+                    DateCreated = DateTime.Now,
+                    ExpertiseCategoryId = expertiseDto.ExpertiseCategoryId,
+                };
+                _context.Expertises.Add(expert);
+                await _context.SaveChangesAsync();
+                return new UpdateCustomerResponseDto
+                {
+                    Message = "Successful",
+                    Status = true
+                };
+            }
+            catch (Exception ex)
+            {
+                return new UpdateCustomerResponseDto
+                {
+                    Message = $"Error, {ex.Message}, {ex.StackTrace}",
+                    Status = true
+                };
+            }
+           
+        }
+
+        public Task<UpdateCustomerResponseDto> AddVendor(AddVendorDto addVendorDto)
+        {
+            throw new NotImplementedException();
         }
     }
 }

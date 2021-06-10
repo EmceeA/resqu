@@ -4,7 +4,7 @@
     Layout = "~/Views/Shared/_LayoutServices.cshtml";
 }
 
-<div class="page-container">
+
     <!-- MAIN CONTENT-->
     <div class="main-content">
         <div class="container-fluid">
@@ -24,17 +24,18 @@
                                 <div class="col-lg-6 mt-4">
                                     <div class="form-group">
                                         <label for="Service-name">Name of Service <span class="text-danger">*</span></label>
-                                        <input type="text" asp-for="ExpertiseName" class="input-field" placeholder="Enter the name of the service to be added">
+                                        <select type="text" asp-items="@ViewBag.ServiceName" asp-for="ExpertiseId" placeholder="Enter the name of the service" class="form-control"></select>
+                                        @*<input type="text" asp-for="ExpertiseName" class="input-field" asp-items="ViewBag.ExpertiseId" placeholder="Enter the name of the service to be added">*@
                                     </div>
                                     <div class="form-group">
                                         <label for="sub-categories">Does this service include sub-categories? <span class="text-danger">*</span></label>
                                         <div class="row">
                                             <p class="col-lg-3 col-xl-2">
-                                                <input type="radio" id="yes" name="radio-group" value="sub-category-1">
+                                                <input type="radio" id="test1" name="radio-group" value="sub-category-1">
                                                 <label for="test1">Yes</label>
                                             </p>
                                             <p class="col-lg-3 col-xl-2">
-                                                <input type="radio" id="no" name="radio-group" value="cost-of-service">
+                                                <input type="radio" id="test2" name="radio-group" value="cost-of-service">
                                                 <label for="test2">No</label>
                                             </p>
                                         </div>
@@ -43,14 +44,15 @@
                                         <div class="col-lg-6">
                                             <div class="form-group">
                                                 <label for="sub-categories-1">Add Sub-category 1 <span class="text-danger">*</span></label>
-                                                <input type="text" class="input-field" placeholder="Enter the name of the sub-category to be added">
+                                                <select type="text" asp-items="ViewBag.ExpertiseId" asp-for="ExpertiseCategoryId" placeholder="Enter the name of the sub-category to be added" class="form-control"></select>
+                                                @*<input type="text" class="input-field" placeholder="Enter the name of the sub-category to be added">*@
                                             </div>
                                             <a href="#">+Add More Sub-category</a>
                                         </div>
                                         <div class="col-lg-6">
                                             <div class="form-group">
                                                 <label for="sub-categories-1">Enter Cost of Service <span class="text-danger">*</span></label>
-                                                <input type="text" class="input-field">
+                                                <input type="text" asp-for="Cost" class="form-control">
                                             </div>
                                         </div>
                                     </div>
@@ -83,4 +85,3 @@
     </div>
     <!-- END MAIN CONTENT-->
     <!-- END PAGE CONTAINER-->
-    </div>

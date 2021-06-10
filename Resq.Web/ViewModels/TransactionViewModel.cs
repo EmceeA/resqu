@@ -16,6 +16,18 @@ namespace Resq.Web.ViewModels
     }
 
 
+    public class VendorsViewModel
+    {
+        public int Id { get; set; }
+        public string VendorName { get; set; }
+        public string ServiceCategory { get; set; }
+        public string Gender { get; set; }
+        public string PhoneNumber { get; set; }
+        public string EmailAddress { get; set; }
+        public string CompletedRequest { get; set; }
+    }
+
+
     public class AvailableServiceViewModel
     {
         public string ServiceName { get; set; }
@@ -43,10 +55,19 @@ namespace Resq.Web.ViewModels
         public int CompletedRequest { get; set; }
     }
 
-    public class Service
-    {
+    public class Service : IEquatable<Service>
+    { 
         public string ServiceType { get; set; }
         public int SubCategory { get; set; }
+
+        public bool Equals(Service other)
+        {
+            return this.ServiceType.Equals(other.ServiceType);
+        }
+        public override int GetHashCode()
+        {
+            return this.ServiceType.GetHashCode();
+        }
     }
 
 

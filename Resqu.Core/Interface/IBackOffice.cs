@@ -22,7 +22,8 @@ namespace Resqu.Core.Interface
         Task<UpdateCustomerResponseDto> AddExpertise(ExpertiseDto expertise);
         Task<UpdateCustomerResponseDto> AddExpertiseCategory(ExpertiseCategoryDto expertise);
 
-        Task<UpdateCustomerResponseDto> AddVendor();
+        Task<UpdateCustomerResponseDto> AddVendor(AddVendorDto addVendorDto);
+        Task<UpdateCustomerResponseDto> AddService(ExpertiseDto expertiseDto);
 
         Task<UserLoginResponse> Login(UserLoginDto loginDto);
 

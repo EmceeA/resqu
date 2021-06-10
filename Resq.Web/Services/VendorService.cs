@@ -24,6 +24,7 @@ namespace Resq.Web.Services
             var uploadedImage = UploadImage(createVendor);
             Vendor employee = new Vendor
             {
+                ExpertiseId = createVendor.ServiceName,
                 FirstName = createVendor.FirstName,
                 LastName = createVendor.LastName,
                 EmailAddress = createVendor.EmailAddress,
@@ -33,7 +34,7 @@ namespace Resq.Web.Services
                 IdentificationNumber = createVendor.IdentificationNumber,
                 VendorPicture = uploadedImage,
                 NextOfKinPhone = createVendor.NextOfKinPhone,
-                PhoneNumber = createVendor.PhoneNumber,
+                PhoneNumber = createVendor.PhoneNo,
                 MeansOfIdentification = createVendor.MeansOfIdentification,
                 NextOfKinName = createVendor.NextOfKinName,
                 PhoneNo = createVendor.PhoneNo,
@@ -47,21 +48,24 @@ namespace Resq.Web.Services
                 isVerified = false,
                 CreatedBy ="user",
                 Pin = "1234",
+                
             };
-            var getExistingVendor = _context.Vendors.Where(c => c.FirstName == employee.FirstName && c.FirstName == employee.FirstName && c.MiddleName == employee.MiddleName && c.ExpertiseId == employee.ExpertiseId).Any();
+            var getExistingVendor = _context.Vendors.Where(c => c.FirstName == employee.FirstName && c.LastName == employee.LastName &&c.CompanyName == employee.CompanyName && c.MiddleName == employee.MiddleName && c.ExpertiseId == employee.ExpertiseId).Any();
             if (!getExistingVendor)
             {
                 _context.Vendors.Add(employee);
                 _context.SaveChanges();
                 return "Successfully Saved";
             }
-            return "Vendor Already Exist in this Service Category";
+            return "This Vendor Already Exist in this Service Category";
         }
 
         public string GenerateCode()
         {
             return "1234566";
         }
+
+
 
         public string UploadImage(CreateVendorViewModel createVendor)
         {

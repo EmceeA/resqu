@@ -518,6 +518,9 @@ namespace Resqu.Core.Migrations
                     b.Property<string>("FirstName")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("Gender")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("IdentificationNumber")
                         .HasColumnType("nvarchar(max)");
 

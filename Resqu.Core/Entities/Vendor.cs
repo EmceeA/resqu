@@ -8,6 +8,7 @@
         public string MiddleName { get; set; }
         public string LastName { get; set; }
         public string CompanyName { get; set; }
+        public string Gender { get; set; }
         public string PhoneNo { get; set; }
         public string EmailAddress { get; set; }
         public string IdentificationNumber { get; set; }

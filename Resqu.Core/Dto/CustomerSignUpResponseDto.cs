@@ -150,7 +150,33 @@ namespace Resqu.Core.Dto
 
     }
 
+    public class AddVendorDto
+    {
+        [Required]
+        public int? VendorService { get; set; }
+        [Required]
+        public string FirstName { get; set; }
+        [Required]
+        public string LastName { get; set; }
 
+        public IFormFile Passport { get; set; }
+       
+        public string MiddleName { get; set; }
+        [Required]
+        public string Phone { get; set; }
+        [Required]
+        public string Email { get; set; }
+        [Required]
+        public string ContactAddress { get; set; }
+        public string MeansOfIdentification { get; set; }
+        public string IdentificationNo { get; set; }
+        [Required]
+        public string NextOfKinFullName { get; set; }
+        [Required]
+        public string NextOfKinPhone { get; set; }
+        [Required]  
+        public string NextOfKinAddress { get; set; }
+    }
 
     //public string Name { get; set; }
 
@@ -163,6 +189,7 @@ namespace Resqu.Core.Dto
         public string Description { get; set; }
         public decimal Cost { get; set; }
         public int? ExpertiseCategoryId { get; set; }
+        public int? ExpertiseId { get; set; }
     }
     public class CustomerListDto
     {

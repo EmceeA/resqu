@@ -1,4 +1,5 @@
-﻿<!DOCTYPE html>
+﻿@using Resqu.Core.Entities
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -9,7 +10,7 @@
     <meta name="keywords" content="investyield, savings, investment, financial savings, investment opportunities">
 
     <!-- Title Page-->
-    <title>Dashboard</title>
+    <title>@ViewBag.Title</title>
 
     <!-- Fontfaces CSS-->
     <link rel="preconnect" href="https://fonts.gstatic.com">
@@ -28,6 +29,13 @@
 
     <!-- Main CSS-->
     <link href="~/dashboard/assets/css/style.css" rel="stylesheet" media="all">
+    <style>
+        .log-out-btn {
+            position: absolute;
+            bottom: 25%;
+            width: 100%;
+        }
+    </style>
 
 </head>
 
@@ -52,36 +60,18 @@
             <nav class="navbar-mobile">
                 <div class="container-fluid">
                     <ul class="navbar-mobile__list list-unstyled">
-                        <li class="has-sub">
-                            <a class="dashboard" href="#">
-                                <i class="fas fa-dashboard"></i>Dashboard
-                            </a>
-                        </li>
-                        <li>
-                            <a href="services.html">
-                                <i class="fas fa-services"></i>Services
-                            </a>
-                        </li>
-                        <li>
-                            <a href="vendors.html">
-                                <i class="fas fa-vendors"></i>Vendors
-                            </a>
-                        </li>
-                        <li>
-                            <a href="customers.html">
-                                <i class="far fa-customers"></i>Customers
-                            </a>
-                        </li>
-                        <li>
-                            <a href="transaction.html">
-                                <i class="fas fa-transactions"></i>Transactions
-                            </a>
-                        </li>
-                        <li>
-                            <a href="wallet.html">
-                                <i class="fas fa-wallet"></i>Wallet
-                            </a>
-                        </li>
+                        @foreach (RoleUrl item in ViewBag.ServicePageUrls)
+                        {
+            <li class="has-sub">
+                <a asp-action="@item.ActionName" asp-controller="@item.ControllerName" class="@item.PageUrlClass">
+                    <i class="@item.PageName"></i>@item.PageName
+                </a>
+                @*<a class="@item.PageUrlClass" href="@item.PageUrl">
+                    <i data-feather="Dashboard" class="@item.PageNameClass"></i>@item.PageName
+                </a>*@
+            </li>
+                            <br />
+}
                     </ul>
                 </div>
             </nav>
@@ -112,42 +102,24 @@
             <div class="menu-sidebar__content js-scrollbar1">
                 <nav class="navbar-sidebar">
                     <ul class="list-unstyled navbar__list">
-                        <li class="mt-2 mb-3">
-                            <a class="js-arrow" href="#">
-                                <i data-feather="Dashboard" class="mr-3"></i>Dashboard
-                            </a>
-                        </li>
-                        <li class="active has-sub mb-3">
-                            <a class="js-arrow" href="#">
-                                <i data-feather="shield" class="mr-3"></i>Services
-                            </a>
-                        </li>
-                        <li class="has-sub mb-3">
-                            <a class="js-arrow" href="#">
-                                <i data-feather="activity" class="mr-3"></i>Vendors
-                            </a>
-                        </li>
-                        <li class="has-sub mb-3">
-                            <a class="js-arrow" href="#">
-                                <i data-feather="file" class="mr-3"></i>Customers
-                            </a>
-                        </li>
-                        <li class="has-sub mb-3">
-                            <a class="js-arrow" href="#">
-                                <i data-feather="user" class="mr-3"></i>Transactions
-                            </a>
-                        </li>
-                        <li class="has-sub mb-3">
-                            <a class="js-arrow" href="#">
-                                <i data-feather="log-out" class="mr-3"></i>Wallet
-                            </a>
-                        </li>
+                        @foreach (RoleUrl item in ViewBag.ServicePageUrls)
+                        {
+            <li class="has-sub">
+                <a asp-action="@item.ActionName" asp-controller="@item.ControllerName" class="@item.PageUrlClass">
+                    <i class="@item.PageName"></i>@item.PageName
+                </a>
+                @*<a class="@item.PageUrlClass" href="@item.PageUrl">
+                    <i data-feather="Dashboard" class="@item.PageNameClass"></i>@item.PageName
+                </a>*@
+            </li>
+                            <br />
+}
                         <li class="log-out-btn mb-3">
                             <div class="p-4 profile-settings">
                                 <div class="d-flex align-items-center">
-                                    <img src="~/dashboard/assets/images/profileImg.svg" class="img-fluid" alt="">
+                                    <img src="~/images/@ViewBag.ProfilePicture" class="img-fluid" alt="" width="52" height="52" style="border-radius:50px">
                                     <div class="px-2">
-                                        <p class="font-sm3">Tolulope Olaleru</p>
+                                        <p class="font-sm3">@ViewBag.FullName</p>
                                         <a href="#" class="font-sm3 text-light">Profile settings</a>
                                     </div>
                                 </div>
@@ -163,7 +135,7 @@
             @RenderBody()
         </div>
 
-        @*<script src="https://unpkg.com/feather-icons"></script>*@
+        
         <!-- Jquery JS-->
         <script src="~/dashboard/assets/vendor/jquery-3.2.1.min.js"></script>
         <!-- Bootstrap JS-->
@@ -189,9 +161,11 @@
         <script src="~/dashboard/assets/js/trigger.js"></script>
 
         <script>feather.replace()</script>
-
         <script>
-    $(document).ready(function () {
+            $('#openFileUpload').click(function () { $('#fileUpload').trigger('click'); });
+        </script>
+        <script>
+            $(document).ready(function () {
                 $('input[type="radio"]').click(function () {
                     var inputValue = $(this).attr("value");
                     var targetBox = $("." + inputValue);
@@ -203,6 +177,24 @@
                     $(targetBox).style.display = "flex";
                 });
             });</script>
+
+        <script>
+            $('.modal-auto-clear').on('shown.bs.modal', function (e) {
+                console.log(e.target)
+                //debugger;
+                //$("#cancel").click(function () {
+                //    console.log("cancelled");
+                //});  
+
+                //$("#confirm").click(function () {
+                //    console.log("confirmed");
+                //}); 
+               
+                $(this).delay(1000).fadeOut(200, function () {
+                    $(this).modal('hide');
+                });
+            })
+        </script>
 
 </body>
 
