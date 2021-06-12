@@ -13,6 +13,13 @@ namespace Resqu.Core.Interface
         Task<UpdateCustomerResponseDto> ActivateCustomerProfile(UpdateCustomerRequestDto requestDto);
         bool DebitCredit(decimal backOfficeCost, decimal vendorCost, string backOfficeWallet, string destinationWallet, string sourceWallet, decimal totalAmount);
         Task<ServiceDto> BookService(ServiceDto service);
+
+
+        Task<DedicatedAccountResponse> CreateCustomerAccount(DedicatedAccountRequest request);
+        Task<DedicatedNubanAccountResponse> CreateDedicatedNubanAccount(DedicatedNubanAccountRequest request);
+        Task<TransferToWalletResponseDto> TransferToWallet(TransferToWalletRequestDto transfer);
+        Task<WalletBalanceResponseDto> GetWalletBalance(WalletBalanceRequestDto walletBalance);
+        Task<PayoutResponseDto> PayOut(PayoutRequestDto payout);
         Task<EndServiceDto> EndService(string bookingId,string paymentType);
         Task<MakePaymentResponse> MakeCashPayment(string bookingId, string paymentType);
         Task<MakePaymentResponse> MakeCardPayment(string bookingId, string paymentType, MakeCardRequest cardRequest);

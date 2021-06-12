@@ -62,6 +62,145 @@ namespace Resqu.Core.Dto
         public string Pin { get; set; }
     }
 
+    public class TransferToWalletRequestDto
+    {
+        public string SourceWallet { get; set; }
+        public string DestinationWallet { get; set; }
+        public decimal Amount { get; set; }
+    }
+
+    public class WalletBalanceRequestDto
+    {
+        public string WalletNo { get; set; }
+        public string PhoneNo { get; set; }
+        public string Pin { get; set; }
+
+    }
+
+    public class PayoutRequestDto
+    {
+        public string BankName { get; set; }
+        public string BankCode { get; set; }
+        public decimal Amount { get; set; }
+        public string AccountNo { get; set; }
+        public decimal Pin { get; set; }
+        public string Phone { get; set; }
+
+    }
+    public class PayoutResponseDto
+    {
+        public string Response { get; set; }
+        public bool Status { get; set; }
+    }
+
+    public class WalletBalanceResponseDto
+    {
+        public string WalletNo { get; set; }
+        public string FullName { get; set; }
+        public string UserId { get; set; }
+        public decimal Balance { get; set; }
+        public string Response { get; set; }
+        public bool Status { get; set; }
+
+
+    }
+    public class TransferToWalletResponseDto
+    {
+        public string Response { get; set; }
+        public bool Status { get; set; }
+    }
+    // Root myDeserializedClass = JsonConvert.DeserializeObject<Root>(myJsonResponse); 
+    public class DedicatedAccountData
+    {
+        public List<object> transactions { get; set; }
+        public List<object> subscriptions { get; set; }
+        public List<object> authorizations { get; set; }
+        public string email { get; set; }
+        public int integration { get; set; }
+        public string domain { get; set; }
+        public string customer_code { get; set; }
+        public string risk_action { get; set; }
+        public int id { get; set; }
+        public DateTime createdAt { get; set; }
+        public DateTime updatedAt { get; set; }
+        public bool identified { get; set; }
+        public object identifications { get; set; }
+    }
+
+    public class DedicatedAccountResponse
+    {
+        public bool status { get; set; }
+        public string message { get; set; }
+        public DedicatedAccountData data { get; set; }
+    }
+
+
+    public class DedicatedAccountRequest
+    {
+        public string Email { get; set; }
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
+    }
+
+    // Root myDeserializedClass = JsonConvert.DeserializeObject<Root>(myJsonResponse); 
+    public class Bank
+    {
+        public string name { get; set; }
+        public int id { get; set; }
+        public string slug { get; set; }
+    }
+
+    public class Assignment
+    {
+        public int integration { get; set; }
+        public int assignee_id { get; set; }
+        public string assignee_type { get; set; }
+        public bool expired { get; set; }
+        public string account_type { get; set; }
+        public DateTime assigned_at { get; set; }
+    }
+
+    public class Customer
+    {
+        public int id { get; set; }
+        public string first_name { get; set; }
+        public string last_name { get; set; }
+        public string email { get; set; }
+        public string customer_code { get; set; }
+        public string phone { get; set; }
+        public string risk_action { get; set; }
+    }
+
+    public class DedicatedNubanAccount
+    {
+        public Bank bank { get; set; }
+        public string account_name { get; set; }
+        public string account_number { get; set; }
+        public bool assigned { get; set; }
+        public string currency { get; set; }
+        public object metadata { get; set; }
+        public bool active { get; set; }
+        public int id { get; set; }
+        public DateTime created_at { get; set; }
+        public DateTime updated_at { get; set; }
+        public Assignment assignment { get; set; }
+        public Customer customer { get; set; }
+    }
+
+    public class DedicatedNubanAccountResponse
+    {
+        public bool status { get; set; }
+        public string message { get; set; }
+        public DedicatedNubanAccount data { get; set; }
+    }
+
+
+
+    public class DedicatedNubanAccountRequest
+    {
+        public string bankName { get; set; }
+        public int customer { get; set; }
+    }
     public class ServiceDto
     {
         public int ServiceId { get; set; }

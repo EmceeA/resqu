@@ -1,9 +1,11 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using Newtonsoft.Json;
 using Resqu.Core.Constants;
 using Resqu.Core.Dto;
 using Resqu.Core.Entities;
 using Resqu.Core.Interface;
+using RestSharp;
 using Serilog;
 using System;
 using System.Collections.Generic;
@@ -129,26 +131,48 @@ namespace Resqu.Core.Services
                 //var getOtp = await _otp.SendOtp(new SendOtpRequestDto { MobileNumber = signUpModel.PhoneNumber });
 
                 var getOtpByNumber = await _context.Otps.Where(d => d.Phone == signUpModel.PhoneNumber).Select(c => c.OtpNumber).FirstOrDefaultAsync();
-
-                if (getOtpByNumber != null && getOtpByNumber == signUpModel.Otp)
+                var createDedicatedAccount = await CreateCustomerAccount(new DedicatedAccountRequest
                 {
-                    await _context.Customers.AddAsync(new Customer
+                    Email = signUpModel.Email,
+                    FirstName = signUpModel.FirstName,
+                    LastName = signUpModel.LastName
+                });
+                if (createDedicatedAccount.message != "Customer created" && createDedicatedAccount.status != true)
+                {
+                    return new CustomerSignUpResponseDto
                     {
-                        FirstName = signUpModel.FirstName,
-                        LastName = signUpModel.LastName,
-                        PhoneNumber = signUpModel.PhoneNumber,
-                        Pin = EncodePin(signUpModel.Pin),
-                        DateCreated = DateTime.Now 
-                    });
-                    await _context.SaveChangesAsync();
-                   return new CustomerSignUpResponseDto
-                    {
-                       FirstName = signUpModel.FirstName,
-                       LastName = signUpModel.LastName,
-                       PhoneNumber = signUpModel.PhoneNumber,
-                       Status = "Success"
+                        Status = "Customer Profile Was not Created on Paystack"
                     };
                 }
+                if (createDedicatedAccount.message == "Customer created" && createDedicatedAccount.status == true)
+                {
+
+                    if (getOtpByNumber != null && getOtpByNumber == signUpModel.Otp)
+                    {
+                        await _context.Customers.AddAsync(new Resqu.Core.Entities.Customer
+                        {
+                            FirstName = signUpModel.FirstName,
+                            LastName = signUpModel.LastName,
+                            PhoneNumber = signUpModel.PhoneNumber,
+                            Pin = EncodePin(signUpModel.Pin),
+                            DateCreated = DateTime.Now,
+                            AccountId = createDedicatedAccount.data.id,
+                            EmailAddress = signUpModel.Email,
+                            IsCustomerCreated = true,
+                            IsDedicatedCreated = false
+                        });
+
+                        await _context.SaveChangesAsync();
+                        return new CustomerSignUpResponseDto
+                        {
+                            FirstName = signUpModel.FirstName,
+                            LastName = signUpModel.LastName,
+                            PhoneNumber = signUpModel.PhoneNumber,
+                            Status = "Success"
+                        };
+                    }
+                }
+                
                 //09064615283
                 return new CustomerSignUpResponseDto
                 {
@@ -489,6 +513,7 @@ namespace Resqu.Core.Services
             return true;
         }
 
+        
 
         public async Task<MakePaymentResponse> MakePayment(string bookingId)
         {
@@ -555,6 +580,97 @@ namespace Resqu.Core.Services
                 Reference = Guid.NewGuid().ToString()
             };
 
+        }
+
+        public async Task<TransferToWalletResponseDto> TransferToWallet(TransferToWalletRequestDto transfer)
+        {
+            var checkSourceWallet = await _context.Wallets.Where(e => e.WalletNo == transfer.SourceWallet).FirstOrDefaultAsync();
+            if (checkSourceWallet == null)
+            {
+                return new TransferToWalletResponseDto
+                {
+                    Response = "The Wallet is not Found, Kindly use the right wallet",
+                    Status = false
+                };
+            }
+
+            var checkDestinationWallet = await _context.Wallets.Where(d => d.WalletNo == transfer.DestinationWallet).FirstOrDefaultAsync();
+            if (checkDestinationWallet == null)
+            {
+                return new TransferToWalletResponseDto
+                {
+                    Response = "The Wallet is not Found, Kindly use the right wallet",
+                    Status = false
+                };
+            }
+
+            checkDestinationWallet.Balance = checkDestinationWallet.Balance - transfer.Amount;
+            checkSourceWallet.Balance = checkSourceWallet.Balance + transfer.Amount;
+
+            _context.SaveChanges();
+
+            return new TransferToWalletResponseDto
+            {
+                Response = $"A sum of {transfer.Amount} was Successfully Transfered from {transfer.DestinationWallet} to {transfer.SourceWallet}",
+                Status = true
+            };
+        }
+
+        public async Task<WalletBalanceResponseDto> GetWalletBalance(WalletBalanceRequestDto walletBalance)
+        {
+            var validatePin = await _context.Customers.Where(s => s.PhoneNumber == walletBalance.PhoneNo).SingleOrDefaultAsync();
+            if (validatePin.Pin != EncodePin(walletBalance.Pin))
+            {
+                return new WalletBalanceResponseDto
+                {
+                    Response = "Invalid Pin",
+                    Status = false
+                };
+            }
+
+            var balance = _context.Wallets.Where(c => c.UserId == validatePin.Id.ToString() && c.WalletNo == walletBalance.WalletNo).Select(e=>new WalletBalanceResponseDto { 
+            Balance = e.Balance,
+            FullName = validatePin.FirstName + " " + validatePin.LastName,
+            Response = "Success",
+            Status = true,
+            UserId = validatePin.Id.ToString(),
+            WalletNo = walletBalance.WalletNo
+            }).FirstOrDefault();
+            return balance;
+        }
+
+        public async Task<PayoutResponseDto> PayOut(PayoutRequestDto payout)
+        {
+
+            throw new NotImplementedException();
+        }
+
+        public async Task<DedicatedAccountResponse> CreateCustomerAccount(DedicatedAccountRequest request)
+        {
+            var client = new RestClient(_config.GetSection("WalletAPI:CreateAccount").Value);
+            var restRequest = new RestRequest(Method.POST);
+            restRequest.AddHeader("Authorization", $"Bearer {_config.GetSection("WalletAPI:SecretKey").Value}");
+            restRequest.AddHeader("Content-Type", "application/json");
+            restRequest.AddHeader("Cookie", "sails.sid=s%3ACtTz966NlJosAffqG13riHFNP8woUYuc.lrEQgc4u5itWxaAQoMU9zyVPSpDkEOB0vylLHA3HhwU");
+            var body = JsonConvert.SerializeObject(request);
+                
+            restRequest.AddParameter("application/json", body, ParameterType.RequestBody);
+            IRestResponse<DedicatedAccountResponse> response = await client.ExecuteAsync<DedicatedAccountResponse>(restRequest);
+            return response.Data;
+        }
+
+        public async Task<DedicatedNubanAccountResponse> CreateDedicatedNubanAccount(DedicatedNubanAccountRequest request)
+        {
+            var client = new RestClient(_config.GetSection("WalletAPI:CreateAccount").Value);
+            var restRequest = new RestRequest(Method.POST);
+            restRequest.AddHeader("Authorization", $"Bearer {_config.GetSection("WalletAPI:SecretKey").Value}");
+            restRequest.AddHeader("Content-Type", "application/json");
+            restRequest.AddHeader("Cookie", "sails.sid=s%3ACtTz966NlJosAffqG13riHFNP8woUYuc.lrEQgc4u5itWxaAQoMU9zyVPSpDkEOB0vylLHA3HhwU");
+            var body = JsonConvert.SerializeObject(request);
+
+            restRequest.AddParameter("application/json", body, ParameterType.RequestBody);
+            IRestResponse<DedicatedNubanAccountResponse> response = await client.ExecuteAsync<DedicatedNubanAccountResponse>(restRequest);
+            return response.Data;
         }
     }
 }

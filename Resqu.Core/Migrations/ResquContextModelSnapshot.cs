@@ -16,7 +16,7 @@ namespace Resqu.Core.Migrations
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
-                .HasAnnotation("ProductVersion", "5.0.5")
+                .HasAnnotation("ProductVersion", "5.0.6")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
             modelBuilder.Entity("Resqu.Core.Entities.BackOfficeRole", b =>
@@ -197,6 +197,9 @@ namespace Resqu.Core.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<int>("AccountId")
+                        .HasColumnType("int");
+
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
 
@@ -213,6 +216,12 @@ namespace Resqu.Core.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("IsBan")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsCustomerCreated")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsDedicatedCreated")
                         .HasColumnType("bit");
 
                     b.Property<bool>("IsDeleted")

@@ -292,8 +292,18 @@ namespace Resq.Web.Controllers
 
         public IActionResult GetAllCustomers()
         {
+            ViewBag.ServicePageUrls = _context.BackOfficeRoles.Where(b => b.RoleName == HttpContext.Session.GetString("role")).Select(p => new Resqu.Core.Entities.RoleUrl
+            {
+                PageName = p.PageName,
+                PageUrl = p.PageUrl,
+                PageNameClass = p.PageNameClass,
+                PageUrlClass = p.PageUrlClass,
+                ActionName = p.ActionName,
+                ControllerName = p.ControllerName
+            }).ToList();
 
-            return View();
+            var allCustomer = _context.Customers.ToList();
+            return View(allCustomer);
         }
 
         public ActionResult BackOfficeDashboard()

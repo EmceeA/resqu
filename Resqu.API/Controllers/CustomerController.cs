@@ -121,6 +121,41 @@ namespace Resqu.API.Controllers
         }
 
         [HttpPost]
+        public async Task<IActionResult> MakePayment(string bookingId)
+        {
+            var payment = await _customer.MakePayment(bookingId);
+            return Ok(payment);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> CreateCustomerAccount(DedicatedAccountRequest request)
+        {
+            var payment = await _customer.CreateCustomerAccount(request);
+            return Ok(payment);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> CreateDedicatedNubanAccount(DedicatedNubanAccountRequest request)
+        {
+            var payment = await _customer.CreateDedicatedNubanAccount(request);
+            return Ok(payment);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> TransferToWallet(TransferToWalletRequestDto transfer)
+        {
+            var walletTransfer = await _customer.TransferToWallet(transfer);
+            return Ok(walletTransfer);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetWalletBalance(WalletBalanceRequestDto walletBalance)
+        {
+            var balance = await _customer.GetWalletBalance(walletBalance);
+            return Ok(balance);
+        }
+
+        [HttpPost]
         public async Task<IActionResult> CustomerSignIn(CustomerSignInRequest signUp)
         {
             if (!ModelState.IsValid)
