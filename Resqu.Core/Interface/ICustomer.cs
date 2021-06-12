@@ -1,5 +1,5 @@
 ﻿using Resqu.Core.Dto;
-using System.Collections.Generic;
+using System.Collections.Generic; 
 using System.Threading.Tasks;
 
 namespace Resqu.Core.Interface
@@ -11,6 +11,12 @@ namespace Resqu.Core.Interface
         Task<CustomerSignInResponse> SignInCustomer(CustomerSignInRequest signInModel);
        
         Task<UpdateCustomerResponseDto> ActivateCustomerProfile(UpdateCustomerRequestDto requestDto);
+
+        Task<ServiceDto> BookService(ServiceDto service);
+        Task<EndServiceDto> EndService(string bookingId,string paymentType);
+        Task<List<ServiceListDto>> ServiceList();
+        Task<List<ProductListDto>> ProductList();
+        Task<List<ServiceCategoryListDto>> ServiceCategoryList();
         
     }
 

@@ -72,6 +72,53 @@ namespace Resqu.API.Controllers
             return BadRequest(activate);
         }
 
+        [HttpPost]
+
+        public async Task<IActionResult> BookService(ServiceDto service)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var result = await _customer.BookService(service);
+            return Ok(result);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> EndService(string bookingId, string paymentType)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var result = await _customer.EndService(bookingId,paymentType);
+            return Ok(result);
+        }
+
+        [HttpGet]
+
+        public async Task<IActionResult> GetServiceList()
+        {
+            var serviceList = await _customer.ServiceList();
+            return Ok(serviceList);
+        }
+
+        [HttpGet]
+
+        public async Task<IActionResult> ServiceCategoryList()
+        {
+            var serviceCategoryList = await _customer.ServiceCategoryList();
+            return Ok(serviceCategoryList);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetServiceCategoryList()
+        {
+            var serviceCategoryList = await _customer.ServiceCategoryList();
+            return Ok(serviceCategoryList);
+        }
 
         [HttpPost]
         public async Task<IActionResult> CustomerSignIn(CustomerSignInRequest signUp)

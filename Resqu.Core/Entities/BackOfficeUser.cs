@@ -48,6 +48,7 @@ namespace Resqu.Core.Entities
 
         public string RoleName { get; set; }
 
+        public long? RoleId { get; set; }
 
 
         public string PageName { get; set; }
@@ -58,5 +59,28 @@ namespace Resqu.Core.Entities
         public string PageUrlClass { get; set; }
 
 
+    }
+
+    public class RoleToPage
+    {
+        public string RoleName { get; set; }
+        public long? RoleId { get; set; } 
+        public string PageName { get; set; }
+        public string ControllerName { get; set; }
+        public string ActionName { get; set; }
+        public string PageNameClass { get; set; }
+        public string PageUrl { get; set; }
+        public string PageUrlClass { get; set; }
+    }
+
+    public class Role
+    {
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+
+        public long Id { get; set; }
+
+        public string RoleName { get; set; }
+        public bool  IsDeleted { get; set; }
     }
 }

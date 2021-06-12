@@ -9,6 +9,8 @@ namespace Resqu.Core.Entities
 
         }
 
+        public DbSet<Role> Roles { get; set; }
+        public DbSet<ResquService> ResquServices { get; set; }
         public DbSet<Customer> Customers { get; set; }
         public DbSet<BackOfficeRole> BackOfficeRoles { get; set; }
         public DbSet<BackOfficeUser> BackOfficeUsers { get; set; }
@@ -17,6 +19,7 @@ namespace Resqu.Core.Entities
         public DbSet<Expertise> Expertises { get; set; }
         public DbSet<ExpertiseCategory> ExpertiseCategories { get; set; }
         public DbSet<WalletPayment> WalletPayments { get; set; }
+        public DbSet<Product> Products { get; set; }
         public DbSet<CardPayment> CardPayments { get; set; }
         public DbSet<CashPayment> CashPayments { get; set; }
         public DbSet<Request> Requests { get; set; }

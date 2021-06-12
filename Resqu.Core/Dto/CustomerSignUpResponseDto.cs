@@ -65,6 +65,56 @@ namespace Resqu.Core.Dto
         public string Pin { get; set; }
     }
 
+    public class ServiceDto
+    {
+        public int ServiceId { get; set; }
+        public int SubCategoryId { get; set; }
+        public string ServiceName { get; set; }
+        public string BookingId { get; set; }
+        public string SubCategoryName { get; set; }
+        public decimal SubCategoryPrice { get; set; }
+        public DateTime StartDate { get; set; }
+        public string CustomerPhone { get; set; }
+        public string VendorPhone { get; set; }
+        public string VendorName { get; set; }
+        public string VendorGender { get; set; }
+        public string ProductName { get; set; }
+        public long? ProductId { get; set; }
+        public decimal ProductPrice { get; set; }
+        public string Description { get; set; }
+    }
+
+    public class EndServiceDto
+    {
+        public string VendorName { get; set; }
+        public string StartDate { get; set; }
+        public string EndDate { get; set; }
+        public decimal MaterialCost { get; set; }
+        public decimal ServiceCharge { get; set; }
+        public decimal Total { get; set; }
+        public string PaymentType { get; set; }
+        public string BookingId { get; set; }
+        
+    }
+
+    public class ServiceListDto
+    {
+        public int ServiceId { get; set; }
+        public string ServiceName { get; set; }
+    }
+
+    public class ProductListDto
+    {
+        public int ProductId { get; set; }
+        public string ProductName { get; set; }
+        public decimal ProductPrice { get; set; }
+    }
+    public class ServiceCategoryListDto
+    {
+        public int ServiceCategoryId { get; set; }
+        public string ServiceCategoryName { get; set; }
+        public decimal ServiceCategoryPrice { get; set; }
+    }
     public class UpdateCustomerResponseDto
     {
         public string Message { get; set; }

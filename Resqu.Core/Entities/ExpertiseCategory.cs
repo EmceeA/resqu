@@ -12,6 +12,7 @@ namespace Resqu.Core.Entities
         public string Name { get; set; }
 
         public int ExpertiseId { get; set; }
+        public decimal Price { get; set; }
         public Expertise Expertise { get; set; }
     }
 }

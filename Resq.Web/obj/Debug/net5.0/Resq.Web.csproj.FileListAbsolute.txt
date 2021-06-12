@@ -478,3 +478,5 @@ C:\Users\HFET\source\repos\Resqu.API\Resq.Web\obj\Debug\net5.0\Resq.Web.dll
 C:\Users\HFET\source\repos\Resqu.API\Resq.Web\obj\Debug\net5.0\ref\Resq.Web.dll
 C:\Users\HFET\source\repos\Resqu.API\Resq.Web\obj\Debug\net5.0\Resq.Web.pdb
 C:\Users\HFET\source\repos\Resqu.API\Resq.Web\obj\Debug\net5.0\Resq.Web.genruntimeconfig.cache
+C:\Users\HFET\source\repos\Resqu.API\Resq.Web\obj\Debug\net5.0\Razor\Views\BackOffice\AddRole.cshtml.g.cs
+C:\Users\HFET\source\repos\Resqu.API\Resq.Web\obj\Debug\net5.0\Razor\Views\BackOffice\EmptyVendor.cshtml.g.cs

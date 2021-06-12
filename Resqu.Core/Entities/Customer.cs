@@ -1,4 +1,6 @@
-﻿namespace Resqu.Core.Entities
+﻿using System;
+
+namespace Resqu.Core.Entities
 {
     public class Customer : CustomerAudit
     {
@@ -12,5 +14,10 @@
 
         public string RegulatoryIndentity { get; set; }
         public string Pin { get; set; }
+
+        public DateTime LastLoginDate { get; set; }
+        public DateTime LastServiceDate { get; set; }
+
+
     }
 }
