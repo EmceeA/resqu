@@ -16,7 +16,9 @@ namespace Resqu.Core.Entities
         public string TransactionRef { get; set; }
 
         public string ServiceType { get; set; }
-        public string TransactionType { get; set; }
+        public string VendorTransactionType { get; set; }
+        public string CustomerTransactionType { get; set; }
+        public string BackOfficeTransactionType { get; set; }
         public string SubCategory { get; set; }
         public string ServiceDate { get; set; }
         public string CustomerName { get; set; }

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace Resqu.Core.Entities
 {
 
-    public class Product
+    public class Product: CustomerAudit
     {
         public long Id { get; set; }
         public decimal ProductPrice { get; set; }
@@ -16,10 +16,11 @@ namespace Resqu.Core.Entities
         public string VendorAddress { get; set; }
         public string VendorPhone { get; set; }
     }
-    public class ResquService
+    public class ResquService: CustomerAudit
     {
         public long Id { get; set; }
         public string ProductName { get; set; }
+        public string Status { get; set; }
         public decimal ProductPrice { get; set; }
         public string VendorGender { get; set; }
         public string BookingId { get; set; }

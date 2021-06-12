@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Resqu.Core.Entities;
 
 namespace Resqu.Core.Migrations
 {
     [DbContext(typeof(ResquContext))]
-    partial class ResquContextModelSnapshot : ModelSnapshot
+    [Migration("20210612035007_added audit")]
+    partial class addedaudit
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -106,9 +108,6 @@ namespace Resqu.Core.Migrations
                     b.Property<decimal>("Amount")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<string>("BookingId")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("CustomerCardNo")
                         .HasColumnType("nvarchar(max)");
 
@@ -150,9 +149,6 @@ namespace Resqu.Core.Migrations
 
                     b.Property<decimal>("Amount")
                         .HasColumnType("decimal(18,2)");
-
-                    b.Property<string>("BookingId")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int?>("CustomerId")
                         .HasColumnType("int");
@@ -573,9 +569,6 @@ namespace Resqu.Core.Migrations
                     b.Property<string>("ServiceName")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Status")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<long>("SubCategoryId")
                         .HasColumnType("bigint");
 
@@ -633,13 +626,7 @@ namespace Resqu.Core.Migrations
                         .HasColumnType("bigint")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("BackOfficeTransactionType")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("CustomerName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("CustomerTransactionType")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("PaymentType")
@@ -672,6 +659,9 @@ namespace Resqu.Core.Migrations
                     b.Property<string>("TransactionRef")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("TransactionType")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<decimal>("VendorAmount")
                         .HasColumnType("decimal(18,2)");
 
@@ -683,9 +673,6 @@ namespace Resqu.Core.Migrations
 
                     b.Property<int>("VendorRating")
                         .HasColumnType("int");
-
-                    b.Property<string>("VendorTransactionType")
-                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
@@ -838,27 +825,6 @@ namespace Resqu.Core.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("VendorAccounts");
-                });
-
-            modelBuilder.Entity("Resqu.Core.Entities.Wallet", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<decimal>("Balance")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<string>("UserId")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("WalletNo")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Wallets");
                 });
 
             modelBuilder.Entity("Resqu.Core.Entities.WalletPayment", b =>

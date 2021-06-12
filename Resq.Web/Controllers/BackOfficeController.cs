@@ -333,7 +333,7 @@ namespace Resq.Web.Controllers
                     ServiceType = y.ServiceType,
                     SubCategory = y.SubCategory,
                     VendorName = y.VendorName,
-                    TransactionType = y.TransactionType,
+                    TransactionType = y.VendorTransactionType,
                     Status = y.Status,
                     TransactionRef = y.TransactionRef,
                 }).ToList();

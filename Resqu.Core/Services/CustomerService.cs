@@ -270,7 +270,8 @@ namespace Resqu.Core.Services
                 VendorGender =service.VendorGender,
                 Price = service.SubCategoryPrice,
                 BookingId = $"{service.ServiceName}-{GenerateRandom(10)}",
-                IsStarted = true
+                IsStarted = true,
+                Status = "ONGOING"
             };
 
             _context.ResquServices.Add(serviceModel);
@@ -330,6 +331,7 @@ namespace Resqu.Core.Services
             getServiceByBookingNumber.Price = Convert.ToDecimal(serviceCharge);
             getServiceByBookingNumber.ProductPrice = materialCost;
             getServiceByBookingNumber.PaymentType = paymentType;
+            getServiceByBookingNumber.Status = "COMPLETED";
             _context.SaveChanges();
 
             return new EndServiceDto
@@ -345,9 +347,214 @@ namespace Resqu.Core.Services
             };
         }
 
-        public Task<List<ProductListDto>> ProductList()
+        public async Task<List<ProductListDto>> ProductList()
         {
-            throw new NotImplementedException();
+            var productList = await _context.Products.Select(d => new ProductListDto
+            {
+                ProductId  = Convert.ToInt32(d.Id),
+                ProductName = d.ProductName,
+                ProductPrice = d.ProductPrice
+            }).ToListAsync();
+            return productList;
+        }
+
+        public async Task<MakePaymentResponse> MakeCashPayment(string bookingId, string paymentType)
+        {
+            var getPaymentDetails = _context.ResquServices.Where(w => w.BookingId == bookingId).FirstOrDefault();
+
+            //Call Payment API here
+
+            
+            if (paymentType == "CASH")
+            {
+                var obj = new
+                {
+                    amount = getPaymentDetails.TotalPrice,
+                    bookingId = getPaymentDetails.BookingId,
+                    date = DateTime.Now,
+                    customerName = _context.Customers.Where(c => c.PhoneNumber == getPaymentDetails.CustomerPhone).Select(r => r.FirstName + " " + r.LastName).FirstOrDefault(),
+                    customerPhone = getPaymentDetails.CustomerPhone,
+                    vendorId = getPaymentDetails.VendorId,
+                    vendorName = getPaymentDetails.VendorName,
+                    vendorPhone = getPaymentDetails.VendorPhone,
+                    paymentType = paymentType
+
+                };
+                var cashPay = new CashPayment
+                {
+                    Amount = Convert.ToDecimal(obj.amount),
+                    CustomerPhoneNo = obj.customerPhone,
+                    PaymentDate = obj.date,
+                    PaymentStatus = "Pending",
+                    ServiceType = getPaymentDetails.ServiceName,
+                    TransactionReference = "FROM PAYMENT GATEWAY",
+                    VendorPhoneNumber = getPaymentDetails.VendorPhone,
+                };
+                _context.CashPayments.Add(cashPay);
+                _context.SaveChanges();
+
+                return new MakePaymentResponse
+                {
+                    Amount = cashPay.Amount,
+                    BookingId = cashPay.BookingId,
+                    PaymentDate = cashPay.PaymentDate,
+                    PaymentType = "CASH",
+                    Reference = cashPay.TransactionReference
+                };
+            }
+            return null;
+          
+            
+
+
+           
+        }
+
+        public async Task<MakePaymentResponse> MakeCardPayment(string bookingId, string paymentType, MakeCardRequest cardRequest)
+        {
+            var getPaymentDetails = _context.ResquServices.Where(w => w.BookingId == bookingId).FirstOrDefault();
+
+            //Call Payment API here
+
+
+            if (paymentType == "CARD")
+            {
+                var obj = new
+                {
+                    amount = getPaymentDetails.TotalPrice,
+                    bookingId = getPaymentDetails.BookingId,
+                    date = DateTime.Now,
+                    customerName = _context.Customers.Where(c => c.PhoneNumber == getPaymentDetails.CustomerPhone).Select(r => r.FirstName + " " + r.LastName).FirstOrDefault(),
+                    customerPhone = getPaymentDetails.CustomerPhone,
+                    vendorId = getPaymentDetails.VendorId,
+                    vendorName = getPaymentDetails.VendorName,
+                    vendorPhone = getPaymentDetails.VendorPhone,
+                    paymentType = paymentType,
+                    cardNo  = cardRequest.CardNo,
+                    pin = cardRequest.Pin,
+                    cvv = cardRequest.Cvv, 
+                    expMonth = cardRequest.ExpiryMonth,
+                    expYear = cardRequest.ExpiryYear
+
+                };
+
+                //Call API 
+                var cashPay = new CardPayment
+                {
+                    Amount = Convert.ToDecimal(obj.amount),
+                    CustomerCardNo = obj.cardNo,
+                    PaymentDate = obj.date,
+                    PaymentStatus = "Pending",
+                    ServiceType = getPaymentDetails.ServiceName,
+                    TransactionReference = "FROM PAYMENT GATEWAY",
+                    VendorPhoneNumber = getPaymentDetails.VendorPhone,
+                    VendorWalletId =  cardRequest.ExpiryMonth
+                };
+                 await _context.CardPayments.AddAsync(cashPay);
+                _context.SaveChanges();
+
+                return new MakePaymentResponse
+                {
+                    Amount = cashPay.Amount,
+                    BookingId = cashPay.BookingId,
+                    PaymentDate = cashPay.PaymentDate,
+                    PaymentType = "CASH",
+                    Reference = cashPay.TransactionReference
+                };
+            }
+            return null;
+
+
+        }
+
+        public bool DebitCredit(decimal backOfficeCost, decimal vendorCost, string backOfficeWallet, string destinationWallet,string sourceWallet, decimal totalAmount)
+        {
+
+            
+            //var getSourceWallet = _context.Wallets.FirstOrDefault(f => f.WalletNo == sourceWallet);
+
+            var getSourceWallet = _context.Wallets.FirstOrDefault(f => f.WalletNo == sourceWallet);
+
+            getSourceWallet.Balance = getSourceWallet.Balance - totalAmount;
+
+            var getVendorWallet = _context.Wallets.FirstOrDefault(f => f.WalletNo == destinationWallet);
+
+            getVendorWallet.Balance = getVendorWallet.Balance + vendorCost;
+
+            var getBackOfficeWallet = _context.Wallets.FirstOrDefault(f => f.WalletNo == backOfficeWallet);
+
+            getBackOfficeWallet.Balance = getBackOfficeWallet.Balance + backOfficeCost;
+
+            _context.SaveChanges();
+            return true;
+        }
+
+
+        public async Task<MakePaymentResponse> MakePayment(string bookingId)
+        {
+            var payment = _context.ResquServices.Where(r => r.BookingId == bookingId).FirstOrDefault();
+            var vendorCost = Convert.ToDecimal(payment.TotalPrice) * (Convert.ToInt32(_config.GetSection("ResqPercentage").Value) / 100);
+
+            var getCustomerId = _context.Customers.Where(c => c.PhoneNumber == payment.CustomerPhone).Select(e => e.Id).FirstOrDefault().ToString();
+            var checkCustomerBalance = _context.Wallets.Where(g => g.UserId == getCustomerId).Select(e => e.Balance).FirstOrDefault();
+            if (checkCustomerBalance < Convert.ToDecimal(payment.TotalPrice))
+            {
+                return new MakePaymentResponse
+                {
+                    Response = "Insufficient Fund, Kindly fund your wallet",
+                    Status = false
+                };
+            }
+            var makeWallet = new MakeWalletRequest
+            {
+                VendorCost = vendorCost,
+                BackOfficeCost = Convert.ToDecimal(payment.TotalPrice) - vendorCost,
+                BackOfficeWallet = _context.Wallets.Where(e => e.UserId == "BackOffice").Select(v => v.WalletNo).FirstOrDefault(),
+                DestinationWallet = _context.Wallets.Where(e=>e.UserId == payment.VendorId).Select(v=>v.WalletNo).FirstOrDefault(),
+                Amount = Convert.ToDecimal(payment.TotalPrice),
+                SourceWallet = _context.Wallets.Where(e => e.UserId == getCustomerId).Select(v => v.WalletNo).FirstOrDefault(),
+            };
+
+            var makePayment = DebitCredit(makeWallet.BackOfficeCost, makeWallet.VendorCost, makeWallet.BackOfficeWallet, makeWallet.DestinationWallet, makeWallet.SourceWallet, makeWallet.Amount);
+            if (makePayment == false)
+            {
+                return new MakePaymentResponse
+                {
+                    Response = "Failed",
+                    Status = false
+                };
+            }
+            var transaction = new Transaction
+            {
+                TotalAmount = makeWallet.Amount,
+                CustomerName = _context.Customers.Where(s => s.PhoneNumber == payment.CustomerPhone).Select(e => e.FirstName + " " + e.LastName).FirstOrDefault(),
+                VendorAmount = makeWallet.VendorCost,
+                PlatformCharge = makeWallet.BackOfficeCost,
+                PaymentType = "WALLET",
+
+                ServiceDate = DateTime.Now.ToString("yyyy-MM-ddd hh:MMMM"),
+                VendorName = payment.VendorName,
+                Status = "Completed",
+                VendorId = int.Parse(payment.VendorId),
+                VendorTransactionType = "CR",
+                CustomerTransactionType = "DR",
+                BackOfficeTransactionType = "CR",
+                ServiceType = payment.ServiceName,
+                SubCategory = payment.SubCategoryId.ToString(),
+            };
+            _context.Transactions.Add(transaction);
+            _context.SaveChanges();
+            return new MakePaymentResponse
+            {
+                Response = "Successful",
+                Status = true,
+                Amount  = makeWallet.Amount,
+                BookingId = payment.BookingId,
+                PaymentDate = DateTime.Now,
+                PaymentType = "WALLET",
+                Reference = Guid.NewGuid().ToString()
+            };
+
         }
     }
 }

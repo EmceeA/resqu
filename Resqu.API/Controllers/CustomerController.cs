@@ -114,10 +114,10 @@ namespace Resqu.API.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetServiceCategoryList()
+        public async Task<IActionResult> ProductList()
         {
-            var serviceCategoryList = await _customer.ServiceCategoryList();
-            return Ok(serviceCategoryList);
+            var productList = await _customer.ProductList();
+            return Ok(productList);
         }
 
         [HttpPost]

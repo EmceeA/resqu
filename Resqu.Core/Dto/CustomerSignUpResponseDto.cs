@@ -3,9 +3,6 @@ using Resqu.Core.Entities;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Resqu.Core.Dto
 {
@@ -22,7 +19,7 @@ namespace Resqu.Core.Dto
     }
 
 
-    public class VendorRegistrationDto 
+    public class VendorRegistrationDto
     {
         public string PhoneNumber { get; set; }
         public string VendorName { get; set; }
@@ -44,7 +41,7 @@ namespace Resqu.Core.Dto
     public class UpdateCustomerRequestDto
     {
         public string Phone { get; set; }
-        [Required(ErrorMessage ="Regulatory Id is Required to Activate Profile")]
+        [Required(ErrorMessage = "Regulatory Id is Required to Activate Profile")]
         public string RegulatoryId { get; set; }
         [Required(ErrorMessage = "Email is Required to Activate Profile")]
         public string Email { get; set; }
@@ -83,6 +80,38 @@ namespace Resqu.Core.Dto
         public decimal ProductPrice { get; set; }
         public string Description { get; set; }
     }
+    public class MakeCardRequest
+    {
+        public string CardNo { get; set; }
+        public string Pin { get; set; }
+        public string ExpiryMonth { get; set; }
+        public string ExpiryYear { get; set; }
+        public decimal Cvv { get; set; }
+        public string BookingId { get; set; }
+
+        public string WalletId { get; set; }
+    }
+    public class MakeWalletRequest
+    {
+        public string SourceWallet { get; set; }
+        public string DestinationWallet { get; set; }
+        public decimal Amount { get; set; }
+        public string BackOfficeWallet { get; set; }
+        public decimal VendorCost { get; set; }
+        public decimal BackOfficeCost { get; set; }
+    }
+
+
+    public class MakePaymentResponse
+    {
+        public string BookingId { get; set; }
+        public string Reference { get; set; }
+        public string Response { get; set; }
+        public bool Status { get; set; }
+        public decimal Amount { get; set; }
+        public DateTime PaymentDate { get; set; }
+        public string PaymentType { get; set; }
+    }
 
     public class EndServiceDto
     {
@@ -94,7 +123,7 @@ namespace Resqu.Core.Dto
         public decimal Total { get; set; }
         public string PaymentType { get; set; }
         public string BookingId { get; set; }
-        
+
     }
 
     public class ServiceListDto
@@ -123,7 +152,7 @@ namespace Resqu.Core.Dto
 
     public class UserRegistrationDto
     {
-       
+
         public string UserName { get; set; }
         public string Password { get; set; }
 
@@ -136,7 +165,7 @@ namespace Resqu.Core.Dto
 
     public class UserLoginDto
     {
-        [Required(ErrorMessage ="Username is required")]
+        [Required(ErrorMessage = "Username is required")]
         public string UserName { get; set; }
         [Required(ErrorMessage = "Password is required")]
         public string Password { get; set; }
@@ -186,7 +215,7 @@ namespace Resqu.Core.Dto
         public string NextOfKinPhone { get; set; }
         public string VendorCode { get; set; }
     }
-    
+
     public class RequestListDto
     {
 
@@ -210,7 +239,7 @@ namespace Resqu.Core.Dto
         public string LastName { get; set; }
 
         public IFormFile Passport { get; set; }
-       
+
         public string MiddleName { get; set; }
         [Required]
         public string Phone { get; set; }
@@ -224,7 +253,7 @@ namespace Resqu.Core.Dto
         public string NextOfKinFullName { get; set; }
         [Required]
         public string NextOfKinPhone { get; set; }
-        [Required]  
+        [Required]
         public string NextOfKinAddress { get; set; }
     }
 
@@ -253,7 +282,7 @@ namespace Resqu.Core.Dto
     }
 
 
-   
+
     public class ExpertiseCategoryDto
     {
         public string Name { get; set; }
