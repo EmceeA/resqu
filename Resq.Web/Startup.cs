@@ -14,6 +14,7 @@ using Resq.Web.Services;
 using Resqu.Core.Entities;
 using Resqu.Core.Interface;
 using Resqu.Core.Services;
+using Resqu.Core.Utility;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -34,7 +35,12 @@ namespace Resq.Web
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddTransient<Resq.Web.Interface.IVendor, VendorService>();
-            services.AddScoped<Resqu.Core.Interface.IBackOffice, BackOfficeService>();
+            services.AddTransient<Resqu.Core.Interface.IBackOffice, BackOfficeService>();
+            //services.AddScoped<Resqu.Core.Interface.IProduct, ProductService>();
+            services.AddTransient<IProduct, ProductService>();
+            services.AddTransient<IOtp, OtpService>();
+            services.AddTransient<ICacheService, RedisCacheService>();
+            services.AddTransient<IHttpContextAccessor, HttpContextAccessor>();
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(
                     Configuration.GetConnectionString("DefaultConnection")));

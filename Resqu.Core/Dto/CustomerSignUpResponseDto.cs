@@ -193,31 +193,176 @@ namespace Resqu.Core.Dto
         public string message { get; set; }
         public DedicatedNubanAccount data { get; set; }
     }
+    public class BuyProductRequestDto
+    {
+        public int ProductId { get; set; }
+        public decimal Price { get; set; }
+        public int VendorId { get; set; }
+        public int UserId { get; set; }
+    }
 
+    public class BuyProductResponseDto
+    {
+        public string Message { get; set; }
+        public bool Status { get; set; }
+    }
 
+    public class RateVendorResponseDto
+    {
+        public string Message { get; set; }
+        public bool Status { get; set; }
+    }
 
+    public class RateVendorDto
+    {
+        public int VendorId { get; set; }
+        public int UserId { get; set; }
+        [Range(1,5,ErrorMessage ="The Star Rating Cannot be less than 1 and greater than 5")]
+        public int StarRating { get; set; }
+        public string BookingId { get; set; }
+    }
     public class DedicatedNubanAccountRequest
     {
         public string bankName { get; set; }
         public int customer { get; set; }
     }
+
+    public class OtpConfirmationResponseDto
+    {
+        public string Message { get; set; }
+        public bool Status { get; set; }
+    }
+
+    public class OtpGenerateResponseDto
+    {
+        public string Token { get; set; }
+        public string Message { get; set; }
+        public bool Status { get; set; }
+    }
     public class ServiceDto
     {
-        public int ServiceId { get; set; }
-        public int SubCategoryId { get; set; }
         public string ServiceName { get; set; }
-        public string BookingId { get; set; }
         public string SubCategoryName { get; set; }
         public decimal SubCategoryPrice { get; set; }
-        public DateTime StartDate { get; set; }
-        public string CustomerPhone { get; set; }
-        public string VendorPhone { get; set; }
+        public string Description { get; set; }
+        public string CustomerAddress { get; set; }
+    }
+
+
+    public class ConnectRequestDto
+    {
+        public string ServiceName { get; set; }
+        public string SubCategoryName { get; set; }
+        public decimal SubCategoryPrice { get; set; }
+        public string Description { get; set; }
+    }
+
+    // Root myDeserializedClass = JsonConvert.DeserializeObject<Root>(myJsonResponse); 
+    public class AddressComponent
+    {
+        public string long_name { get; set; }
+        public string short_name { get; set; }
+        public List<string> types { get; set; }
+    }
+
+    public class Location
+    {
+        public double lat { get; set; }
+        public double lng { get; set; }
+    }
+
+    public class Northeast
+    {
+        public double lat { get; set; }
+        public double lng { get; set; }
+    }
+
+    public class Southwest
+    {
+        public double lat { get; set; }
+        public double lng { get; set; }
+    }
+
+    public class Viewport
+    {
+        public Northeast northeast { get; set; }
+        public Southwest southwest { get; set; }
+    }
+
+    public class Geometry
+    {
+        public Location location { get; set; }
+        public string location_type { get; set; }
+        public Viewport viewport { get; set; }
+    }
+
+    public class PlusCode
+    {
+        public string compound_code { get; set; }
+        public string global_code { get; set; }
+    }
+
+    public class Result
+    {
+        public List<AddressComponent> address_components { get; set; }
+        public string formatted_address { get; set; }
+        public Geometry geometry { get; set; }
+        public string place_id { get; set; }
+        public PlusCode plus_code { get; set; }
+        public List<string> types { get; set; }
+    }
+
+    public class Root
+    {
+        public List<Result> results { get; set; }
+        public string status { get; set; }
+    }
+
+
+
+
+    public class VendorDistanceResponseDto
+    {
+        public long VendorId { get; set; }
+        public string VendorName { get; set; }
+        public string Gender { get; set; }
+        public string Phone { get; set; }
+        public double Distance { get; set; }
+        public double Time { get; set; }
+        public string ServiceName { get; set; }
+        public string ServiceSubCategory { get; set; }
+        public decimal Price { get; set; }
+    }
+
+
+    public class VendorDistanceRequestDto
+    {
+        public long VendorId { get; set; }
+        public string VendorName { get; set; }
+        public double Longitude { get; set; }
+        public double Latitude { get; set; }
+    }
+    public class ConnectResponseDto
+    {
+        public string ServiceName { get; set; }
+        public string SubCategoryName { get; set; }
+        public decimal SubCategoryPrice { get; set; }
+        public string Description { get; set; }
+    }
+
+
+    public class ServiceResponseDto
+    {
+        public string ServiceName { get; set; }
+        public string SubCategoryName { get; set; }
+        public decimal SubCategoryPrice { get; set; }
+        public double Distance { get; set; }
+        public double Time { get; set; }
+        public string Description { get; set; }
+        public string BookingId { get; set; }
         public string VendorName { get; set; }
         public string VendorGender { get; set; }
-        public string ProductName { get; set; }
-        public long? ProductId { get; set; }
-        public decimal ProductPrice { get; set; }
-        public string Description { get; set; }
+        public string VendorPhone { get; set; }
     }
     public class MakeCardRequest
     {

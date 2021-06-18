@@ -210,6 +210,8 @@ namespace Resq.Web.Controllers
                 ActionName = p.ActionName,
                 ControllerName = p.ControllerName
             }).ToList();
+            ViewBag.ProfilePicture = _context.BackOfficeUsers.Where(d => d.UserName == HttpContext.Session.GetString("userName")).Select(e => e.ProfilePicture).FirstOrDefault();
+            ViewBag.FullName = _context.BackOfficeUsers.Where(d => d.UserName == HttpContext.Session.GetString("userName")).Select(e => e.FirstName + " " + e.LastName).FirstOrDefault();
             return View();
         }
         [HttpPost]
@@ -286,6 +288,8 @@ namespace Resq.Web.Controllers
                 ActionName = p.ActionName,
                 ControllerName = p.ControllerName
             }).ToList();
+            ViewBag.ProfilePicture = _context.BackOfficeUsers.Where(d => d.UserName == HttpContext.Session.GetString("userName")).Select(e => e.ProfilePicture).FirstOrDefault();
+            ViewBag.FullName = _context.BackOfficeUsers.Where(d => d.UserName == HttpContext.Session.GetString("userName")).Select(e => e.FirstName + " " + e.LastName).FirstOrDefault();
             return View();
         }
         [HttpGet]
@@ -303,6 +307,8 @@ namespace Resq.Web.Controllers
             }).ToList();
 
             var allCustomer = _context.Customers.ToList();
+            ViewBag.ProfilePicture = _context.BackOfficeUsers.Where(d => d.UserName == HttpContext.Session.GetString("userName")).Select(e => e.ProfilePicture).FirstOrDefault();
+            ViewBag.FullName = _context.BackOfficeUsers.Where(d => d.UserName == HttpContext.Session.GetString("userName")).Select(e => e.FirstName + " " + e.LastName).FirstOrDefault();
             return View(allCustomer);
         }
 
@@ -425,7 +431,7 @@ namespace Resq.Web.Controllers
                 var topVendor = new TopVendor
                 {
                     Picture = vendo.VendorPicture,
-                    NumberOfRequest = _context.Transactions.Where(c => c.VendorName == vendo.CompanyName).ToList().Count(),
+                    NumberOfRequest = _context.Requests.Where(c => c.VendorId == vendo.Id).ToList().Count(),
                     VendorName = vendo.CompanyName
                 };
                 topVendorList.Add(topVendor);
@@ -462,7 +468,7 @@ namespace Resq.Web.Controllers
                 reviewList.Add(ratings);
             }
 
-            ViewBag.TopVendors = topVendorList.OrderByDescending(e => e.NumberOfRequest).Take(10);
+            ViewBag.TopVendors = topVendorList.OrderByDescending(e => e.NumberOfRequest).Take(10).Distinct();
             ViewBag.Reviews = reviewList.OrderByDescending(e => e.Rating).Take(20);
             //ViewBag.Reviews
             //{

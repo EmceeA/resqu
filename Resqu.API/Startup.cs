@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -35,11 +36,11 @@ namespace Resqu.API
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-
+            //services.AddSession();
             services.AddControllers();
-
             services.AddDbContext<ResquContext>(options => options.UseSqlServer(Configuration.GetConnectionString("ResquContext")));
             services.AddScoped<ICustomer, CustomerService>();
+            services.AddTransient<IHttpContextAccessor, HttpContextAccessor>();
             services.AddScoped<IBackOffice, BackOfficeService>();
             services.AddSingleton<IJwtAuthManager, JwtAuthManager>();
             services.AddSingleton<IJwtAuthManager, JwtAuthManager>();
@@ -47,6 +48,12 @@ namespace Resqu.API
             services.AddScoped<IWallet, WalletService>();
             services.AddScoped<ICacheService, RedisCacheService>();
             services.AddSingleton<IConnectionMultiplexer>(x => ConnectionMultiplexer.Connect(Configuration.GetSection("Redis:Server").Value));
+
+            services.AddMvc().AddSessionStateTempDataProvider();
+            services.AddSession(options =>
+            {
+                options.IdleTimeout = TimeSpan.FromMinutes(30);
+            });
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Resqu.API", Version = "v1" });
@@ -114,13 +121,11 @@ namespace Resqu.API
             }
 
             app.UseHttpsRedirection();
-
+            app.UseSession();
             app.UseRouting();
             app.UseCors("AllowAll");
             app.UseAuthentication();
             app.UseAuthorization();
-
-
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();

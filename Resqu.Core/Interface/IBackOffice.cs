@@ -14,6 +14,7 @@ namespace Resqu.Core.Interface
 
         Task<UpdateCustomerResponseDto> BanCustomer(string phone);
 
+        //Task<>
         Task<UpdateCustomerResponseDto> UnBanCustomer(string phone);
         Task<UpdateCustomerResponseDto> DeleteCustomer(string phone);
         Task<List<VendorListDto>> VendorList();

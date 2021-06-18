@@ -21,6 +21,8 @@
   </ImportGroup>
   <PropertyGroup Condition=" '$(ExcludeRestorePackageImports)' != 'true' ">
     <PkgMicrosoft_EntityFrameworkCore_Tools Condition=" '$(PkgMicrosoft_EntityFrameworkCore_Tools)' == '' ">C:\Users\HFET\.nuget\packages\microsoft.entityframeworkcore.tools\5.0.6</PkgMicrosoft_EntityFrameworkCore_Tools>
+    <PkgCrossPlatformLibrary Condition=" '$(PkgCrossPlatformLibrary)' == '' ">C:\Users\HFET\.nuget\packages\crossplatformlibrary\1.0.73</PkgCrossPlatformLibrary>
+    <PkgCrossPlatformLibrary_Geolocation Condition=" '$(PkgCrossPlatformLibrary_Geolocation)' == '' ">C:\Users\HFET\.nuget\packages\crossplatformlibrary.geolocation\1.0.25</PkgCrossPlatformLibrary_Geolocation>
     <PkgMicrosoft_CodeAnalysis_Analyzers Condition=" '$(PkgMicrosoft_CodeAnalysis_Analyzers)' == '' ">C:\Users\HFET\.nuget\packages\microsoft.codeanalysis.analyzers\3.0.0</PkgMicrosoft_CodeAnalysis_Analyzers>
   </PropertyGroup>
 </Project>

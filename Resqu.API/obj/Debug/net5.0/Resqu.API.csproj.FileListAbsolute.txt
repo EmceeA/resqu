@@ -71,3 +71,8 @@ C:\Users\HFET\source\repos\Resqu.API\Resqu.API\obj\Debug\net5.0\Resqu.API.dll
 C:\Users\HFET\source\repos\Resqu.API\Resqu.API\obj\Debug\net5.0\ref\Resqu.API.dll
 C:\Users\HFET\source\repos\Resqu.API\Resqu.API\obj\Debug\net5.0\Resqu.API.pdb
 C:\Users\HFET\source\repos\Resqu.API\Resqu.API\obj\Debug\net5.0\Resqu.API.genruntimeconfig.cache
+C:\Users\HFET\source\repos\Resqu.API\Resqu.API\bin\Debug\net5.0\GeoCoordinate.NetCore.dll
+C:\Users\HFET\source\repos\Resqu.API\Resqu.API\bin\Debug\net5.0\CrossPlatformLibrary.Platform.dll
+C:\Users\HFET\source\repos\Resqu.API\Resqu.API\bin\Debug\net5.0\CrossPlatformLibrary.dll
+C:\Users\HFET\source\repos\Resqu.API\Resqu.API\bin\Debug\net5.0\CrossPlatformLibrary.Geolocation.dll
+C:\Users\HFET\source\repos\Resqu.API\Resqu.API\bin\Debug\net5.0\System.Device.Portable.dll

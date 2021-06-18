@@ -16,7 +16,9 @@ namespace Resqu.Core.Entities
         public DbSet<BackOfficeUser> BackOfficeUsers { get; set; }
         public DbSet<Otp> Otps { get; set; }
         public DbSet<Vendor> Vendors { get; set; }
+        public DbSet<VendorServiceSubCategory> VendorServiceSubCategories { get; set; }
         public DbSet<Expertise> Expertises { get; set; }
+        public DbSet<VendorRating> VendorRatings { get; set; }
         public DbSet<ExpertiseCategory> ExpertiseCategories { get; set; }
         public DbSet<WalletPayment> WalletPayments { get; set; }
         public DbSet<Product> Products { get; set; }

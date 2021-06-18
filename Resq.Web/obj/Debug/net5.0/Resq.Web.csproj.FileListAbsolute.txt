@@ -481,3 +481,8 @@ C:\Users\HFET\source\repos\Resqu.API\Resq.Web\obj\Debug\net5.0\Resq.Web.genrunti
 C:\Users\HFET\source\repos\Resqu.API\Resq.Web\obj\Debug\net5.0\Razor\Views\BackOffice\AddRole.cshtml.g.cs
 C:\Users\HFET\source\repos\Resqu.API\Resq.Web\obj\Debug\net5.0\Razor\Views\BackOffice\EmptyVendor.cshtml.g.cs
 C:\Users\HFET\source\repos\Resqu.API\Resq.Web\obj\Debug\net5.0\Razor\Views\BackOffice\GetAllCustomers.cshtml.g.cs
+C:\Users\HFET\source\repos\Resqu.API\Resq.Web\bin\Debug\net5.0\CrossPlatformLibrary.Platform.dll
+C:\Users\HFET\source\repos\Resqu.API\Resq.Web\bin\Debug\net5.0\CrossPlatformLibrary.dll
+C:\Users\HFET\source\repos\Resqu.API\Resq.Web\bin\Debug\net5.0\CrossPlatformLibrary.Geolocation.dll
+C:\Users\HFET\source\repos\Resqu.API\Resq.Web\bin\Debug\net5.0\GeoCoordinate.NetCore.dll
+C:\Users\HFET\source\repos\Resqu.API\Resq.Web\bin\Debug\net5.0\System.Device.Portable.dll

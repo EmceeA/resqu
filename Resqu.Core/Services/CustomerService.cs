@@ -1,4 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using GeoCoordinatePortable;
+using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 using Resqu.Core.Constants;
@@ -7,9 +9,14 @@ using Resqu.Core.Entities;
 using Resqu.Core.Interface;
 using RestSharp;
 using Serilog;
+using StackExchange.Redis;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Net;
+using System.Net.Mail;
+using System.Runtime.Serialization.Json;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
@@ -22,12 +29,14 @@ namespace Resqu.Core.Services
         private IConfiguration _config;
         private readonly IOtp _otp;
         private readonly ICacheService _cache;
-        public CustomerService(ResquContext context, IOtp otp, ICacheService cache, IConfiguration config)
+        private readonly IHttpContextAccessor _http;
+        public CustomerService(ResquContext context, IOtp otp, ICacheService cache, IConfiguration config, IHttpContextAccessor http)
         {
             _context = context;
             _otp = otp;
             _cache = cache;
             _config = config;
+            _http = http;
         }
 
         public async Task<CustomerSignInResponse> SignInCustomer(CustomerSignInRequest signInModel)
@@ -119,6 +128,9 @@ namespace Resqu.Core.Services
         {
             try
             {
+                //var length = signUpModel.PhoneNumber.Length - 1;
+                signUpModel.PhoneNumber = "0"+signUpModel.PhoneNumber.Substring(4, 10);
+                _http.HttpContext.Session.SetString("phone", signUpModel.PhoneNumber);
                 var getCustomer = await _context.Customers.Where(d => d.PhoneNumber == signUpModel.PhoneNumber && d.FirstName == signUpModel.FirstName && d.LastName == signUpModel.LastName).AnyAsync();
                 if (getCustomer)
                 {
@@ -127,10 +139,6 @@ namespace Resqu.Core.Services
                         Status = "Customer Already Enrolled"
                     };
                 }
-
-                //var getOtp = await _otp.SendOtp(new SendOtpRequestDto { MobileNumber = signUpModel.PhoneNumber });
-
-                var getOtpByNumber = await _context.Otps.Where(d => d.Phone == signUpModel.PhoneNumber).Select(c => c.OtpNumber).FirstOrDefaultAsync();
                 var createDedicatedAccount = await CreateCustomerAccount(new DedicatedAccountRequest
                 {
                     Email = signUpModel.Email,
@@ -147,30 +155,64 @@ namespace Resqu.Core.Services
                 if (createDedicatedAccount.message == "Customer created" && createDedicatedAccount.status == true)
                 {
 
-                    if (getOtpByNumber != null && getOtpByNumber == signUpModel.Otp)
+                    var getToken = _context.Otps.Where(d => d.Phone == signUpModel.PhoneNumber).FirstOrDefault();
+                    var onetime = GenerateRandom(6);
+                    if (getToken != null)
                     {
-                        await _context.Customers.AddAsync(new Resqu.Core.Entities.Customer
-                        {
-                            FirstName = signUpModel.FirstName,
-                            LastName = signUpModel.LastName,
-                            PhoneNumber = signUpModel.PhoneNumber,
-                            Pin = EncodePin(signUpModel.Pin),
-                            DateCreated = DateTime.Now,
-                            AccountId = createDedicatedAccount.data.id,
-                            EmailAddress = signUpModel.Email,
-                            IsCustomerCreated = true,
-                            IsDedicatedCreated = false
-                        });
-
-                        await _context.SaveChangesAsync();
-                        return new CustomerSignUpResponseDto
-                        {
-                            FirstName = signUpModel.FirstName,
-                            LastName = signUpModel.LastName,
-                            PhoneNumber = signUpModel.PhoneNumber,
-                            Status = "Success"
-                        };
+                        getToken.DateCreated = DateTime.Now;
+                        getToken.ExpiryDate = getToken.DateCreated.AddMinutes(5);
+                        getToken.OtpNumber = onetime;
+                        getToken.Status = "UPDATED";
+                        _context.SaveChanges();
                     }
+                    else if (getToken == null)
+                    {
+                        var createdDate = DateTime.Now;
+                        var otps = new Otp
+                        {
+                            OtpNumber = onetime,
+                            Phone = signUpModel.PhoneNumber,
+                            DateCreated = createdDate,
+                            ExpiryDate = createdDate.AddMinutes(5),
+                            Status = "CREATED"
+                        };
+                        _context.Otps.Add(otps);
+                        _context.SaveChanges();
+                    }
+
+                   
+
+                    //Email(signUpModel.Email, $"Your One Time Password is {oneTimePassword.OtpNumber}");
+                    //var getOtpByNumber = await _context.Otps.Where(d => d.Phone == signUpModel.PhoneNumber).Select(c => c.OtpNumber).FirstOrDefaultAsync();
+                    //if (getOtpByNumber != null && getOtpByNumber == signUpModel.Otp)
+                    //{
+                    await _context.Customers.AddAsync(new Resqu.Core.Entities.Customer
+                    {
+                        FirstName = signUpModel.FirstName,
+                        LastName = signUpModel.LastName,
+                        PhoneNumber = signUpModel.PhoneNumber,
+                        Pin = EncodePin(signUpModel.Pin),
+                        DateCreated = DateTime.Now,
+                        AccountId = createDedicatedAccount.data.id,
+                        EmailAddress = signUpModel.Email,
+                        IsCustomerCreated = true,
+                        IsDedicatedCreated = false
+                    });
+                    //var dedicated = CreateDedicatedNubanAccount(new DedicatedNubanAccountRequest
+                    //{
+                    //    bankName = "wema-bank",
+                    //    customer = createDedicatedAccount.data.id
+                    //});
+                    await _context.SaveChangesAsync();
+                    return new CustomerSignUpResponseDto
+                    {
+                        FirstName = signUpModel.FirstName,
+                        LastName = signUpModel.LastName,
+                        PhoneNumber = signUpModel.PhoneNumber,
+                        EmailAddress = signUpModel.Email,
+                        Status = "Success"
+                    };
+                    //}
                 }
                 
                 //09064615283
@@ -185,6 +227,31 @@ namespace Resqu.Core.Services
                 throw;
             }
             
+        }
+
+
+
+
+        public static void Email(string email, string htmlString)
+        {
+            try
+            {
+                MailMessage message = new MailMessage();
+                SmtpClient smtp = new SmtpClient();
+                message.From = new MailAddress("adetop99@gmail.com");
+                message.To.Add(new MailAddress(email));
+                message.Subject = "Test";
+                message.IsBodyHtml = true; //to make message body as html  
+                message.Body = htmlString;
+                smtp.Port = 587;
+                smtp.Host = "smtp.gmail.com"; //for gmail host  
+                smtp.EnableSsl = true;
+                smtp.UseDefaultCredentials = false;
+                smtp.Credentials = new NetworkCredential("adetop99@gmail.com", "OLUWAseun");
+                smtp.DeliveryMethod = SmtpDeliveryMethod.Network;
+                smtp.Send(message);
+            }
+            catch (Exception) { }
         }
 
         public string EncodePin(string pin)
@@ -278,43 +345,37 @@ namespace Resqu.Core.Services
             var res = new string(result);
             return res;
         }
-        public async Task<ServiceDto> BookService(ServiceDto service)
+        public async Task<ServiceResponseDto> BookService(ServiceDto service)
         {
             var serviceModel = new ResquService
             {
                 ServiceName = service.ServiceName,
-                ServiceId = service.ServiceId,
-                DateStarted = DateTime.Now,
-                CustomerPhone = service.CustomerPhone,
-                Description = service.Description,
                 SubCategoryName = service.SubCategoryName,
-                SubCategoryId = service.SubCategoryId,
-                VendorPhone = service.VendorPhone,
-                VendorName = service.VendorName,
-                VendorGender =service.VendorGender,
                 Price = service.SubCategoryPrice,
-                BookingId = $"{service.ServiceName}-{GenerateRandom(10)}",
+                BookingId = $"{service.ServiceName.Substring(0,3).ToUpper()}/{GenerateRandom(10)}",
                 IsStarted = true,
-                Status = "ONGOING"
+                Description = service.Description,
+                Status = "ONGOING",
+                CustomerLocation = service.CustomerAddress,
             };
 
             _context.ResquServices.Add(serviceModel);
             _context.SaveChanges();
+            var getNearestVendor = await CalculateShortestDistance(service.CustomerAddress, null, service.SubCategoryName, service.ServiceName);
 
-            return new ServiceDto
+            return new ServiceResponseDto
             {
-                CustomerPhone = service.CustomerPhone,
+                
                 Description = service.Description,
-                ServiceId = service.ServiceId,
-                ServiceName = _context.Expertises.Where(e => e.Id == service.ServiceId).Select(c => c.Name).FirstOrDefault(),
-                StartDate = serviceModel.DateStarted,
-                SubCategoryId = service.SubCategoryId,
-                SubCategoryName = _context.ExpertiseCategories.Where(e => e.Id == service.SubCategoryId).Select(c => c.Name).FirstOrDefault(),
+                ServiceName = service.ServiceName,
+                SubCategoryName = service.SubCategoryName,
                 BookingId = serviceModel.BookingId,
-                VendorGender= service.VendorGender,
-                VendorName = service.VendorName,
-                VendorPhone = service.VendorPhone,
-                SubCategoryPrice = _context.ExpertiseCategories.Where(e=>e.Id == service.SubCategoryId).Select(w=>w.Price).FirstOrDefault(),
+                SubCategoryPrice = getNearestVendor.Price,
+                VendorName = getNearestVendor.VendorName,
+                VendorGender = getNearestVendor.Gender,
+                VendorPhone = getNearestVendor.Phone,
+                Distance  = getNearestVendor.Distance,
+                Time = Math.Round(getNearestVendor.Time)
             };
         }
 
@@ -652,8 +713,13 @@ namespace Resqu.Core.Services
             restRequest.AddHeader("Authorization", $"Bearer {_config.GetSection("WalletAPI:SecretKey").Value}");
             restRequest.AddHeader("Content-Type", "application/json");
             restRequest.AddHeader("Cookie", "sails.sid=s%3ACtTz966NlJosAffqG13riHFNP8woUYuc.lrEQgc4u5itWxaAQoMU9zyVPSpDkEOB0vylLHA3HhwU");
-            var body = JsonConvert.SerializeObject(request);
-                
+            var reqestParams = new
+            {
+                email = request.Email,
+                firstName = request.FirstName,
+                lastName = request.LastName
+            };
+            var body = JsonConvert.SerializeObject(reqestParams);
             restRequest.AddParameter("application/json", body, ParameterType.RequestBody);
             IRestResponse<DedicatedAccountResponse> response = await client.ExecuteAsync<DedicatedAccountResponse>(restRequest);
             return response.Data;
@@ -671,6 +737,291 @@ namespace Resqu.Core.Services
             restRequest.AddParameter("application/json", body, ParameterType.RequestBody);
             IRestResponse<DedicatedNubanAccountResponse> response = await client.ExecuteAsync<DedicatedNubanAccountResponse>(restRequest);
             return response.Data;
+        }
+
+        public async Task<RateVendorResponseDto> RateVendor(RateVendorDto rateVendor)
+        {
+            try
+            {
+                var rate = new VendorRating
+                {
+                    Rating = rateVendor.StarRating,
+                    UserId = rateVendor.UserId,
+                    VendorId = rateVendor.VendorId
+                };
+                _context.VendorRatings.Add(rate);
+                _context.SaveChanges();
+                return new RateVendorResponseDto
+                {
+                    Message = "Rated Successfully",
+                    Status = true
+                };
+            }
+            catch (Exception ex)
+            {
+                return new RateVendorResponseDto
+                {
+                    Message = $"{ex.Message}",
+                    Status = false
+                };
+            }
+        }
+
+        public async Task<OtpConfirmationResponseDto> ConfirmOtp(OtpDto otp)
+        {
+            //otp.Phone = otp.Phone.Substring(4, 10);
+            //var phone = _http.HttpContext.Session.GetString("phone");
+            var validateOtp = await _context.Otps.Where(e => e.Phone == otp.Phone && e.OtpNumber == otp.Otp).FirstOrDefaultAsync();
+
+            //var otpExpiry = validateOtp.ExpiryDate;
+            //var currentDate = DateTime.Now;
+            var check1 = DateTime.Now > validateOtp.ExpiryDate;
+            var check2 = validateOtp.ExpiryDate < DateTime.Now;
+            if (DateTime.Now > validateOtp.ExpiryDate)
+            {
+                validateOtp.Status = "EXPIRED";
+                _context.SaveChanges();
+                return new OtpConfirmationResponseDto
+                {
+                    Message = "The Token has expired",
+                    Status = false
+                };
+            }
+            if (validateOtp != null && DateTime.Now < validateOtp.ExpiryDate)
+            {
+                validateOtp.Status = "USED";
+                _context.SaveChanges();
+                return new OtpConfirmationResponseDto
+                {
+                    Message = "Success",
+                    Status = true
+                };
+            }
+
+            if (validateOtp == null)
+            {
+                return new OtpConfirmationResponseDto
+                {
+                    Message = "Invalid Otp",
+                    Status = false
+                };
+            }
+
+            return new OtpConfirmationResponseDto
+            {
+                Message = "An Error Occurred",
+                Status = false
+            };
+        }
+
+        public async Task<OtpGenerateResponseDto> GenerateOtp(string phoneNo)
+        {
+            var getCustomer = await _context.Customers.Where(e => e.PhoneNumber == phoneNo).FirstOrDefaultAsync();
+            if (getCustomer == null)
+            {
+                return new OtpGenerateResponseDto
+                {
+                    Status = false,
+                    Token = null,
+                    Message = "Invalid user"
+                };
+            }
+
+            if (getCustomer != null)
+            {
+                var tokenizer = _context.Otps.Where(o => o.Phone == phoneNo).FirstOrDefault();
+                if (tokenizer == null)
+                {
+
+                    var otps = GenerateRandom(6);
+                    var toks = new Otp
+                    {
+                        DateCreated = DateTime.Now,
+                        ExpiryDate = DateTime.Now.AddMinutes(5),
+                        OtpNumber = otps,
+                        Phone = phoneNo,
+                        Status = "CREATED",
+                    };
+                    _context.Otps.Add(toks);
+                    _context.SaveChanges();
+                    return new OtpGenerateResponseDto
+                    {
+                        Status = true,
+                        Token = tokenizer.OtpNumber,
+                        Message = "Otp Generated Successfully"
+                    };
+                }
+                if (tokenizer != null)
+                {
+                    var otpss = GenerateRandom(6);
+                    tokenizer.OtpNumber = otpss;
+                    tokenizer.DateCreated = DateTime.Now;
+                    tokenizer.ExpiryDate = tokenizer.DateCreated.AddMinutes(5);
+                    tokenizer.Status = "UPDATED";
+                    _context.SaveChanges();
+                    return new OtpGenerateResponseDto
+                    {
+                        Status = true,
+                        Token = tokenizer.OtpNumber,
+                        Message = "Otp Generated Successfully"
+                    };
+                }
+            }
+            return null;
+        }
+
+        public async Task<ConnectResponseDto> Connect(ConnectRequestDto connect)
+        {
+            
+            throw new NotImplementedException();
+        }
+
+        public async Task<RootObject> GetAddress(double lat, double lon)
+        {
+          
+
+                WebClient webClient = new WebClient();
+
+                webClient.Headers.Add("user-agent", "Mozilla/4.0(compatible; MSIE 6.0; Windows NT 5.2; .NET CLR 1.0.3705;)");
+
+                webClient.Headers.Add("Referer", "http://www.microsoft.com");
+
+                var jsonData = webClient.DownloadData("http://nominatim.openstreetmap.org/reverse?format=json&lat=" + lat + "&lon=" + lon);
+
+                DataContractJsonSerializer ser = new DataContractJsonSerializer(typeof(RootObject));
+
+                RootObject rootObject = (RootObject)ser.ReadObject(new MemoryStream(jsonData));
+
+                return rootObject;
+        }
+
+        public async Task<double> CalculateDistance(double slat, double slon, double dlat, double dlon)
+        {
+
+            var sourceCord = new  GeoCoordinate(slat,slon);
+            var destCord = new GeoCoordinate(dlat, dlon);
+
+            return sourceCord.GetDistanceTo(destCord);
+        }
+
+        public async Task<VendorDistanceResponseDto> CalculateShortestDistance(string customerLocation, string vendorLocation, string subCategory, string serviceName)
+        {
+            List<VendorDistanceRequestDto> destination = new List<VendorDistanceRequestDto>();
+            var getCustomerLatLong = await GetLatitudeLongitudeByAddress(customerLocation);
+            var getExpertiseIdByName = _context.Expertises.Where(e => e.Name == serviceName).Select(d=>d.Id).FirstOrDefault();
+            //var getSubCategory = _context.VendorServiceSubCategories.Where(e => e.ServiceName == serviceName).ToList();
+            var linqQuery = (from cats in _context.VendorServiceSubCategories
+                            where cats.ServiceName == serviceName
+                            join ven in _context.Vendors
+                            on cats.VendorId equals ven.Id
+                            select new
+                            {
+                                cats.VendorId,
+                                cats.SubCategoryId,
+                            }).ToList();
+            var getVendorAddresses = new List<Entities.Vendor>();
+            foreach (var subCat in linqQuery)
+            {
+                var getVendorInfo = _context.Vendors.Where(v => v.ExpertiseId == getExpertiseIdByName && v.AvailabilityStatus == "Online" && v.Id == subCat.VendorId).FirstOrDefault();
+                if (getVendorInfo != null)
+                {
+                    getVendorAddresses.Add(getVendorInfo);
+                }
+            }
+            foreach (var contactAddress in getVendorAddresses)
+            {
+                var getVendorLatLong = await GetLatitudeLongitudeByAddress(contactAddress.ContactAddress);
+                destination.Add(new VendorDistanceRequestDto { Latitude = getVendorLatLong.lat, Longitude = getVendorLatLong.lng, VendorId = contactAddress.Id, VendorName = contactAddress.FirstName + " " + contactAddress.LastName });
+            }
+            List<VendorDistanceResponseDto> vendors = new List<VendorDistanceResponseDto>();
+            foreach (var dest in destination)
+            {
+                var sourceDestination = new GeoCoordinate(getCustomerLatLong.lat, getCustomerLatLong.lng);
+                var vendorDestination = new GeoCoordinate(dest.Latitude, dest.Longitude);
+                var distance = sourceDestination.GetDistanceTo(vendorDestination);
+                var getTime = await GetTravelTime(Convert.ToSingle(distance));
+                var vend = new VendorDistanceResponseDto
+                {
+                    Distance = sourceDestination.GetDistanceTo(vendorDestination),
+                    VendorId = dest.VendorId,
+                    VendorName = dest.VendorName,
+                    Price = _context.ExpertiseCategories.Where(s => s.ExpertiseId == getExpertiseIdByName).Select(p => p.Price).FirstOrDefault(),
+                    ServiceName = serviceName,
+                    ServiceSubCategory = subCategory,
+                    Gender = _context.Vendors.Where(v => v.Id == dest.VendorId).Select(d => d.Gender).FirstOrDefault(),
+                    Phone = _context.Vendors.Where(v => v.Id == dest.VendorId).Select(d => d.PhoneNo).FirstOrDefault(),
+                    Time = Math.Round(getTime)
+                };
+                vendors.Add(vend);
+
+                //var secondVendor = new GeoCoordinate(dest.Latitude, dest.Longitude);
+                //vendors.Add(new VendorDistanceResponseDto
+                //{
+                //    Distance = sourceDestination.GetDistanceTo(secondVendor),
+                //    VendorId = dest.VendorId,
+                //    VendorName = dest.VendorName
+                //});
+
+
+                //var thirdVendor = new GeoCoordinate(dest.Latitude, dest.Longitude);
+                //vendors.Add(new VendorDistanceResponseDto
+                //{
+                //    Distance = sourceDestination.GetDistanceTo(thirdVendor),
+                //    VendorId = dest.VendorId,
+                //    VendorName = dest.VendorName
+                //});
+            }
+            var pickNearestDistance = vendors.OrderBy(e => e.Distance).FirstOrDefault();
+            return pickNearestDistance;
+        }
+
+        public async Task<Location> GetLatitudeLongitudeByAddress(string address)
+        {
+            var client = new 
+                RestClient(_config.GetSection("Location:ApiUrl").Value.Replace("@apikey",_config.GetSection("Location:Api_key").Value).Replace("@address",address));
+            client.Timeout = -1;
+            var request = new RestRequest(Method.GET);
+            IRestResponse<Root> response = await client.ExecuteAsync<Root>(request);
+            var loc = new Location();
+            foreach (var resp in response.Data.results)
+            {
+
+                loc.lat = resp.geometry.location.lat;
+                loc.lng = resp.geometry.location.lng;
+            }
+            return loc;
+        }
+
+        public async Task<float> GetTravelTime(float distance)
+        {
+            int speed = Convert.ToInt32(_config.GetSection("TravelTime").Value);
+            float time = distance/speed;
+            var timeInMinutes = (time % 3600) / 60;
+            return timeInMinutes;
+        }
+
+        public async Task<UpdateCustomerResponseDto> AcceptRequest(string bookingId)
+        {
+            var getBookingDetails = await _context.ResquServices.Where(e => e.BookingId == bookingId).FirstOrDefaultAsync();
+            getBookingDetails.IsVendorAccepted = true;
+            _context.SaveChanges();
+            return new UpdateCustomerResponseDto
+            {
+                Message = "Accepted",
+                Status = true
+            };
+        }
+
+        public async Task<UpdateCustomerResponseDto> RejectRequest(string bookingId)
+        {
+            var getBookingDetails = await _context.ResquServices.Where(e => e.BookingId == bookingId).FirstOrDefaultAsync();
+            getBookingDetails.IsVendorRejected = true;
+            _context.SaveChanges();
+            return new UpdateCustomerResponseDto
+            {
+                Message = "Rejected",
+                Status = true
+            };
         }
     }
 }

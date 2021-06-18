@@ -1,5 +1,17 @@
 ﻿namespace Resqu.Core.Entities
 {
+
+    public class VendorServiceSubCategory : VendorAudit
+    {
+        public long SubCategoryId { get; set; }
+        public ExpertiseCategory ExpertiseCategory { get; set; }
+        public string SubCategoryName { get; set; }
+        public long VendorId { get; set; }
+        public Vendor Vendor { get; set; }
+        public string VendorName { get; set; }
+        public string ServiceName  { get; set; }
+        public long ServiceId  { get; set; }
+    }
     public class Vendor:VendorAudit
     {
         
@@ -19,6 +31,7 @@
         public string NextOfKinAddress { get; set; }
         public string NextOfKinPhone { get; set; }
         public string VendorCode { get; set; }
+        public string AvailabilityStatus { get; set; }
         public string Pin { get; set; }
         public string VendorPicture { get; set; }
         public int? ExpertiseId { get; set; }

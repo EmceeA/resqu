@@ -16,7 +16,7 @@ namespace Resqu.Core.Migrations
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
-                .HasAnnotation("ProductVersion", "5.0.6")
+                .HasAnnotation("ProductVersion", "5.0.5")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
             modelBuilder.Entity("Resqu.Core.Entities.BackOfficeRole", b =>
@@ -331,8 +331,14 @@ namespace Resqu.Core.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<DateTime>("DateCreated")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("DateModified")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("ExpiryDate")
+                        .HasColumnType("datetime2");
 
                     b.Property<int?>("GetCustomerId")
                         .HasColumnType("int");
@@ -341,6 +347,9 @@ namespace Resqu.Core.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Phone")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Status")
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
@@ -510,9 +519,6 @@ namespace Resqu.Core.Migrations
                         .HasColumnType("bigint")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<decimal>("AmountPerMin")
-                        .HasColumnType("decimal(18,2)");
-
                     b.Property<string>("BookingId")
                         .HasColumnType("nvarchar(max)");
 
@@ -556,6 +562,12 @@ namespace Resqu.Core.Migrations
                         .HasColumnType("bit");
 
                     b.Property<bool>("IsStarted")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsVendorAccepted")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsVendorRejected")
                         .HasColumnType("bit");
 
                     b.Property<string>("PaymentType")
@@ -710,6 +722,9 @@ namespace Resqu.Core.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<string>("AvailabilityStatus")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("CompanyName")
                         .HasColumnType("nvarchar(max)");
 
@@ -847,6 +862,88 @@ namespace Resqu.Core.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("VendorAccounts");
+                });
+
+            modelBuilder.Entity("Resqu.Core.Entities.VendorRating", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("Rating")
+                        .HasColumnType("int");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("VendorId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("VendorRatings");
+                });
+
+            modelBuilder.Entity("Resqu.Core.Entities.VendorServiceSubCategory", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("DateCreated")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("DateModified")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int?>("ExpertiseCategoryId")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("IsBan")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsFullyVerified")
+                        .HasColumnType("bit");
+
+                    b.Property<long>("ServiceId")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("ServiceName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<long>("SubCategoryId")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("SubCategoryName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<long>("VendorId")
+                        .HasColumnType("bigint");
+
+                    b.Property<int?>("VendorId1")
+                        .HasColumnType("int");
+
+                    b.Property<string>("VendorName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("isVerified")
+                        .HasColumnType("bit");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ExpertiseCategoryId");
+
+                    b.HasIndex("VendorId1");
+
+                    b.ToTable("VendorServiceSubCategories");
                 });
 
             modelBuilder.Entity("Resqu.Core.Entities.Wallet", b =>
@@ -1018,6 +1115,21 @@ namespace Resqu.Core.Migrations
                         .HasForeignKey("ExpertiseId");
 
                     b.Navigation("Expertise");
+                });
+
+            modelBuilder.Entity("Resqu.Core.Entities.VendorServiceSubCategory", b =>
+                {
+                    b.HasOne("Resqu.Core.Entities.ExpertiseCategory", "ExpertiseCategory")
+                        .WithMany()
+                        .HasForeignKey("ExpertiseCategoryId");
+
+                    b.HasOne("Resqu.Core.Entities.Vendor", "Vendor")
+                        .WithMany()
+                        .HasForeignKey("VendorId1");
+
+                    b.Navigation("ExpertiseCategory");
+
+                    b.Navigation("Vendor");
                 });
 
             modelBuilder.Entity("Resqu.Core.Entities.WalletPayment", b =>

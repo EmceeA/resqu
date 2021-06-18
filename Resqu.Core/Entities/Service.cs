@@ -44,8 +44,7 @@ namespace Resqu.Core.Entities
         public string Description { get; set; }
         public string TotalPrice { get; set; }
         public string PaymentType { get; set; }
-        public decimal AmountPerMin { get; set; }
-
-
+        public bool IsVendorAccepted { get; set; }
+        public bool IsVendorRejected { get; set; }
     }
 }

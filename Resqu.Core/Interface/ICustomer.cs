@@ -12,9 +12,20 @@ namespace Resqu.Core.Interface
        
         Task<UpdateCustomerResponseDto> ActivateCustomerProfile(UpdateCustomerRequestDto requestDto);
         bool DebitCredit(decimal backOfficeCost, decimal vendorCost, string backOfficeWallet, string destinationWallet, string sourceWallet, decimal totalAmount);
-        Task<ServiceDto> BookService(ServiceDto service);
+        Task<ServiceResponseDto> BookService(ServiceDto service);
+        Task<float> GetTravelTime(float distance);
+        Task<UpdateCustomerResponseDto> AcceptRequest(string bookingId);
+        Task<UpdateCustomerResponseDto> RejectRequest(string bookingId);
+        Task<RootObject> GetAddress(double lat, double lon);
+        Task<Location> GetLatitudeLongitudeByAddress(string address);
+        Task<double> CalculateDistance(double slat, double slon, double dlat, double dlon);
+        Task<VendorDistanceResponseDto> CalculateShortestDistance(string customerLocation, string vendorLocation, string subCategory, string serviceName);
+        Task<ConnectResponseDto> Connect(ConnectRequestDto connect);
 
+        Task<OtpConfirmationResponseDto> ConfirmOtp(OtpDto otp);
+        Task<OtpGenerateResponseDto> GenerateOtp(string phoneNo);
 
+        Task<RateVendorResponseDto> RateVendor(RateVendorDto rateVendor);
         Task<DedicatedAccountResponse> CreateCustomerAccount(DedicatedAccountRequest request);
         Task<DedicatedNubanAccountResponse> CreateDedicatedNubanAccount(DedicatedNubanAccountRequest request);
         Task<TransferToWalletResponseDto> TransferToWallet(TransferToWalletRequestDto transfer);

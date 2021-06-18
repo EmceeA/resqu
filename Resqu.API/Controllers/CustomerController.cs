@@ -18,13 +18,15 @@ namespace Resqu.API.Controllers
     public class CustomerController : Controller
     {
         private readonly ICustomer _customer;
+        private readonly IHttpContextAccessor _accessor;
         private readonly IJwtAuthManager _jwtAuthManager;
         private readonly ILogger<CustomerController> _logger;
-        public CustomerController(ICustomer customer, IJwtAuthManager jwtAuthManager, ILogger<CustomerController> logger)
+        public CustomerController(ICustomer customer, IJwtAuthManager jwtAuthManager, ILogger<CustomerController> logger, IHttpContextAccessor accessor)
         {
             _customer = customer;
             _jwtAuthManager = jwtAuthManager;
             _logger = logger;
+            _accessor = accessor;
         }
 
         [HttpPost]
@@ -39,7 +41,7 @@ namespace Resqu.API.Controllers
             {
                 return Ok(register);
             }
-            return BadRequest(register);
+            return BadRequest(register.Status);
         }
 
 
@@ -73,6 +75,42 @@ namespace Resqu.API.Controllers
         }
 
         [HttpPost]
+        //[Authorize]
+        public async Task<ActionResult> ValidateOtp(OtpDto requestDto)
+        {
+            
+            requestDto.Phone = _accessor.HttpContext.Session.GetString("phone");
+            //requestDto.Phone = phone;
+            var activate = await _customer.ConfirmOtp(requestDto);
+            if (activate.Status == true)
+            {
+                _logger.LogInformation($"User [{requestDto.Phone}] logged into the system.");
+                return Ok(activate);
+            }
+
+            return BadRequest(activate);
+        }
+
+
+        [HttpPost]
+        //[Authorize]
+        public async Task<ActionResult> GenerateOtp(string phoneNo)
+        {
+
+            //requestDto.Phone = phone;
+            var generate = await _customer.GenerateOtp(phoneNo);
+            if (generate.Status == true)
+            {
+                _logger.LogInformation($"User [{phoneNo}] logged into the system.");
+                return Ok(generate);
+            }
+
+            return BadRequest(generate);
+        }
+
+
+
+        [HttpPost]
 
         public async Task<IActionResult> BookService(ServiceDto service)
         {
@@ -82,6 +120,49 @@ namespace Resqu.API.Controllers
             }
 
             var result = await _customer.BookService(service);
+            return Ok(result);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetAddress(double lat, double lon)
+        {
+            var result = await _customer.GetAddress(lat,lon);
+            return Ok(result);
+        }
+
+
+        [HttpGet]
+        public async Task<IActionResult> AcceptRequest(string bookingId)
+        {
+            var result = await _customer.AcceptRequest(bookingId);
+            return Ok(result);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> RejectRequest(string bookingId)
+        {
+            var result = await _customer.RejectRequest(bookingId);
+            return Ok(result);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetLatitudeLongitudeByAddress(string address)
+        {
+            var result = await _customer.GetLatitudeLongitudeByAddress(address);
+            return Ok(result);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> GetNearestVendor(string customerLocation, string vendorLocation,string serviceName, string subCategory)
+        {
+            var result = await _customer.CalculateShortestDistance(customerLocation,vendorLocation,serviceName,subCategory);
+            return Ok(result);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> CalculateDistance(double slat, double slon, double dlat, double dlon)
+        {
+            var result = await _customer.CalculateDistance(slat, slon,dlat,dlon);
             return Ok(result);
         }
 
@@ -127,6 +208,15 @@ namespace Resqu.API.Controllers
             return Ok(payment);
         }
 
+
+        [HttpPost]
+        public async Task<IActionResult> RateVendor(RateVendorDto rate)
+        {
+            var rater = await _customer.RateVendor(rate);
+            return Ok(rater);
+        }
+
+
         [HttpPost]
         public async Task<IActionResult> CreateCustomerAccount(DedicatedAccountRequest request)
         {
@@ -162,7 +252,7 @@ namespace Resqu.API.Controllers
             {
                 return BadRequest(ModelState);
             }
-            var register = await _customer.SignInCustomer(signUp);
+            var register = await _customer.CustomerSignIn(signUp);
             var claims = new[]
         {
             new Claim(ClaimTypes.Name,signUp.PhoneNumber),
