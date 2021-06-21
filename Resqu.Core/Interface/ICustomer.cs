@@ -16,6 +16,8 @@ namespace Resqu.Core.Interface
         Task<float> GetTravelTime(float distance);
         Task<UpdateCustomerResponseDto> AcceptRequest(string bookingId);
         Task<UpdateCustomerResponseDto> RejectRequest(string bookingId);
+        Task<UpdateCustomerResponseDto> GoOnline(string mobileNo);
+        Task<UpdateCustomerResponseDto> GoOffline(string mobileNo);
         Task<RootObject> GetAddress(double lat, double lon);
         Task<Location> GetLatitudeLongitudeByAddress(string address);
         Task<double> CalculateDistance(double slat, double slon, double dlat, double dlon);
@@ -38,6 +40,7 @@ namespace Resqu.Core.Interface
         Task<List<ServiceListDto>> ServiceList();
         Task<List<ProductListDto>> ProductList();
         Task<List<ServiceCategoryListDto>> ServiceCategoryList();
+        Task<List<ServiceCategoryDto>> ServiceCategoryByExpertise(int expertiseId);
         
     }
 

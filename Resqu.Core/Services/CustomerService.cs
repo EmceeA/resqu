@@ -42,7 +42,7 @@ namespace Resqu.Core.Services
         public async Task<CustomerSignInResponse> SignInCustomer(CustomerSignInRequest signInModel)
         {
             CustomerSignInResponse response = null;
-            string custCacheId = ConstantValue.USER_LOGIN_CACHE + signInModel.PhoneNumber + signInModel.Pin;
+            string custCacheId = ConstantValue.USER_LOGIN_CACHE + signInModel.PhoneNumber + signInModel.Password;
             var cachedString = _cache.GetCachedValue(custCacheId, ConstantValue.CACHE_KEY_APP_DEFAULT).Result;
             //string cachedString = null;
 
@@ -94,7 +94,7 @@ namespace Resqu.Core.Services
             }
             string pin = DecodePin(getUserName.Pin);
 
-            var getUser = await _context.Customers.Where(c => c.PhoneNumber == signInModel.PhoneNumber && signInModel.Pin == pin).FirstOrDefaultAsync();
+            var getUser = await _context.Customers.Where(c => c.PhoneNumber == signInModel.PhoneNumber && signInModel.Password == pin).FirstOrDefaultAsync();
             if (getUser == null)
             {
                 return new CustomerSignInResponse
@@ -191,7 +191,7 @@ namespace Resqu.Core.Services
                         FirstName = signUpModel.FirstName,
                         LastName = signUpModel.LastName,
                         PhoneNumber = signUpModel.PhoneNumber,
-                        Pin = EncodePin(signUpModel.Pin),
+                        Pin = EncodePin(signUpModel.Password),
                         DateCreated = DateTime.Now,
                         AccountId = createDedicatedAccount.data.id,
                         EmailAddress = signUpModel.Email,
@@ -992,12 +992,12 @@ namespace Resqu.Core.Services
             return loc;
         }
 
-        public async Task<float> GetTravelTime(float distance)
+        public  Task<float> GetTravelTime(float distance)
         {
             int speed = Convert.ToInt32(_config.GetSection("TravelTime").Value);
             float time = distance/speed;
             var timeInMinutes = (time % 3600) / 60;
-            return timeInMinutes;
+            return Task.FromResult<float>(timeInMinutes);
         }
 
         public async Task<UpdateCustomerResponseDto> AcceptRequest(string bookingId)
@@ -1022,6 +1022,83 @@ namespace Resqu.Core.Services
                 Message = "Rejected",
                 Status = true
             };
+        }
+
+        public async Task<UpdateCustomerResponseDto> GoOnline(string mobileNo)
+        {
+            var getVendor = await _context.Vendors.Where(x => x.PhoneNo == mobileNo).FirstOrDefaultAsync();
+            if (getVendor.AvailabilityStatus == "Online")
+            {
+                return new UpdateCustomerResponseDto
+                {
+                    Message = "Availability Status already Updated to Online",
+                    Status = false
+                };
+            }
+            if (getVendor  != null && getVendor.AvailabilityStatus == "Offline")
+            {
+                getVendor.AvailabilityStatus = "Online";
+                _context.SaveChanges();
+                return new UpdateCustomerResponseDto
+                {
+                    Message = "Availability Status Updated to Online",
+                    Status = true
+                };
+            }
+            return new UpdateCustomerResponseDto
+            {
+                Message = "An Error Occurred",
+                Status = false
+            };
+            
+        }
+
+        public async Task<UpdateCustomerResponseDto> GoOffline(string mobileNo)
+        {
+            var getVendor = await _context.Vendors.Where(x => x.PhoneNo == mobileNo).FirstOrDefaultAsync();
+            if (getVendor != null && getVendor.AvailabilityStatus == "Offline")
+            {
+                return new UpdateCustomerResponseDto
+                {
+                    Message = "Availability Status already Updated to Offline",
+                    Status = false
+                };
+            }
+            if (getVendor != null && getVendor.AvailabilityStatus == "Online")
+            {
+                getVendor.AvailabilityStatus = "Offline";
+                _context.SaveChanges();
+                return new UpdateCustomerResponseDto
+                {
+                    Message = "Availability Status Updated to Offline",
+                    Status = true
+                };
+            }
+            return new UpdateCustomerResponseDto
+            {
+                Message = "An Error Occurred",
+                Status = false
+            };
+        }
+
+        public async Task<List<ServiceCategoryDto>> ServiceCategoryByExpertise(int expertiseId)
+        {
+
+            var serviceCats =  await 
+                _context.Expertises.Where(d => d.Id == expertiseId).Select(w => new ServiceCategoryDto
+                {
+                ServiceCategoryId = w.ExpertiseCategoryId.Value,
+                ServiceCategoryName = _context.ExpertiseCategories.Where(e => e.ExpertiseId == expertiseId).Select(s => new ServiceCatDto { 
+                Name= s.Name,
+                Price = s.Price
+                }).ToList(),
+                
+            }).ToListAsync();
+            if(serviceCats == null)
+            {
+                return null;
+            }
+            return serviceCats;
         }
     }
 }

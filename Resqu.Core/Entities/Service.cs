@@ -45,6 +45,7 @@ namespace Resqu.Core.Entities
         public string TotalPrice { get; set; }
         public string PaymentType { get; set; }
         public bool IsVendorAccepted { get; set; }
+        public bool IsVendorArrived { get; set; }
         public bool IsVendorRejected { get; set; }
     }
 }

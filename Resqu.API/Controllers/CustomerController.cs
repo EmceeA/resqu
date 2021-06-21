@@ -138,6 +138,29 @@ namespace Resqu.API.Controllers
             return Ok(result);
         }
 
+
+        [HttpGet]
+        public async Task<IActionResult> GoOffline(string phone)
+        {
+            var result = await _customer.GoOffline(phone);
+            return Ok(result);
+        }
+
+
+        [HttpGet]
+        public async Task<IActionResult> GoOnline(string phone)
+        {
+            var result = await _customer.GoOnline(phone);
+            return Ok(result);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> ServiceCategoryByExpertise(int expertiseId)
+        {
+            var result = await _customer.ServiceCategoryByExpertise(expertiseId);
+            return Ok(result);
+        }
+
         [HttpGet]
         public async Task<IActionResult> RejectRequest(string bookingId)
         {

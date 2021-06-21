@@ -44,10 +44,10 @@ namespace Resqu.Core.Dto
         public string LastName { get; set; }
 
 
-        [Required(ErrorMessage ="Pin is required")]
+        [Required(ErrorMessage ="Password is required")]
         [MaxLength,MinLength(4, ErrorMessage = "Minimum and Maximum Length is 4")]
-        [RegularExpression(@"^[0-9]+$", ErrorMessage = "Only numerics are required")]
-        public string Pin { get; set; }
+        [DataType(DataType.Password)]
+        public string Password { get; set; }
 
     }
 }

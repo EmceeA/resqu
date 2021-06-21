@@ -35,7 +35,7 @@ namespace Resqu.Core.Dto
     public class CustomerSignInRequest
     {
         public string PhoneNumber { get; set; }
-        public string Pin { get; set; }
+        public string Password { get; set; }
     }
 
     public class UpdateCustomerRequestDto
@@ -422,11 +422,24 @@ namespace Resqu.Core.Dto
         public string ProductName { get; set; }
         public decimal ProductPrice { get; set; }
     }
+
+    public class ServiceCatDto
+    {
+        
+        public string Name { get; set; }
+        public decimal Price { get; set; }
+    }
     public class ServiceCategoryListDto
     {
         public int ServiceCategoryId { get; set; }
         public string ServiceCategoryName { get; set; }
         public decimal ServiceCategoryPrice { get; set; }
+    }
+
+    public class ServiceCategoryDto
+    {
+        public int ServiceCategoryId { get; set; }
+        public List<ServiceCatDto> ServiceCategoryName { get; set; }
     }
     public class UpdateCustomerResponseDto
     {

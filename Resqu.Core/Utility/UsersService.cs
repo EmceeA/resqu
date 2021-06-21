@@ -45,7 +45,7 @@ namespace Resqu.Core.Utility
                 };
             }
 
-            var validateCreds = _db.Customers.Where(d => d.PhoneNumber == customer.PhoneNumber && d.Pin == customer.Pin).FirstOrDefault();
+            var validateCreds = _db.Customers.Where(d => d.PhoneNumber == customer.PhoneNumber && d.Pin == customer.Password).FirstOrDefault();
 
             if (validateCreds == null)
             {
