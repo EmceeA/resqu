@@ -16,5 +16,8 @@ namespace Resqu.Core.Entities
         public int Rating { get; set; }
         public int VendorId { get; set; }
         public int UserId { get; set; }
+        public string ServiceType { get; set; }
+        public string BookingId { get; set; }
+        public DateTime CreatedAt { get; set; }
     }
 }

@@ -38,6 +38,9 @@ namespace Resqu.Core.Entities
         public string VendorPhone { get; set; }
         public string VendorLocation { get; set; }
         public string CustomerLocation { get; set; }
+
+        public string CustomerId { get; set; }
+        public string CustomerName { get; set; }
         public decimal Price { get; set; }
         public bool ProductRequired { get; set; }
         public long? ProductId { get; set; }

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Resqu.Core.Dto;
 using Resqu.Core.Entities;
@@ -14,10 +15,11 @@ namespace Resqu.Core.Services
     public class BackOfficeService : IBackOffice
     {
         private readonly ResquContext _context;
-       
-        public BackOfficeService(ResquContext context)
+        private readonly IWebHostEnvironment _hosting;
+        public BackOfficeService(ResquContext context, IWebHostEnvironment hosting)
         {
             _context = context;
+            _hosting = hosting;
         }
         public async Task<UpdateCustomerResponseDto> BanCustomer(string phone)
         {
@@ -143,9 +145,10 @@ namespace Resqu.Core.Services
                 NextOfKin = c.NextOfKinRelationship,
                 NextOfKinName = c.NextOfKinName,
                 NextOfKinPhone = c.NextOfKinPhone,
-                PhoneNumber = c.PhoneNumber,
+                PhoneNumber = c.PhoneNo,
                 VendorCode = c.VendorCode,
-                VendorName = c.CompanyName
+                VendorName = c.CompanyName,
+                Gender = c.Gender
             }).ToListAsync();
             if (vendors == null)
             {
@@ -315,7 +318,17 @@ namespace Resqu.Core.Services
         public async Task<UpdateCustomerResponseDto> AddService(ExpertiseDto expertiseDto)
         {
             try
+
             {
+                var checkExistence = _context.Expertises.Where(s => s.Name == _context.Expertises.Where(g=>g.Id == expertiseDto.ExpertiseId).Select(e=>e.Name).FirstOrDefault() && s.ExpertiseCategoryId == expertiseDto.ExpertiseCategoryId).Any();
+                if (checkExistence)
+                {
+                    return new UpdateCustomerResponseDto
+                    {
+                        Message = "Product Already Exists",
+                        Status = false
+                    };
+                }
                 var expert = new Expertise
                 {
                     
@@ -347,6 +360,139 @@ namespace Resqu.Core.Services
         public Task<UpdateCustomerResponseDto> AddVendor(AddVendorDto addVendorDto)
         {
             throw new NotImplementedException();
+        }
+
+        public async Task<UpdateCustomerResponseDto> BanVendor(int  id)
+        {
+            var getVendor = await _context.Vendors.FindAsync(id);
+            if (getVendor == null)
+            {
+                return new UpdateCustomerResponseDto
+                {
+                    Message = "Vendor not found",
+                    Status = false
+                };
+            }
+            if (getVendor.IsBan == true)
+            {
+                return new UpdateCustomerResponseDto
+                {
+                    Message = "Vendor Already Banned",
+                    Status = false
+                };
+            }
+            getVendor.IsBan = true;
+           await _context.SaveChangesAsync();
+            return new UpdateCustomerResponseDto
+            {
+                Message = "Vendor Banned Successfully",
+                Status = true
+            };
+        }
+
+        public async Task<UpdateCustomerResponseDto> UnBanVendor(int id)
+        {
+            var getVendor = await _context.Vendors.FindAsync(id);
+            if (getVendor == null)
+            {
+                return new UpdateCustomerResponseDto
+                {
+                    Message = "Vendor not found",
+                    Status = false
+                };
+            }
+            if (getVendor.IsBan == false)
+            {
+                return new UpdateCustomerResponseDto
+                {
+                    Message = "Vendor Already UnBanned",
+                    Status = false
+                };
+            }
+            getVendor.IsBan = false;
+            await _context.SaveChangesAsync();
+            return new UpdateCustomerResponseDto
+            {
+                Message = "Vendor UnBanned Successfully",
+                Status = true
+            };
+        }
+
+        public async Task<UpdateCustomerResponseDto> DeleteVendor(int id)
+        {
+            var getVendor = await _context.Vendors.FindAsync(id);
+            if (getVendor == null)
+            {
+                return new UpdateCustomerResponseDto
+                {
+                    Message = "Vendor not found",
+                    Status = false
+                };
+            }
+            if (getVendor.IsDeleted == true)
+            {
+                return new UpdateCustomerResponseDto
+                {
+                    Message = "Vendor Already Deleted",
+                    Status = false
+                };
+            }
+            getVendor.IsDeleted = true;
+            await _context.SaveChangesAsync();
+            return new UpdateCustomerResponseDto
+            {
+                Message = "Vendor Deleted Successfully",
+                Status = true
+            };
+        }
+
+        public string UploadImage(Core.Dto.Vendor createVendor)
+        {
+
+            string uniqueFileName = null;
+
+            if (createVendor.VendorPicture !=  null)
+            {
+                string uploadsFolder = Path.Combine(_hosting.WebRootPath, "images");
+                uniqueFileName = Guid.NewGuid().ToString() + "_" + createVendor.VendorPicture.FileName;
+                string filePath = Path.Combine(uploadsFolder, uniqueFileName);
+                using (var fileStream = new FileStream(filePath, FileMode.Create))
+                {
+                    createVendor.VendorPicture.CopyTo(fileStream);
+                }
+            }
+            return uniqueFileName;
+
+        }
+
+        public async Task<UpdateCustomerResponseDto> UpdateVendorProfile(int? id,Core.Dto.Vendor vendor)
+        {
+            var getCurrentVendor = await _context.Vendors.FindAsync(id);
+            if (getCurrentVendor == null)
+            {
+                return new UpdateCustomerResponseDto { Message = "Vendor Profile was not found", Status = false };
+
+            }
+            getCurrentVendor.VendorPicture = UploadImage(vendor);
+            getCurrentVendor.ExpertiseId = vendor.ExpertiseId;
+            getCurrentVendor.FirstName = vendor.FirstName;
+            getCurrentVendor.MiddleName = vendor.MiddleName;
+            getCurrentVendor.LastName = vendor.LastName;
+            getCurrentVendor.PhoneNo = vendor.PhoneNo;
+            getCurrentVendor.ContactAddress = vendor.ContactAddress;
+            getCurrentVendor.IdentificationNumber = vendor.IdentificationNumber;
+            getCurrentVendor.NextOfKinPhone = vendor.NextOfKinPhone;
+            getCurrentVendor.EmailAddress = vendor.EmailAddress;
+            getCurrentVendor.NextOfKinAddress = vendor.NextOfKinAddress;
+            getCurrentVendor.MeansOfIdentification = vendor.MeansOfIdentification;
+            getCurrentVendor.NextOfKinName = vendor.NextOfKinName;
+            getCurrentVendor.NextOfKinAddress = vendor.NextOfKinAddress;
+            await _context.SaveChangesAsync();
+            return new UpdateCustomerResponseDto
+            {
+                Message = "Vendor Profile Updated Successfully",
+                Status = true
+            };
         }
     }
 }

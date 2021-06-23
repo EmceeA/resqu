@@ -1,4 +1,4 @@
-﻿@model Resqu.Core.Entities.Vendor   
+﻿@model Resqu.Core.Entities.Vendor
 
 @{
     ViewData["Title"] = "VendorDetails";
@@ -18,19 +18,133 @@
                         <div class="col-lg-6">
                             <div class="row">
                                 <div class="col-lg-6 mt-3">
+                                    <h5 id="vendorId" hidden="hidden">@Model.Id</h5>
                                     @if (ViewBag.BanStatus == true)
                                     {
-                                        <a asp-action="UnBanVendor" asp-controller="BackOffice" asp-route-id="@Model.Id" class="btn btn-ban-vendor font-sm2">UnBan Vendor</a>
+                                        @*<a asp-action="UnBanVendor" asp-controller="BackOffice" asp-route-id="@Model.Id" class="btn btn-ban-vendor font-sm2">UnBan Vendor</a>*@
+
+                                        <button class="btn btn-ban-vendor font-sm2" id="unban">UnBan Vendor</button>
                                     }
                                     else if (ViewBag.BanStatus == false)
                                     {
-                                        <a asp-action="BanVendor" asp-controller="BackOffice" asp-route-id="@Model.Id" class="btn btn-ban-vendor font-sm2">Ban Vendor</a>
+                                        <button class="btn btn-ban-vendor font-sm2" id="ban">Ban Vendor</button>
+                                        @*<a asp-action="BanVendor" asp-controller="BackOffice" asp-route-id="@Model.Id" class="btn btn-ban-vendor font-sm2" id="banners" onclick="BanVendor()">Ban Vendor</a>*@
                                     }
-                                    @*<button class="btn btn-ban-vendor font-sm2" data-toggle="modal" data-target="#banVendorModal">Ban Vendor</button>*@
+                                    <script src="~/dashboard/assets/vendor/jquery-3.2.1.min.js"></script>
+                                    <script type="text/javascript">
+                                        $(document).ready(function () {
+                                            console.log("vendorid", @Model.Id)
+                                            $("#ban").click(function () {
+                                                $("#banVendorSettingsModal").modal('show');
+                                                $("#yesButton").click(function () {
+
+                                                    $.ajax({
+                                            type: "GET",
+                                            url: "https://localhost:44309/api/BackOffice/VendorBan?id=" + @Model.Id,
+                                            dataType: "json",
+                                            success: function (data) {
+                                                $("#banVendorSettingsModal").modal('hide');
+                                                console.log(data);
+                                                console.log(data.message);
+                                                console.log(data.status);
+                                                $("#successbanVendorSettingsModal").modal('show');
+                                                setTimeout(function () {
+                                                    window.location.href = 'https://localhost:44369/BackOffice/Vendors';
+                                                },5000)
+                                            },
+                                            error: function (req, status, error) {
+                                                console.log(msg);
+                                            }
+                                        });
+
+                                                });
+
+
+            @**@
+        });
+                                            })
+
+
+                                    </script>
+
+                                    <script type="text/javascript">
+                                        $(document).ready(function () {
+                                            console.log("vendorid", @Model.Id)
+                                            $("#unban").click(function () {
+                                                $("#unbanVendorSettingsModal").modal('show');
+                                                $("#unbanyesButton").click(function () {
+
+                                                    $.ajax({
+                                            type: "GET",
+                                            url: "https://localhost:44309/api/BackOffice/VendorUnBan?id=" + @Model.Id,
+                                            dataType: "json",
+                                            success: function (data) {
+                                                $("#unbanVendorSettingsModal").modal('hide');
+                                                console.log(data);
+                                                console.log(data.message);
+                                                console.log(data.status);
+                                                $("#unbansuccessbanVendorSettingsModal").modal('show');
+                                                setTimeout(function () {
+                                                    window.location.href = 'https://localhost:44369/BackOffice/Vendors';
+
+                                                },5000)
+                                            },
+                                            error: function (req, status, error) {
+                                                console.log(msg);
+                                            }
+                                        });
+
+                                                });
+
+
+            @**@
+        });
+                                            })
+
+
+                                    </script>
+
+                                  
                                 </div>
                                 <div class="col-lg-6 mt-3">
-                                    <a asp-action="DeleteVendor" asp-controller="BackOffice" asp-route-id="@Model.Id" class="btn btn-delete-vendor font-sm2">Delete Vendor</a>
-                                    @*<button class="btn btn-delete-vendor font-sm2" data-toggle="modal" data-target="#deleteVendorModal">Delete Vendor</button>*@
+                                   
+                                    <button class="btn btn-delete-vendor font-sm2" data-toggle="modal" data-target="#deleteVendorModal" id="deleteVendor">Delete Vendor</button>
+                                    <script type="text/javascript">
+                                        $(document).ready(function () {
+                                            console.log("vendorid", @Model.Id)
+                                            $("#deleteVendor").click(function () {
+                                                $("#deleteVendorModal").modal('show');
+                                                $("#deleteyesButton").click(function () {
+
+                                                    $.ajax({
+                                            type: "GET",
+                                            url: "https://localhost:44309/api/BackOffice/VendorDelete?id=" + @Model.Id,
+                                            dataType: "json",
+                                            success: function (data) {
+                                                $("#deleteVendorModal").modal('hide');
+                                                console.log(data);
+                                                console.log(data.message);
+                                                console.log(data.status);
+                                                $("#successDeleteModal").modal('show');
+                                                setTimeout(function () {
+                                                    window.location.href = 'https://localhost:44369/BackOffice/Vendors';
+
+                                                },5000)
+                                            },
+                                            error: function (req, status, error) {
+                                                console.log(msg);
+                                            }
+                                        });
+
+                                                });
+
+
+         
+        });
+                                            })
+
+
+                                    </script>
                                 </div>
                             </div>
                         </div>
@@ -78,7 +192,8 @@
                             <h4>Vendor’s Basic Details</h4>
                         </div>
                         <div class="col-lg-4 col-xl-3">
-                            <button class="btn-update-profile-info font-sm2">Update Profile Info</button>
+                            <a href="../../BackOffice/UpdateVendorProfile/@Model.Id" class="btn-update-profile-info font-sm2">Update Profile Info</a>
+                            @*<button class="btn-update-profile-info font-sm2">Update Profile Info</button>*@
                         </div>
                     </div>
                     <div class="row mt-4">
@@ -335,10 +450,10 @@
                     <div class="col-lg-8">
                         <div class="row">
                             <div class="col-lg-6">
-                                <button class="btn btn-close btn-no" data-dismiss="modal" id="cancel">No</button>
+                                <button class="btn btn-close btn-no" data-dismiss="modal" id="deleteynoButton">No</button>
                             </div>
                             <div class="col-lg-6">
-                                <button class="btn btn-update" data-toggle="modal" data-target="#successDeleteModal" data-dismiss="modal" id="confirm">Yes</button>
+                                <button class="btn btn-update" data-toggle="modal" data-target="#successDeleteModal" data-dismiss="modal" id="deleteyesButton">Yes</button>
                             </div>
                         </div>
                     </div>
@@ -361,7 +476,7 @@
                     <div class="col-lg-8">
                         <div class="row">
                             <div class="col-lg-6">
-                                <button class="btn btn-close btn-no" data-dismiss="modal">No</a>
+                                <button class="btn btn-close btn-no" data-dismiss="modal">No</button>
                             </div>
                             <div class="col-lg-6">
                                 <button class="btn btn-update" data-toggle="modal" data-target="#banVendorSettingsModal" data-dismiss="modal">Yes</button>
@@ -381,10 +496,10 @@
             <div class="modal-body">
                 <div class="row justify-content-center">
                     <div class="col-lg-10">
-                        <h5>Ban Vendor</h5>
+                        <h5 class="text-warning">Are you sure you want to ban @Model.CompanyName</h5>
                     </div>
                 </div>
-                <div class="row mt-4 justify-content-center">
+                @*<div class="row mt-4 justify-content-center">
                     <div class="col-lg-10">
                         <form action="">
                             <div class="row">
@@ -403,15 +518,15 @@
                             </div>
                         </form>
                     </div>
-                </div>
+                </div>*@
                 <div class="row mt-4 justify-content-center">
                     <div class="col-lg-10">
                         <div class="row">
                             <div class="col-lg-6">
-                                <button class="btn btn-close btn-no" data-dismiss="modal">Cancel</a>
+                                <button class="btn btn-close btn-no" data-dismiss="modal" id="noButton">No</button>
                             </div>
                             <div class="col-lg-6">
-                                <button class="btn btn-update" data-toggle="modal" data-target="#successBanModal" data-dismiss="modal">Ban Vendor</button>
+                                <button class="btn btn-update" data-toggle="modal" data-target="#successBanModal" data-dismiss="modal" id="yesButton">Yes</button>
                             </div>
                         </div>
                     </div>
@@ -420,7 +535,110 @@
         </div>
     </div>
 </div>
-<div class="modal fade modal-auto-clear" tabindex="-1" role="dialog" id="successBanModal">
+
+
+
+<div class="modal fade" tabindex="-1" role="dialog" id="unbanVendorSettingsModal">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+            </div>
+            <div class="modal-body">
+                <div class="row justify-content-center">
+                    <div class="col-lg-10">
+                        <h5 class="text-warning">Are you sure you want to unban @Model.CompanyName</h5>
+                    </div>
+                </div>
+                @*<div class="row mt-4 justify-content-center">
+                        <div class="col-lg-10">
+                            <form action="">
+                                <div class="row">
+                                    <div class="col-lg-6">
+                                        <div class="form-group">
+                                            <label for="from">From <span class="text-danger">*</span></label>
+                                            <input type="datetime-local" class="input-field">
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <div class="form-group">
+                                            <label for="from">From <span class="text-danger">*</span></label>
+                                            <input type="datetime-local" class="input-field">
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>*@
+                <div class="row mt-4 justify-content-center">
+                    <div class="col-lg-10">
+                        <div class="row">
+                            <div class="col-lg-6">
+                                <button class="btn btn-close btn-no" data-dismiss="modal" id="unbannoButton">No</button>
+                            </div>
+                            <div class="col-lg-6">
+                                <button class="btn btn-update" data-toggle="modal" data-target="#successBanModal" data-dismiss="modal" id="unbanyesButton">Yes</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+<div class="modal fade" tabindex="-1" role="dialog" id="unbansuccessbanVendorSettingsModal">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+            </div>
+            <div class="modal-body">
+                <div class="row justify-content-center">
+                    <div class="col-lg-10">
+                        <h5 class="text-success">@Model.CompanyName Successfully UnBanned</h5>
+                    </div>
+                </div>
+                @*<div class="row mt-4 justify-content-center">
+                        <div class="col-lg-10">
+                            <form action="">
+                                <div class="row">
+                                    <div class="col-lg-6">
+                                        <div class="form-group">
+                                            <label for="from">From <span class="text-danger">*</span></label>
+                                            <input type="datetime-local" class="input-field">
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <div class="form-group">
+                                            <label for="from">From <span class="text-danger">*</span></label>
+                                            <input type="datetime-local" class="input-field">
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>*@
+                @*<div class="row mt-4 justify-content-center">
+                    <div class="col-lg-10">
+                        <div class="row">
+                            <div class="col-lg-6">
+                                <button class="btn btn-close btn-no" data-dismiss="modal" id="noButton">No</button>
+                            </div>
+                            <div class="col-lg-6">
+                                <button class="btn btn-update" data-toggle="modal" data-target="#successBanModal" data-dismiss="modal" id="yesButton">Yes</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>*@
+            </div>
+        </div>
+    </div>
+</div>
+@*<div class="modal fade modal-auto-clear" tabindex="-1" role="dialog" id="successBanModal">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-body">
@@ -430,14 +648,31 @@
             </div>
         </div>
     </div>
-</div>
-<div class="modal fade modal-auto-clear" tabindex="-1" role="dialog" id="successDeleteModal">
+</div>*@
+@*<div class="modal fade modal-auto-clear" tabindex="-1" role="dialog" id="successDeleteModal">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-body">
                 <div class="d-flex justify-content-center">
                     <h5>Vendor deleted successfully</h5>
                 </div>
+            </div>
+        </div>
+    </div>
+</div>*@
+
+<div class="modal fade" tabindex="-1" role="dialog" id="successDeleteModal">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+            </div>
+            <div class="modal-body">
+                <div class="row justify-content-center">
+                    <div class="col-lg-10">
+                        <h5 class="text-success">@Model.CompanyName Successfully Deleted</h5>
+                    </div>
+                </div>
+                
             </div>
         </div>
     </div>

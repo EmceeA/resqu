@@ -16,7 +16,11 @@ namespace Resqu.Core.Interface
 
         //Task<>
         Task<UpdateCustomerResponseDto> UnBanCustomer(string phone);
+        Task<UpdateCustomerResponseDto> BanVendor(int id);
+        Task<UpdateCustomerResponseDto> UnBanVendor(int id);
+        Task<UpdateCustomerResponseDto> UpdateVendorProfile(int? id, Core.Dto.Vendor vendor);
         Task<UpdateCustomerResponseDto> DeleteCustomer(string phone);
+        Task<UpdateCustomerResponseDto> DeleteVendor(int id);
         Task<List<VendorListDto>> VendorList();
         Task<List<RequestListDto>> RequestList();
         Task<List<CustomerListDto>> CustomerList();

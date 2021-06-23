@@ -58,7 +58,15 @@ namespace Resqu.Core.Dto
         public string NextOfKinName { get; set; }
         public string NextOfKinAddress { get; set; }
         public string NextOfKinPhone { get; set; }
+        public IFormFile VendorPicture { get; set; }
         public string VendorCode { get; set; }
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
+        public string MiddleName { get; set; }
+        public string PhoneNo { get; set; }
+        public string IdentificationNumber { get; set; }
+        public string MeansOfIdentification { get; set; }
+        public int ExpertiseId { get; set; }
         public string Pin { get; set; }
     }
 
@@ -213,13 +221,12 @@ namespace Resqu.Core.Dto
         public bool Status { get; set; }
     }
 
+
     public class RateVendorDto
     {
-        public int VendorId { get; set; }
-        public int UserId { get; set; }
+        
         [Range(1,5,ErrorMessage ="The Star Rating Cannot be less than 1 and greater than 5")]
         public int StarRating { get; set; }
-        public string BookingId { get; set; }
     }
     public class DedicatedNubanAccountRequest
     {
@@ -502,6 +509,7 @@ namespace Resqu.Core.Dto
 
     public class VendorListDto
     {
+        public string Gender { get; set; }
         public string PhoneNumber { get; set; }
         public string VendorName { get; set; }
         public string EmailAddress { get; set; }

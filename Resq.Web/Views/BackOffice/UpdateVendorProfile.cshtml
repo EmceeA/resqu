@@ -1,0 +1,185 @@
+﻿@model Resqu.Core.Entities.Vendor
+
+@{
+    ViewData["Title"] = "UpdateVendorProfile";
+    Layout = "~/Views/Shared/_LayoutServices.cshtml";
+}
+
+<div class="main-content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-lg-12 mt-4">
+                <h4>Profile Update</h4>
+            </div>
+        </div>
+        <div class="row my-4">
+            <div class="col-lg-12">
+                <div class="add-service-div p-5">
+                    <div>
+                        <h5>Click on any of the fields to edit profile info</h5>
+                    </div>
+                    <form asp-action="UpdateVendorProfile" enctype="multipart/form-data" method="post">
+                        <div class="row">
+                            <div class="col-lg-6 mt-4">
+                                <div class="form-group">
+                                    <label for="Service-category">
+                                        Select Service Category <span class="text-danger">*</span>
+                                    </label>
+                                    <select type="text" asp-items="@ViewBag.ServiceName" asp-for="ExpertiseId" placeholder="Enter the name of the service" class="form-control"></select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="Service-name">First Name <span class="text-danger">*</span></label>
+                                    <input type="text" class="input-field" asp-for="FirstName"
+                                           value="@Model.FirstName">
+                                </div>
+                            </div>
+                            <div class="col-lg-6 mt-4">
+                                <div class="form-group">
+                                    <label for="">Upload Passport Photograph *</label>
+                                    <div class="row btn-upload-img">
+                                        <div class="col-lg-12">
+                                            <div class="row align-items-center">
+                                                <div class="col-lg-3" >
+                                                    <img src="~/images/@Model.VendorPicture" class="img-fluid" alt=""  style="max-height: 160px; width:100%;" >
+                                                    @*<img src="./assets/images/bigImg.svg" class="img-fluid" style="max-height: 160px; width:100%;" alt="">*@
+                                                </div>
+                                                <div class="col-lg-9">
+                                                    <div class="d-flex flex-column justify-content-center align-items-center">
+                                                        <div>
+                                                            <a class="btn d-flex flex-column justify-content-center align-items-center">
+                                                                <div class="px-2 text-blue underline">Remove Profile photo</div>
+                                                            </a>
+                                                        </div>
+                                                        <div>
+                                                            <input type="file" class="d-none" id="fileUpload" asp-for="VendorPicture"  />
+                                                            <a class="btn d-flex flex-column justify-content-center align-items-center underline" id="openFileUpload">
+                                                                <div class="px-2 text-blue underline">Upload New photo</div>
+                                                            </a>
+                                                        </div>
+
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-6 mt-3">
+                                <div class="form-group">
+                                    <label for="Service-name">Middle Name <span class="text-danger">*</span></label>
+                                    <input type="text" class="input-field"
+                                           value="@Model.MiddleName" asp-for="MiddleName">
+                                </div>
+                            </div>
+                            <div class="col-lg-6 mt-3">
+                                <div class="form-group">
+                                    <label for="Service-name">Last Name <span class="text-danger">*</span></label>
+                                    <input type="text" class="input-field"
+                                           value="@Model.LastName" asp-for="LastName">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-6 mt-3">
+                                <div class="form-group">
+                                    <label for="Service-name">Phone Number<span class="text-danger">*</span></label>
+                                    <input type="text" class="input-field"
+                                           value="@Model.PhoneNo" asp-for="PhoneNo">
+                                </div>
+                            </div>
+                            <div class="col-lg-6 mt-3">
+                                <div class="form-group">
+                                    <label for="Service-name">Email Address <span class="text-danger">*</span></label>
+                                    <input type="text" class="input-field"
+                                           value="@Model.EmailAddress" asp-for="EmailAddress">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-6 mt-3">
+                                <div class="form-group">
+                                    <label for="Service-name">Contact Address<span class="text-danger">*</span></label>
+                                    <input type="text" class="input-field"
+                                           value="@Model.ContactAddress" asp-for="ContactAddress">
+                                </div>
+                            </div>
+                            <div class="col-lg-6 mt-3">
+                                <div class="form-group">
+                                    <label for="Service-name">
+                                        Means of Identification <span class="text-danger">*</span>
+                                    </label>
+                                    <select class="input-field" asp-for="MeansOfIdentification">
+                                        <option value="International Passport">International Passport</option>
+                                        <option value="National Identity Card">National Identity Card</option>
+                                        <option value="Voters Card">Voters Card</option>
+                                        <option value="Driver License">Driver License</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-6 mt-3">
+                                <div class="form-group">
+                                    <label for="Service-name">
+                                        Identification Number<span class="text-danger">*</span>
+                                    </label>
+                                    <input type="text" class="input-field"
+                                           value="@Model.IdentificationNumber" asp-for="IdentificationNumber">
+                                </div>
+                            </div>
+                            <div class="col-lg-6 mt-3">
+                                <div class="form-group">
+                                    <label for="Service-name">
+                                        Full Name of Next of Kin <span class="text-danger">*</span>
+                                    </label>
+                                    <input type="text" class="input-field"
+                                           value="@Model.NextOfKinName" asp-for="NextOfKinName">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-6 mt-3">
+                                <div class="form-group">
+                                    <label for="Service-name">
+                                        Phone Number of Next of Kin<span class="text-danger">*</span>
+                                    </label>
+                                    <input type="text" class="input-field"
+                                           value="@Model.NextOfKinPhone" asp-for="NextOfKinPhone">
+                                </div>
+                            </div>
+                            <div class="col-lg-6 mt-3">
+                                <div class="form-group">
+                                    <label for="Service-name">
+                                        Contact Address of Next of Kin <span class="text-danger">*</span>
+                                    </label>
+                                    <input type="text" class="input-field"
+                                           value="@Model.NextOfKinAddress" asp-for="NextOfKinAddress">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row justify-content-center mt-5">
+                            <div class="col-lg-5">
+                                <button class="btn btn-services mt-3" id="update">Update Profile Info</button>
+                                @*<script src="~/dashboard/assets/vendor/jquery-3.2.1.min.js"></script>
+                                <script type="text/javascript">
+                                    $(document).ready(function () {
+                                        $("#update").click(function () {
+                                            console.log(data);
+                                            alert("clicked")
+                                        });
+                                    });
+
+                                </script>*@
+                                @*<a href="../../BackOffice/UpdateVendorProfile" class="btn btn-services mt-3">Update Profile Info</a>*@
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

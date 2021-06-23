@@ -27,6 +27,8 @@ namespace Resq.Web.ViewModels
         [Required]
         public string ContactAddress { get; set; }
         [Required]
+        public string Gender { get; set; }
+        [Required]
         public string NextOfKinRelationship { get; set; }
         [Required]
         public string NextOfKinName { get; set; }
@@ -34,6 +36,8 @@ namespace Resq.Web.ViewModels
         public string NextOfKinAddress { get; set; }
         [Required]
         public string NextOfKinPhone { get; set; }
+        [Required]
+        public string NextOfKinEmail { get; set; }
 
         public int? ExpertiseId { get; set; }
         public IFormFile VendorPicture { get; set; }

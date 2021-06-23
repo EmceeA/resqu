@@ -149,8 +149,8 @@ namespace Resq.Web.Controllers
             }).ToList();
             ViewBag.ProfilePicture = _context.BackOfficeUsers.Where(d => d.UserName == HttpContext.Session.GetString("userName")).Select(e => e.ProfilePicture).FirstOrDefault();
             ViewBag.FullName = _context.BackOfficeUsers.Where(d => d.UserName == HttpContext.Session.GetString("userName")).Select(e => e.FirstName + " " + e.LastName).FirstOrDefault();
-
-            return View(serve);
+            ViewBag.Message = serve.Message;
+            return View();
         }
 
 
@@ -423,16 +423,19 @@ namespace Resq.Web.Controllers
             ViewBag.Role = HttpContext.Session.GetString("role");
             ViewBag.Phone = HttpContext.Session.GetString("phone");
             ViewBag.Email = HttpContext.Session.GetString("email");
-             
+            
             var vendorList = _context.Vendors.ToList();
             var topVendorList = new List<TopVendor>();
             foreach (var vendo in vendorList)
             {
+                var getTotalRating = _context.VendorRatings.Where(e => e.VendorId == vendo.Id).Select(d => d.Rating).ToList().Sum();
+
                 var topVendor = new TopVendor
                 {
                     Picture = vendo.VendorPicture,
                     NumberOfRequest = _context.Requests.Where(c => c.VendorId == vendo.Id).ToList().Count(),
-                    VendorName = vendo.CompanyName
+                    VendorName = vendo.CompanyName,
+                    RatingTotal = getTotalRating
                 };
                 topVendorList.Add(topVendor);
             }
@@ -445,38 +448,50 @@ namespace Resq.Web.Controllers
                 var serviceName = _context.Expertises.Where(s => s.Id == vendo.Id).Select(u => u.Name).FirstOrDefault();
                 int nullrating = 0;
                 int Fullrating = 0;
-                var rating = _context.Transactions.Where(e => e.VendorId == vendo.Id && e.ServiceType == serviceName).Select(s => s.VendorRating).FirstOrDefault();
-                if (rating == 0)
+                var rating = _context.VendorRatings.Where(e => e.VendorId == vendo.Id && e.ServiceType == serviceName).Select(s => new Ratings {TotalRating = s.Rating, LastCreatedAt = _context.VendorRatings.Where(r=>r.VendorId == vendo.Id).Select(e=>e.CreatedAt).Max()}).FirstOrDefault();
+                if (rating != null)
                 {
-                    nullrating = 0;
+                    if (rating == null)
+                    {
+                        rating.TotalRating = 0;
+                        nullrating = 0;
+                    }
+                    if (rating.TotalRating == 0)
+                    {
+                        nullrating = 0;
+                    }
+                    else if (rating.TotalRating > 0)
+                    {
+                        Fullrating = _context.VendorRatings.Where(e => e.VendorId == vendo.Id && e.ServiceType == serviceName).Select(s => s.Rating).FirstOrDefault();
+                    }
+                    rating.TotalRating = rating.TotalRating == nullrating ? nullrating : Fullrating;
+                    var completedRequests = _context.Requests.Where(c => c.VendorId.Value == vendo.Id && c.RequestStatus == "Completed").ToList().Count();
+                    var dates = rating.LastCreatedAt;
+                    var minusDate = DateTime.Now - dates;
+                    var ratings = new Review
+                    {
+                        Picture = vendo.VendorPicture,
+                        Rating = rating.TotalRating,
+                        SubCategory = vendo.Expertise.Name,
+                        Description = vendo.Expertise.Description,
+                        VendorName = vendo.CompanyName,
+                        CompletedRequest = completedRequests,
+                        DaysAgo = minusDate.Days
+                    };
+                    reviewList.Add(ratings);
                 }
-                else if (rating > 0)
-                {
-                    Fullrating = _context.Transactions.Where(e => e.VendorId == vendo.Id && e.ServiceType == serviceName).Select(s => s.VendorRating).FirstOrDefault();
-                }
-                rating = rating == nullrating ? nullrating : Fullrating;
-                var completedRequests = _context.Requests.Where(c => c.VendorId.Value == vendo.Id && c.RequestStatus == "Completed").ToList().Count();
-                var ratings = new Review
-                {
-                    Picture = vendo.VendorPicture,
-                    Rating = rating,
-                    SubCategory = vendo.Expertise.Name,
-                    Description = vendo.Expertise.Description,
-                    VendorName = vendo.CompanyName,
-                    CompletedRequest = completedRequests
-                };
-                reviewList.Add(ratings);
             }
-
-            ViewBag.TopVendors = topVendorList.OrderByDescending(e => e.NumberOfRequest).Take(10).Distinct();
-            ViewBag.Reviews = reviewList.OrderByDescending(e => e.Rating).Take(20);
+                
+            var vendorLists = topVendorList.OrderByDescending(e => e.NumberOfRequest).Distinct();
+            ViewBag.TopVendors = vendorLists.OrderByDescending(e=>e.RatingTotal).Take(10);
+            ViewBag.Reviews = reviewList.OrderByDescending(e => e.Rating).Take(10);
             //ViewBag.Reviews
             //{
             //    new AvailableServiceDetailViewModel
             //    {
 
             //    }
-            //};
+            //}
             string roleId = HttpContext.Session.GetString("roleId");
             ViewBag.PageUrls = _context.BackOfficeRoles.Where(b => b.RoleName == HttpContext.Session.GetString("role")).Select(p => new Resqu.Core.Entities.RoleUrl
             {
@@ -558,7 +573,45 @@ namespace Resq.Web.Controllers
             }
             return View();
         }
+        
+        public ActionResult UpdateVendorProfile(int id)
+        {
+            var getVendor = _context.Vendors.Find(id);
+            ViewData["ServiceName"] = new SelectList(_context.Expertises, "Id", "Name");
+            ViewBag.ServicePageUrls = _context.BackOfficeRoles.Where(b => b.RoleName == HttpContext.Session.GetString("role")).Select(p => new Resqu.Core.Entities.RoleUrl
+            {
+                PageName = p.PageName,
+                PageUrl = p.PageUrl,
+                PageNameClass = p.PageNameClass,
+                PageUrlClass = p.PageUrlClass,
+                ActionName = p.ActionName,
+                ControllerName = p.ControllerName
+            }).ToList();
+            ViewBag.ProfilePicture = _context.BackOfficeUsers.Where(d => d.UserName == HttpContext.Session.GetString("userName")).Select(e => e.ProfilePicture).FirstOrDefault();
+            ViewBag.FullName = _context.BackOfficeUsers.Where(d => d.UserName == HttpContext.Session.GetString("userName")).Select(e => e.FirstName + " " + e.LastName).FirstOrDefault();
+            return View(getVendor);
+        }
 
+        [HttpPost]
+        public ActionResult UpdateVendorProfile(int id,Resqu.Core.Dto.Vendor vendor)
+        {
+            try
+            {
+                var update = _back.UpdateVendorProfile(id, vendor).Result;
+                if (update.Status == true)
+                {
+                    return RedirectToAction("Vendors");
+                }
+                return View();
+            }
+            catch (Exception ex)
+            {
+                return View(ex);
+            }
+            
+        }
+
+        [HttpGet]
         public ActionResult BanVendor(int id)
         {
             var delete = _context.Vendors.Find(id);
@@ -590,7 +643,7 @@ namespace Resq.Web.Controllers
                 Id = d.Id,
                 EmailAddress = d.EmailAddress,
                 Gender = d.Gender,
-                PhoneNumber = d.PhoneNumber,
+                PhoneNumber = d.PhoneNo,
                 ServiceCategory = _context.Expertises.Where(e=>e.Id == d.ExpertiseId).Select(s=>s.Name).FirstOrDefault(),
                 VendorName = d.FirstName + " "+ d.LastName,
                 CompletedRequest = _context.Transactions.Where(c=>c.VendorId == d.Id && c.Status == "Completed").Count().ToString()

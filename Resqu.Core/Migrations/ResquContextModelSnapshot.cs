@@ -525,7 +525,13 @@ namespace Resqu.Core.Migrations
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("CustomerId")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("CustomerLocation")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("CustomerName")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("CustomerPhone")
@@ -565,6 +571,9 @@ namespace Resqu.Core.Migrations
                         .HasColumnType("bit");
 
                     b.Property<bool>("IsVendorAccepted")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsVendorArrived")
                         .HasColumnType("bit");
 
                     b.Property<bool>("IsVendorRejected")
@@ -776,6 +785,9 @@ namespace Resqu.Core.Migrations
                     b.Property<string>("NextOfKinAddress")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("NextOfKinEmail")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("NextOfKinName")
                         .HasColumnType("nvarchar(max)");
 
@@ -871,8 +883,17 @@ namespace Resqu.Core.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<string>("BookingId")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
                     b.Property<int>("Rating")
                         .HasColumnType("int");
+
+                    b.Property<string>("ServiceType")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("UserId")
                         .HasColumnType("int");

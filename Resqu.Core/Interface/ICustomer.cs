@@ -37,6 +37,8 @@ namespace Resqu.Core.Interface
         Task<MakePaymentResponse> MakeCashPayment(string bookingId, string paymentType);
         Task<MakePaymentResponse> MakeCardPayment(string bookingId, string paymentType, MakeCardRequest cardRequest);
         Task<MakePaymentResponse> MakePayment(string bookingId);
+        Task<OtpConfirmationResponseDto> StartService(string bookingId);
+        Task<OtpConfirmationResponseDto> EndService(string bookingId);
         Task<List<ServiceListDto>> ServiceList();
         Task<List<ProductListDto>> ProductList();
         Task<List<ServiceCategoryListDto>> ServiceCategoryList();

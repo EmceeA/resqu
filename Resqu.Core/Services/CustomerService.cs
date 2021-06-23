@@ -85,6 +85,7 @@ namespace Resqu.Core.Services
         public async Task<CustomerSignInResponse> CustomerSignIn(CustomerSignInRequest signInModel)
         {
             var getUserName = _context.Customers.Where(d => d.PhoneNumber == signInModel.PhoneNumber && d.IsDeleted == false).FirstOrDefault();
+            _http.HttpContext.Session.SetString("customerPhone", signInModel.PhoneNumber);
             if (getUserName == null)
             {
                 return new CustomerSignInResponse
@@ -347,22 +348,32 @@ namespace Resqu.Core.Services
         }
         public async Task<ServiceResponseDto> BookService(ServiceDto service)
         {
+            var phoneNumber = _http.HttpContext.Session.GetString("customerPhone");
+            var getNearestVendor = await CalculateShortestDistance(service.CustomerAddress, null, service.SubCategoryName, service.ServiceName);
+            if (getNearestVendor == null)
+            {
+                return null;
+            }
             var serviceModel = new ResquService
             {
                 ServiceName = service.ServiceName,
                 SubCategoryName = service.SubCategoryName,
                 Price = service.SubCategoryPrice,
-                BookingId = $"{service.ServiceName.Substring(0,3).ToUpper()}/{GenerateRandom(10)}",
+                BookingId = $"{service.ServiceName.Substring(0, 3).ToUpper()}/{GenerateRandom(10)}",
                 IsStarted = true,
                 Description = service.Description,
                 Status = "ONGOING",
                 CustomerLocation = service.CustomerAddress,
+                CustomerPhone = phoneNumber,
+                VendorId =getNearestVendor.VendorId.ToString(),
+                VendorName = getNearestVendor.VendorName,
+                VendorPhone = getNearestVendor.Phone,
+                CustomerId = _context.Customers.Where(w=>w.PhoneNumber == phoneNumber).Select(e=>e.Id).FirstOrDefault().ToString(),
+                CustomerName = _context.Customers.Where(w => w.PhoneNumber == phoneNumber).Select(e => e.FirstName + " " + e.LastName).FirstOrDefault()
             };
 
             _context.ResquServices.Add(serviceModel);
             _context.SaveChanges();
-            var getNearestVendor = await CalculateShortestDistance(service.CustomerAddress, null, service.SubCategoryName, service.ServiceName);
-
             return new ServiceResponseDto
             {
                 
@@ -743,11 +754,32 @@ namespace Resqu.Core.Services
         {
             try
             {
+                string bookingId = _http.HttpContext.Session.GetString("bookingId");
+                var getVendorByBooking = await _context.ResquServices.Where(e => e.BookingId == bookingId).FirstOrDefaultAsync();
+                if (getVendorByBooking == null)
+                {
+                    return new RateVendorResponseDto
+                    {
+                        Message = "Invalid Transaction",
+                        Status = false
+                    };
+                }
+                if (getVendorByBooking.IsVendorAccepted != true)
+                {
+                    return new RateVendorResponseDto
+                    {
+                        Message = "You can't rate a vendor that have not accepted your request",
+                        Status = false
+                    };
+                }
                 var rate = new VendorRating
                 {
                     Rating = rateVendor.StarRating,
-                    UserId = rateVendor.UserId,
-                    VendorId = rateVendor.VendorId
+                    UserId = Convert.ToInt32(getVendorByBooking.CustomerId),
+                    VendorId = Convert.ToInt32(getVendorByBooking.VendorId),
+                    BookingId = bookingId,
+                    ServiceType = getVendorByBooking.ServiceName,
+                    CreatedAt = DateTime.Now
                 };
                 _context.VendorRatings.Add(rate);
                 _context.SaveChanges();
@@ -770,7 +802,7 @@ namespace Resqu.Core.Services
         public async Task<OtpConfirmationResponseDto> ConfirmOtp(OtpDto otp)
         {
             //otp.Phone = otp.Phone.Substring(4, 10);
-            //var phone = _http.HttpContext.Session.GetString("phone");
+            var phone = _http.HttpContext.Session.GetString("phone");
             var validateOtp = await _context.Otps.Where(e => e.Phone == otp.Phone && e.OtpNumber == otp.Otp).FirstOrDefaultAsync();
 
             //var otpExpiry = validateOtp.ExpiryDate;
@@ -1003,6 +1035,7 @@ namespace Resqu.Core.Services
         public async Task<UpdateCustomerResponseDto> AcceptRequest(string bookingId)
         {
             var getBookingDetails = await _context.ResquServices.Where(e => e.BookingId == bookingId).FirstOrDefaultAsync();
+            _http.HttpContext.Session.SetString("bookingId", bookingId);
             getBookingDetails.IsVendorAccepted = true;
             _context.SaveChanges();
             return new UpdateCustomerResponseDto
@@ -1099,6 +1132,95 @@ namespace Resqu.Core.Services
                 return null;
             }
             return serviceCats;
+        }
+
+        public async Task<OtpConfirmationResponseDto> StartService(string bookingId)
+        {
+            try
+            {
+                var start = await _context.ResquServices.Where(w => w.BookingId == bookingId).FirstOrDefaultAsync();
+
+                if (start.IsVendorAccepted != true)
+                {
+                    return new OtpConfirmationResponseDto
+                    {
+                        Message = "Kindly accept the request before starting",
+                        Status = false
+                    };
+                }
+
+
+                start.DateStarted = DateTime.Now;
+                start.IsStarted = true;
+                await _context.SaveChangesAsync();
+                return new OtpConfirmationResponseDto
+                {
+                    Message = "Started Successfully",
+                    Status = true
+                };
+            }
+            catch (Exception ex)
+            {
+                return new OtpConfirmationResponseDto
+                {
+                    Message = $"Error {ex}",
+                    Status = false
+                };
+            }
+            
+        }
+
+        public async Task<OtpConfirmationResponseDto> EndService(string bookingId)
+        {
+            try
+            {
+                var end = await _context.ResquServices.Where(w => w.BookingId == bookingId).FirstOrDefaultAsync();
+
+                if (end.IsVendorAccepted != true)
+                {
+                    return new OtpConfirmationResponseDto
+                    {
+                        Message = "Kindly accept the request before starting",
+                        Status = false
+                    };
+                }
+
+                if (end.IsStarted != true)
+                {
+                    return new OtpConfirmationResponseDto
+                    {
+                        Message = "The Service Needs to be started before it can end",
+                        Status = false
+                    };
+                }
+
+                if (end.IsVendorAccepted == true && end.IsStarted == true)
+                {
+                    end.DateEnded = DateTime.Now;
+                    end.IsEnded = true;
+                    await _context.SaveChangesAsync();
+                    return new OtpConfirmationResponseDto
+                    {
+                        Message = "Ended Successfully",
+                        Status = true
+                    };
+                }
+
+                return new OtpConfirmationResponseDto
+                {
+                    Message = "Outside the condition",
+                    Status = false
+                };
+               
+            }
+            catch (Exception ex)
+            {
+                return new OtpConfirmationResponseDto
+                {
+                    Message = $"Error {ex}",
+                    Status = false
+                };
+            }
         }
     }
 }

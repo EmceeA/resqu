@@ -42,6 +42,7 @@ namespace Resq.Web.ViewModels
         public string Picture { get; set; }
         public string VendorName { get; set; }
         public int NumberOfRequest { get; set; }
+        public int RatingTotal { get; set; }
     }
 
 
@@ -53,6 +54,9 @@ namespace Resq.Web.ViewModels
         public int Rating { get; set; }
         public string Description { get; set; }
         public int CompletedRequest { get; set; }
+        public int DaysAgo { get; set; }
+
+
     }
 
     public class Service : IEquatable<Service>

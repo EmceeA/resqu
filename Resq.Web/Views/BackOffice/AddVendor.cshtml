@@ -38,7 +38,7 @@
                             <div class="col-lg-6 mt-4">
                                 <div class="form-group">
                                     <label for="">Upload Passport Photograph *</label>
-                                    <input type="file" class="d-none" id="fileUpload" asp-for="VendorPicture"  required="required"/>
+                                    <input type="file" class="d-none" id="fileUpload" asp-for="VendorPicture" required="required" />
                                     <a class="btn btn-upload-img d-flex flex-column justify-content-center align-items-center" id="openFileUpload">
                                         <div><img src="~/dashboard/assets/images/uploadIcon.svg" alt=""></div>
                                         <div class="px-2 text-blue">Upload photo</div>
@@ -57,6 +57,24 @@
                                 <div class="form-group">
                                     <label for="Service-name">Last Name <span class="text-danger">*</span></label>
                                     <input asp-for="LastName" type="text" class="input-field" placeholder="Enter the name of the service to be added">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-lg-6 mt-3">
+                                <div class="form-group">
+                                    <label for="Service-name">Gender <span class="text-danger">*</span></label>
+                                    <select>
+                                        <option value="Male">Male</option>
+                                        <option value="Female">Female</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-lg-6 mt-3">
+                                <div class="form-group">
+                                    <label for="Service-name">Next Of Kin Email <span class="text-danger">*</span></label>
+                                    <input asp-for="NextOfKinEmail" type="text" class="input-field" placeholder="Enter next of kin email">
                                 </div>
                             </div>
                         </div>
@@ -119,7 +137,7 @@
                                     <input type="text" class="input-field" asp-for="NextOfKinName" placeholder="Enter the name of the service to be added">
                                 </div>
                             </div>
-                            
+
                             <div class="col-lg-6 mt-3">
                                 <div class="form-group">
                                     <label for="Service-name">Next Of Kin Relationship <span class="text-danger">*</span></label>

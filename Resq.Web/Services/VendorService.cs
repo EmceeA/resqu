@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Threading.Tasks;
 
 namespace Resq.Web.Services
@@ -41,13 +42,16 @@ namespace Resq.Web.Services
                 MiddleName = createVendor.MiddleName,
                 NextOfKinRelationship = createVendor.NextOfKinRelationship,
                 DateCreated= DateTime.Now,
-                VendorCode  = GenerateCode(),
+                VendorCode  = "REZQ-"+ GenerateRandom(10),
                 IsBan = false,
                 IsFullyVerified = false,
                 IsDeleted= false,
                 isVerified = false,
-                CreatedBy ="user",
-                Pin = "1234",
+                CreatedBy ="",
+                Pin = GenerateRandom(8),
+                Gender = createVendor.Gender,
+                NextOfKinEmail = createVendor.NextOfKinEmail
+                
                 
             };
             var getExistingVendor = _context.Vendors.Where(c => c.FirstName == employee.FirstName && c.LastName == employee.LastName &&c.CompanyName == employee.CompanyName && c.MiddleName == employee.MiddleName && c.ExpertiseId == employee.ExpertiseId).Any();
@@ -62,9 +66,36 @@ namespace Resq.Web.Services
 
         public string GenerateCode()
         {
-            return "1234566";
+            throw new NotImplementedException();
         }
 
+        public string GenerateRandom(int length)
+        {
+            string chars = "1234567890";
+            RNGCryptoServiceProvider crypto = new RNGCryptoServiceProvider();
+
+            byte[] data = new byte[length];
+            byte[] buffer = null;
+            int maxRandom = byte.MaxValue - ((byte.MaxValue + 1) % chars.Length);
+            crypto.GetBytes(data);
+            char[] result = new char[length];
+            for (int i = 0; i < length; i++)
+            {
+                byte value = data[i];
+                while (value > maxRandom)
+                {
+                    if (buffer == null)
+                    {
+                        buffer = new byte[1];
+                    }
+                    crypto.GetBytes(buffer);
+                    value = buffer[0];
+                }
+                result[i] = chars[value % chars.Length];
+            }
+            var res = new string(result);
+            return res;
+        }
 
 
         public string UploadImage(CreateVendorViewModel createVendor)

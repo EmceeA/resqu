@@ -8,6 +8,12 @@ using System.Threading.Tasks;
 namespace Resqu.Core.Dto
 {
 
+    public class Ratings
+    {
+        public int TotalRating { get; set; }
+        public DateTime LastCreatedAt { get; set; }
+    }
+
     public class OtpDto
     {
         public string Phone { get; set; }

@@ -40,6 +40,52 @@ namespace Resqu.API.Controllers
             return BadRequest(banCustomer);
         }
 
+
+        [HttpGet]
+        public async Task<IActionResult> VendorBan(int id)
+        {
+            var banCustomer = await _customer.BanVendor(id);
+            if (banCustomer.Status == true && banCustomer.Message == "Vendor Banned Successfully")
+            {
+                return Ok(banCustomer);
+            }
+            return BadRequest(banCustomer);
+        }
+
+
+        [HttpGet]
+        public async Task<IActionResult> VendorDelete(int id)
+        {
+            var banCustomer = await _customer.DeleteVendor(id);
+            if (banCustomer.Status == true && banCustomer.Message == "Vendor Deleted Successfully")
+            {
+                return Ok(banCustomer);
+            }
+            return BadRequest(banCustomer);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> UpdateProfile(int id,Vendor vendor)
+        {
+            var banCustomer = await _customer.UpdateVendorProfile(id,vendor);
+            if (banCustomer.Status == true && banCustomer.Message == "Vendor Profile Updated Successfully")
+            {
+                return Ok(banCustomer);
+            }
+            return BadRequest(banCustomer);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> VendorUnBan(int id)
+        {
+            var banCustomer = await _customer.UnBanVendor(id);
+            if (banCustomer.Status == true && banCustomer.Message == "Vendor UnBanned Successfully")
+            {
+                return Ok(banCustomer);
+            }
+            return BadRequest(banCustomer);
+        }
+
         [HttpGet]
         public async Task<IActionResult> BannedCustomers()
         {

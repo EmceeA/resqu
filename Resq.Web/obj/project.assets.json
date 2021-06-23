@@ -3012,7 +3012,10 @@
         },
         "runtime": {
           "bin/placeholder/Resqu.Core.dll": {}
-        }
+        },
+        "frameworkReferences": [
+          "Microsoft.AspNetCore.App"
+        ]
       }
     }
   },

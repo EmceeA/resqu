@@ -62,16 +62,16 @@
                     <ul class="navbar-mobile__list list-unstyled">
                         @foreach (RoleUrl item in ViewBag.ServicePageUrls)
                         {
-            <li class="has-sub">
-                <a asp-action="@item.ActionName" asp-controller="@item.ControllerName" class="@item.PageUrlClass">
-                    <i class="@item.PageName"></i>@item.PageName
-                </a>
-                @*<a class="@item.PageUrlClass" href="@item.PageUrl">
-                    <i data-feather="Dashboard" class="@item.PageNameClass"></i>@item.PageName
-                </a>*@
-            </li>
+                            <li class="has-sub">
+                                <a asp-action="@item.ActionName" asp-controller="@item.ControllerName" class="@item.PageUrlClass">
+                                    <i class="@item.PageName"></i>@item.PageName
+                                </a>
+                                @*<a class="@item.PageUrlClass" href="@item.PageUrl">
+                                    <i data-feather="Dashboard" class="@item.PageNameClass"></i>@item.PageName
+                                </a>*@
+                            </li>
                             <br />
-}
+                        }
                     </ul>
                 </div>
             </nav>
@@ -104,16 +104,16 @@
                     <ul class="list-unstyled navbar__list">
                         @foreach (RoleUrl item in ViewBag.ServicePageUrls)
                         {
-            <li class="has-sub">
-                <a asp-action="@item.ActionName" asp-controller="@item.ControllerName" class="@item.PageUrlClass">
-                    <i class="@item.PageName"></i>@item.PageName
-                </a>
-                @*<a class="@item.PageUrlClass" href="@item.PageUrl">
-                    <i data-feather="Dashboard" class="@item.PageNameClass"></i>@item.PageName
-                </a>*@
-            </li>
+                            <li class="has-sub">
+                                <a asp-action="@item.ActionName" asp-controller="@item.ControllerName" class="@item.PageUrlClass">
+                                    <i class="@item.PageName"></i>@item.PageName
+                                </a>
+                                @*<a class="@item.PageUrlClass" href="@item.PageUrl">
+                                    <i data-feather="Dashboard" class="@item.PageNameClass"></i>@item.PageName
+                                </a>*@
+                            </li>
                             <br />
-}
+                        }
                         <li class="log-out-btn mb-3">
                             <div class="p-4 profile-settings">
                                 <div class="d-flex align-items-center">
@@ -135,7 +135,7 @@
             @RenderBody()
         </div>
 
-        
+
         <!-- Jquery JS-->
         <script src="~/dashboard/assets/vendor/jquery-3.2.1.min.js"></script>
         <!-- Bootstrap JS-->
@@ -177,19 +177,10 @@
                     $(targetBox).style.display = "flex";
                 });
             });</script>
-
+        
         <script>
             $('.modal-auto-clear').on('shown.bs.modal', function (e) {
                 console.log(e.target)
-                //debugger;
-                //$("#cancel").click(function () {
-                //    console.log("cancelled");
-                //});  
-
-                //$("#confirm").click(function () {
-                //    console.log("confirmed");
-                //}); 
-               
                 $(this).delay(1000).fadeOut(200, function () {
                     $(this).modal('hide');
                 });

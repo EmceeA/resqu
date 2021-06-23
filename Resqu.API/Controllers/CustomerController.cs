@@ -146,6 +146,21 @@ namespace Resqu.API.Controllers
             return Ok(result);
         }
 
+        [HttpGet]
+        public async Task<IActionResult> StartService(string bookingId)
+        {
+            var result = await _customer.StartService(bookingId);
+            return Ok(result);
+        }
+
+
+        [HttpGet]
+        public async Task<IActionResult> EndService(string phone)
+        {
+            var result = await _customer.EndService(phone);
+            return Ok(result);
+        }
+
 
         [HttpGet]
         public async Task<IActionResult> GoOnline(string phone)

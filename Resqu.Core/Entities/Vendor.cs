@@ -29,6 +29,7 @@
         public string NextOfKinRelationship { get; set; }
         public string NextOfKinName { get; set; }
         public string NextOfKinAddress { get; set; }
+        public string NextOfKinEmail { get; set; }
         public string NextOfKinPhone { get; set; }
         public string VendorCode { get; set; }
         public string AvailabilityStatus { get; set; }
