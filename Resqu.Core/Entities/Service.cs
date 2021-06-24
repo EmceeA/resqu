@@ -12,6 +12,15 @@ namespace Resqu.Core.Entities
         public long Id { get; set; }
         public decimal ProductPrice { get; set; }
         public string ProductName { get; set; }
+        public string ProductCategory { get; set; }
+        public string ProductImage { get; set; }
+        public string VendorName { get; set; }
+        public int Quantity { get; set; }
+       
+    }
+
+    public class ProductVendor: CustomerAudit
+    {
         public string VendorName { get; set; }
         public string VendorAddress { get; set; }
         public string VendorPhone { get; set; }

@@ -1,0 +1,86 @@
+﻿@model Resqu.Core.Dto.ProductDto
+@{
+    ViewData["Title"] = "CreateProduct";
+    Layout = "~/Views/Shared/_LayoutServices.cshtml";
+}
+
+<div class="main-content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-lg-12 mt-4">
+                <h4>Products</h4>
+            </div>
+        </div>
+        <div class="row my-4">
+            <div class="col-lg-12">
+                <div class="add-service-div p-5">
+                    <div>
+                        <h5>Fill in the fields below to add a new product</h5>
+                    </div>
+                    <form asp-action="CreateProduct" enctype="multipart/form-data">
+
+                        <div class="row">
+                            <div class="col-lg-6 mt-3">
+                                <div class="form-group">
+                                    <label for="Service-name">Enter the name of product <span class="text-danger">*</span></label>
+                                    <input type="text" asp-for="ProductName" class="input-field" placeholder="Enter the name of the product to be added">
+                                </div>
+                            </div>
+                            <div class="col-lg-6 mt-3">
+                                <div class="form-group">
+                                    <label for="Service-category">Select Service Category <span class="text-danger">*</span></label>
+                                    <select asp-for="ProductCategory" class="input-field" asp-items="@ViewBag.ProductCategory">
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-6 mt-3">
+                                <div class="form-group">
+                                    <label for="Service-name">
+                                        Cost of Product <span class="text-danger">*</span>
+                                    </label>
+                                    <input type="text" class="input-field" asp-for="ProductPrice"
+                                           placeholder="Enter the name of the service to be added">
+                                </div>
+                            </div>
+                            <div class="col-lg-6 mt-3">
+                                <div class="form-group">
+                                    <label for="">Upload Passport Photograph *</label>
+                                    <input type="file" asp-for="ProductImage" class="d-none" id="fileUpload">
+                                    <a class="btn btn-upload-img2 d-flex  justify-content-center align-items-center"
+                                       id="openFileUpload">
+                                        <div><img src="./assets/images/uploadBtn-blue.svg" alt=""></div>
+                                        <div class="px-2 text-blue">Upload file</div>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-6 mt-3">
+                                <div class="form-group">
+                                    <label for="Service-category">Select Name of Distributor<span class="text-danger">*</span></label>
+                                    <select asp-for="VendorName" class="input-field" asp-items="@ViewBag.ProductVendorList">
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-6 mt-3">
+                            <div class="form-group">
+                                <label for="Quantity">Quantity<span class="text-danger">*</span></label>
+                                <input type="number" class="input-field" asp-for="Quantity"
+                                       placeholder="Enter the available quantity to be added">
+                            </div>
+                        </div>
+                        </div>
+                        <div class="row justify-content-center mt-5">
+                            <div class="col-lg-5">
+                                <button class="btn btn-services mt-3">Submit</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

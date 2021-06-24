@@ -506,7 +506,32 @@ namespace Resqu.Core.Dto
         public string RefreshToken { get; set; }
     }
 
+    public class ProductDto
+    {
+        [Required]
+        public decimal ProductPrice { get; set; }
+        [Required]
+        public string ProductName { get; set; }
+        [Required]
+        public string ProductCategory { get; set; }
+        public IFormFile ProductImage { get; set; }
+        [Required]
+        public string VendorName { get; set; }
+        public int Quantity { get; set; }
+    }
 
+
+    public class ProductListDtos
+    {
+        public long Id { get; set; }
+        public decimal ProductPrice { get; set; }
+        public string ProductName { get; set; }
+        public string ProductCategory { get; set; }
+        public string ProductImage { get; set; }
+        public string VendorName { get; set; }
+        public int Quantity { get; set; }
+        public DateTime DateCreated { get; set; }
+    }
     public class VendorListDto
     {
         public string Gender { get; set; }

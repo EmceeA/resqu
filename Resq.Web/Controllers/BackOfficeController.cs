@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -19,11 +21,13 @@ namespace Resq.Web.Controllers
         //private readonly IHttpContextAccessor _http;
         private IBackOffice _back;
         private readonly Resq.Web.Interface.IVendor _vendor;
-        public BackOfficeController(ResquContext context, IBackOffice back, Resq.Web.Interface.IVendor vendor)
+        private readonly IWebHostEnvironment _hosting;
+        public BackOfficeController(ResquContext context, IBackOffice back, Resq.Web.Interface.IVendor vendor, IWebHostEnvironment hosting)
         {
             _context = context;
             _back = back;
             _vendor = vendor;
+            _hosting = hosting;
             //_http = http;
         }
 
@@ -196,7 +200,29 @@ namespace Resq.Web.Controllers
                 ActionName = p.ActionName,
                 ControllerName = p.ControllerName
             }).ToList();
+            ViewBag.ProfilePicture = _context.BackOfficeUsers.Where(d => d.UserName == HttpContext.Session.GetString("userName")).Select(e => e.ProfilePicture).FirstOrDefault();
+            ViewBag.FullName = _context.BackOfficeUsers.Where(d => d.UserName == HttpContext.Session.GetString("userName")).Select(e => e.FirstName + " " + e.LastName).FirstOrDefault();
+
             return View();
+        }
+
+
+        [HttpGet]
+        public IActionResult RoleList()
+        {
+            ViewBag.ServicePageUrls = _context.BackOfficeRoles.Where(b => b.RoleName == HttpContext.Session.GetString("role")).Select(p => new Resqu.Core.Entities.RoleUrl
+            {
+                PageName = p.PageName,
+                PageUrl = p.PageUrl,
+                PageNameClass = p.PageNameClass,
+                PageUrlClass = p.PageUrlClass,
+                ActionName = p.ActionName,
+                ControllerName = p.ControllerName
+            }).ToList();
+            ViewBag.ProfilePicture = _context.BackOfficeUsers.Where(d => d.UserName == HttpContext.Session.GetString("userName")).Select(e => e.ProfilePicture).FirstOrDefault();
+            ViewBag.FullName = _context.BackOfficeUsers.Where(d => d.UserName == HttpContext.Session.GetString("userName")).Select(e => e.FirstName + " " + e.LastName).FirstOrDefault();
+            var roles = _context.Roles.ToList();
+            return View(roles);
         }
         [HttpGet]
         public IActionResult AddRole()
@@ -292,6 +318,111 @@ namespace Resq.Web.Controllers
             ViewBag.FullName = _context.BackOfficeUsers.Where(d => d.UserName == HttpContext.Session.GetString("userName")).Select(e => e.FirstName + " " + e.LastName).FirstOrDefault();
             return View();
         }
+
+        public IActionResult CreateProduct()
+        {
+            ViewBag.ServicePageUrls = _context.BackOfficeRoles.Where(b => b.RoleName == HttpContext.Session.GetString("role")).Select(p => new Resqu.Core.Entities.RoleUrl
+            {
+                PageName = p.PageName,
+                PageUrl = p.PageUrl,
+                PageNameClass = p.PageNameClass,
+                PageUrlClass = p.PageUrlClass,
+                ActionName = p.ActionName,
+                ControllerName = p.ControllerName
+            }).ToList();
+            ViewBag.ProfilePicture = _context.BackOfficeUsers.Where(d => d.UserName == HttpContext.Session.GetString("userName")).Select(e => e.ProfilePicture).FirstOrDefault();
+            ViewBag.FullName = _context.BackOfficeUsers.Where(d => d.UserName == HttpContext.Session.GetString("userName")).Select(e => e.FirstName + " " + e.LastName).FirstOrDefault();
+            ViewData["ProductVendorList"] = new SelectList(_context.ProductVendors, "Id", "VendorName");
+            ViewData["ProductCategory"] = new SelectList(_context.Expertises, "Id", "Name");
+            return View();
+        }
+
+
+        public IActionResult ProductList()
+        {
+            ViewBag.ServicePageUrls = _context.BackOfficeRoles.Where(b => b.RoleName == HttpContext.Session.GetString("role")).Select(p => new Resqu.Core.Entities.RoleUrl
+            {
+                PageName = p.PageName,
+                PageUrl = p.PageUrl,
+                PageNameClass = p.PageNameClass,
+                PageUrlClass = p.PageUrlClass,
+                ActionName = p.ActionName,
+                ControllerName = p.ControllerName
+            }).ToList();
+            ViewBag.ProfilePicture = _context.BackOfficeUsers.Where(d => d.UserName == HttpContext.Session.GetString("userName")).Select(e => e.ProfilePicture).FirstOrDefault();
+            ViewBag.FullName = _context.BackOfficeUsers.Where(d => d.UserName == HttpContext.Session.GetString("userName")).Select(e => e.FirstName + " " + e.LastName).FirstOrDefault();
+            var category = _context.Expertises.Where(e => e.Id == 1).Select(s => s.Name).FirstOrDefault();
+            var products = _context.Products.Select(d=> new ProductListDtos { 
+                DateCreated = d.DateCreated.Value,
+                ProductCategory = _context.Expertises.Where(e=>e.Id == Convert.ToInt32(d.ProductCategory)).Select(s=>s.Name).FirstOrDefault(),
+                VendorName = _context.ProductVendors.Where(e => e.Id == Convert.ToInt32(d.VendorName)).Select(s => s.VendorName).FirstOrDefault(),
+                ProductImage= d.ProductImage,
+                ProductName = d.ProductName,
+                ProductPrice = d.ProductPrice,
+                Quantity = d.Quantity,
+                Id = d.Id
+            }).ToList();
+            return View(products);
+        }
+
+        [HttpPost]
+        public IActionResult CreateProduct(ProductDto productDto)
+        {
+            ViewBag.ServicePageUrls = _context.BackOfficeRoles.Where(b => b.RoleName == HttpContext.Session.GetString("role")).Select(p => new Resqu.Core.Entities.RoleUrl
+            {
+                PageName = p.PageName,
+                PageUrl = p.PageUrl,
+                PageNameClass = p.PageNameClass,
+                PageUrlClass = p.PageUrlClass,
+                ActionName = p.ActionName,
+                ControllerName = p.ControllerName
+            }).ToList();
+            ViewBag.ProfilePicture = _context.BackOfficeUsers.Where(d => d.UserName == HttpContext.Session.GetString("userName")).Select(e => e.ProfilePicture).FirstOrDefault();
+            ViewBag.FullName = _context.BackOfficeUsers.Where(d => d.UserName == HttpContext.Session.GetString("userName")).Select(e => e.FirstName + " " + e.LastName).FirstOrDefault();
+            
+            if (!ModelState.IsValid)
+            {
+                return View(ModelState);
+            }
+            var models = new Product
+            {
+                CreatedBy = "",
+                DateCreated = DateTime.Now,
+                DateModified = DateTime.Now,
+                ProductCategory = productDto.ProductCategory,
+                ProductImage = UploadImage(productDto),
+                ProductName = productDto.ProductName,
+                ProductPrice = productDto.ProductPrice,
+                VendorName = productDto.VendorName,
+                Quantity = productDto.Quantity
+            };
+            _context.Products.Add(models);
+            _context.SaveChanges();
+            ViewData["ProductVendorList"] = new SelectList(_context.ProductVendors, "Id", "VendorName", productDto.VendorName);
+            ViewData["ProductCategory"] = new SelectList(_context.Expertises, "Id", "Name", productDto.ProductCategory);
+            return View();
+        }
+
+        public string UploadImage(ProductDto createVendor)
+        {
+
+            string uniqueFileName = null;
+
+            if (createVendor.ProductImage != null)
+            {
+                string uploadsFolder = Path.Combine(_hosting.WebRootPath, "images");
+                uniqueFileName = Guid.NewGuid().ToString() + "_" + createVendor.ProductImage.FileName;
+                string filePath = Path.Combine(uploadsFolder, uniqueFileName);
+                using (var fileStream = new FileStream(filePath, FileMode.Create))
+                {
+                    createVendor.ProductImage.CopyTo(fileStream);
+                }
+            }
+            return uniqueFileName;
+
+        }
+
+
         [HttpGet]
 
         public IActionResult GetAllCustomers()
@@ -310,6 +441,48 @@ namespace Resq.Web.Controllers
             ViewBag.ProfilePicture = _context.BackOfficeUsers.Where(d => d.UserName == HttpContext.Session.GetString("userName")).Select(e => e.ProfilePicture).FirstOrDefault();
             ViewBag.FullName = _context.BackOfficeUsers.Where(d => d.UserName == HttpContext.Session.GetString("userName")).Select(e => e.FirstName + " " + e.LastName).FirstOrDefault();
             return View(allCustomer);
+        }
+
+        public ActionResult WalletPage()
+        {
+            ViewBag.ServicePageUrls = _context.BackOfficeRoles.Where(b => b.RoleName == HttpContext.Session.GetString("role")).Select(p => new Resqu.Core.Entities.RoleUrl
+            {
+                PageName = p.PageName,
+                PageUrl = p.PageUrl,
+                PageNameClass = p.PageNameClass,
+                PageUrlClass = p.PageUrlClass,
+                ActionName = p.ActionName,
+                ControllerName = p.ControllerName
+            }).ToList();
+
+            var allCustomer = _context.Customers.ToList();
+            ViewBag.ProfilePicture = _context.BackOfficeUsers.Where(d => d.UserName == HttpContext.Session.GetString("userName")).Select(e => e.ProfilePicture).FirstOrDefault();
+            ViewBag.FullName = _context.BackOfficeUsers.Where(d => d.UserName == HttpContext.Session.GetString("userName")).Select(e => e.FirstName + " " + e.LastName).FirstOrDefault();
+            ViewBag.AllTransaction = _context.Transactions.ToList();
+            ViewBag.DebitTransaction = _context.Transactions.Where(r=>r.CustomerTransactionType == "DR").ToList();
+            ViewBag.CreditTransaction = _context.Transactions.Where(r => r.CustomerTransactionType == "CR").ToList();
+            ViewBag.OverallWalletBalance = _context.Wallets.Select(d => d.Balance).ToList().Sum();
+            return View();
+        }
+        public ActionResult TransactionList()
+        {
+            ViewBag.ServicePageUrls = _context.BackOfficeRoles.Where(b => b.RoleName == HttpContext.Session.GetString("role")).Select(p => new Resqu.Core.Entities.RoleUrl
+            {
+                PageName = p.PageName,
+                PageUrl = p.PageUrl,
+                PageNameClass = p.PageNameClass,
+                PageUrlClass = p.PageUrlClass,
+                ActionName = p.ActionName,
+                ControllerName = p.ControllerName
+            }).ToList();
+
+            var allCustomer = _context.Customers.ToList();
+            ViewBag.ProfilePicture = _context.BackOfficeUsers.Where(d => d.UserName == HttpContext.Session.GetString("userName")).Select(e => e.ProfilePicture).FirstOrDefault();
+            ViewBag.FullName = _context.BackOfficeUsers.Where(d => d.UserName == HttpContext.Session.GetString("userName")).Select(e => e.FirstName + " " + e.LastName).FirstOrDefault();
+
+            var transactions = _context.Transactions.ToList();
+            ViewBag.Transactions = transactions.Where(c => c.Status == "Completed").Count();
+            return View(transactions);
         }
 
         public ActionResult BackOfficeDashboard()
@@ -523,6 +696,69 @@ namespace Resq.Web.Controllers
                 ActionName = p.ActionName,
                 ControllerName = p.ControllerName
             }).ToList();
+            var vendorList = _context.Vendors.Where(e=>e.IsDeleted == false).ToList();
+            var getTotalVendorRating = _context.VendorRatings.Where(e => e.VendorId == id).Select(d => d.Rating).ToList().Sum();
+            ViewBag.Rating = getTotalVendorRating;
+
+            var topVendorList = new List<TopVendor>();
+
+            foreach (var vendo in vendorList)
+            {
+                var getTotalRating = _context.VendorRatings.Where(e => e.VendorId == vendo.Id).Select(d => d.Rating).ToList().Sum();
+
+                    var topVendor = new TopVendor
+                {
+                    Picture = vendo.VendorPicture,
+                    NumberOfRequest = _context.Requests.Where(c => c.VendorId == vendo.Id).ToList().Count(),
+                    VendorName = vendo.CompanyName,
+                    RatingTotal = getTotalRating
+                };
+                topVendorList.Add(topVendor);
+            }
+            var reviewList = new List<Review>();
+
+            foreach (var vendo in vendorList)
+            {
+                var serviceName = _context.Expertises.Where(s => s.Id == vendo.Id).Select(u => u.Name).FirstOrDefault();
+                int nullrating = 0;
+                int Fullrating = 0;
+                var rating = _context.VendorRatings.Where(e => e.VendorId == vendo.Id && e.ServiceType == serviceName).Select(s => new Ratings { TotalRating = s.Rating, LastCreatedAt = _context.VendorRatings.Where(r => r.VendorId == vendo.Id).Select(e => e.CreatedAt).Max() }).FirstOrDefault();
+                if (rating != null)
+                {
+                    if (rating == null)
+                    {
+                        rating.TotalRating = 0;
+                        nullrating = 0;
+                    }
+                    if (rating.TotalRating == 0)
+                    {
+                        nullrating = 0;
+                    }
+                    else if (rating.TotalRating > 0)
+                    {
+                        Fullrating = _context.VendorRatings.Where(e => e.VendorId == vendo.Id && e.ServiceType == serviceName).Select(s => s.Rating).FirstOrDefault();
+                    }
+                    rating.TotalRating = rating.TotalRating == nullrating ? nullrating : Fullrating;
+                    var completedRequests = _context.Requests.Where(c => c.VendorId.Value == vendo.Id && c.RequestStatus == "Completed").ToList().Count();
+                    var dates = rating.LastCreatedAt;
+                    var minusDate = DateTime.Now - dates;
+                    var ratings = new Review
+                    {
+                        Picture = vendo.VendorPicture,
+                        Rating = rating.TotalRating,
+                        SubCategory = _context.Vendors.Where(v=>v.Id == vendo.Id).Select(s=>s.Expertise.Name).FirstOrDefault(),
+                        Description = _context.Vendors.Where(v => v.Id == vendo.Id).Select(s => s.Expertise.Description).FirstOrDefault(),
+                        VendorName = vendo.CompanyName,
+                        CompletedRequest = completedRequests,
+                        DaysAgo = minusDate.Days
+                    };
+                    reviewList.Add(ratings);
+                }
+            }
+
+            var vendorLists = topVendorList.OrderByDescending(e => e.NumberOfRequest).Distinct();
+            ViewBag.TopVendors = vendorLists.OrderByDescending(e => e.RatingTotal).Take(10);
+            ViewBag.Reviews = reviewList.OrderByDescending(e => e.Rating).Take(10);
             ViewBag.BanStatus = _context.Vendors.Where(c => c.Id == id).Select(e => e.IsBan).FirstOrDefault();
             ViewBag.Completed = _context.Transactions.Where(c => c.VendorId == id && c.Status == "Completed").Count();
             ViewBag.ProfilePicture = _context.BackOfficeUsers.Where(d => d.UserName == HttpContext.Session.GetString("userName")).Select(e => e.ProfilePicture).FirstOrDefault();

@@ -59,41 +59,8 @@
                             <a asp-action="@item.ActionName" asp-controller="@item.ControllerName" class="@item.PageUrlClass">
                             <i class="@item.PageNameClass"></i>@item.PageName
                             </a>
-                            @*<a class="@item.PageUrlClass" href="@item.PageUrl">
-                                <i class="@item.PageName"></i>@item.PageName
-                            </a>*@
                         </li>
                         }
-                        @*<li class="has-sub">
-                            <a class="dashboard" href="../../BackOffice/BackOfficeDashboard">
-                                <i class="fas fa-dashboard"></i>Dashboard
-                            </a>
-                        </li>
-                        <li>
-                            <a href="../../BackOffice/AddService">
-                                <i class="fas fa-services"></i>Services
-                            </a>
-                        </li>
-                        <li>
-                            <a href="vendors.html">
-                                <i class="fas fa-vendors"></i>Vendors
-                            </a>
-                        </li>
-                        <li>
-                            <a href="customers.html">
-                                <i class="far fa-customers"></i>Customers
-                            </a>
-                        </li>
-                        <li>
-                            <a href="transaction.html">
-                                <i class="fas fa-transactions"></i>Transactions
-                            </a>
-                        </li>
-                        <li>
-                            <a href="wallet.html">
-                                <i class="fas fa-wallet"></i>Wallet
-                            </a>
-                        </li>*@
                     </ul>
                 </div>
             </nav>
@@ -107,7 +74,7 @@
                 </a>
             </div>
             <div class="px-4 mt-4">
-                <a href="../../BackOffice" class="btn btn-addNewVendor d-flex justify-content-between align-items-center">
+                <a href="../../BackOffice/AddVendor" target="_blank" class="btn btn-addNewVendor d-flex justify-content-between align-items-center">
                     <span class="px-2 col-lg-4">Add new vendor</span>
                     <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 48 48">
                         <g id="Group_4794" data-name="Group 4794" transform="translate(-217 -163)">
@@ -130,43 +97,9 @@
                             <a asp-action="@item.ActionName" asp-controller="@item.ControllerName" class="@item.PageUrlClass">
                                 <i class="@item.PageNameClass"></i>@item.PageName
                             </a>
-                            @*<a class="@item.PageUrlClass" href="@item.PageUrl">
-            <i data-feather="Dashboard" class="@item.PageNameClass"></i>@item.PageName
-        </a>*@
                         </li>
                         <br />
-
                         }
-                        @*<li class="active mt-2 mb-3">
-                            <a class="js-arrow" href="../../BackOffice/BackOfficeDashboard">
-                                <i data-feather="Dashboard" class="mr-3"></i>Dashboard
-                            </a>
-                        </li>
-                        <li class="has-sub mb-3">
-                            <a class="js-arrow" href="../../BackOffice/AddService">
-                                <i data-feather="shield" class="mr-3"></i>Services
-                            </a>
-                        </li>
-                        <li class="has-sub mb-3">
-                            <a class="js-arrow" href="#">
-                                <i data-feather="activity" class="mr-3"></i>Vendors
-                            </a>
-                        </li>
-                        <li class="has-sub mb-3">
-                            <a class="js-arrow" href="#">
-                                <i data-feather="file" class="mr-3"></i>Customers
-                            </a>
-                        </li>
-                        <li class="has-sub mb-3">
-                            <a class="js-arrow" href="#">
-                                <i data-feather="user" class="mr-3"></i>Transactions
-                            </a>
-                        </li>
-                        <li class="has-sub mb-3">
-                            <a class="js-arrow" href="#">
-                                <i data-feather="log-out" class="mr-3"></i>Wallet
-                            </a>
-                        </li>*@
                         <li class="log-out-btn mb-3">
                             <div class="p-4 profile-settings">
                                 <div class="d-flex align-items-center">

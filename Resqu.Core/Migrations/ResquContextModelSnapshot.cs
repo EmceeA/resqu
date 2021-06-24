@@ -387,11 +387,59 @@ namespace Resqu.Core.Migrations
                     b.Property<bool>("IsModified")
                         .HasColumnType("bit");
 
+                    b.Property<string>("ProductCategory")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ProductImage")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("ProductName")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("ProductPrice")
                         .HasColumnType("decimal(18,2)");
+
+                    b.Property<int>("Quantity")
+                        .HasColumnType("int");
+
+                    b.Property<string>("VendorName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("isVerified")
+                        .HasColumnType("bit");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Products");
+                });
+
+            modelBuilder.Entity("Resqu.Core.Entities.ProductVendor", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("DateCreated")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("DateModified")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsBan")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsFullyVerified")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsModified")
+                        .HasColumnType("bit");
 
                     b.Property<string>("VendorAddress")
                         .HasColumnType("nvarchar(max)");
@@ -407,7 +455,7 @@ namespace Resqu.Core.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Products");
+                    b.ToTable("ProductVendors");
                 });
 
             modelBuilder.Entity("Resqu.Core.Entities.Request", b =>

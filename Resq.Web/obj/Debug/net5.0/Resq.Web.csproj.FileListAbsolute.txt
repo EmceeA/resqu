@@ -487,3 +487,8 @@ C:\Users\HFET\source\repos\Resqu.API\Resq.Web\bin\Debug\net5.0\CrossPlatformLibr
 C:\Users\HFET\source\repos\Resqu.API\Resq.Web\bin\Debug\net5.0\GeoCoordinate.NetCore.dll
 C:\Users\HFET\source\repos\Resqu.API\Resq.Web\bin\Debug\net5.0\System.Device.Portable.dll
 C:\Users\HFET\source\repos\Resqu.API\Resq.Web\obj\Debug\net5.0\Razor\Views\BackOffice\UpdateVendorProfile.cshtml.g.cs
+C:\Users\HFET\source\repos\Resqu.API\Resq.Web\obj\Debug\net5.0\Razor\Views\BackOffice\CreateProduct.cshtml.g.cs
+C:\Users\HFET\source\repos\Resqu.API\Resq.Web\obj\Debug\net5.0\Razor\Views\BackOffice\ProductList.cshtml.g.cs
+C:\Users\HFET\source\repos\Resqu.API\Resq.Web\obj\Debug\net5.0\Razor\Views\BackOffice\RoleList.cshtml.g.cs
+C:\Users\HFET\source\repos\Resqu.API\Resq.Web\obj\Debug\net5.0\Razor\Views\BackOffice\TransactionList.cshtml.g.cs
+C:\Users\HFET\source\repos\Resqu.API\Resq.Web\obj\Debug\net5.0\Razor\Views\BackOffice\WalletPage.cshtml.g.cs

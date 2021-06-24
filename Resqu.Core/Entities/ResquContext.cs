@@ -22,6 +22,7 @@ namespace Resqu.Core.Entities
         public DbSet<ExpertiseCategory> ExpertiseCategories { get; set; }
         public DbSet<WalletPayment> WalletPayments { get; set; }
         public DbSet<Product> Products { get; set; }
+        public DbSet<ProductVendor> ProductVendors { get; set; }
         public DbSet<Wallet> Wallets { get; set; }
         public DbSet<CardPayment> CardPayments { get; set; }
         public DbSet<CashPayment> CashPayments { get; set; }

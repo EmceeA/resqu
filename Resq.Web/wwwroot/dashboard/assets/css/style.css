@@ -354,6 +354,17 @@ a .sub-category-p {
   background-color: #f7f7f7;
   border-radius: 5px;
 }
+.btn-upload-img2 {
+  height: 55px;
+  border: 1px solid #707070;
+  border-style: dashed;
+  background-color: #f7f7f7;
+  border-radius: 5px;
+}
+.btn-upload-img2 img {
+  height: 24px;
+  width: 24px;
+}
 .btn-no {
   border: 1px solid #a39d9d !important;
   color: #5a5a5a !important;
@@ -371,6 +382,43 @@ a .sub-category-p {
 .customer-div {
   background-color: #dddddd;
   border-radius: 5px;
+}
+.available-status {
+  padding: 5px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #154806;
+  color: #fff;
+  font-size: 0.75rem;
+  border-radius: 5px;
+}
+.wallet-div {
+  padding: 25px;
+  background: linear-gradient(297deg, #4c9d58, #224426 55.71%),
+    linear-gradient(127deg, #1c3820, #1c3820 70.71%);
+  border-radius: 5px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.input-field-wallet {
+  height: 40px;
+  border: 1px solid #a29e9e;
+  border-radius: 5px;
+  font-size: 0.75rem;
+  padding-left: 5px;
+  padding-right: 5px;
+  width: 100%;
+}
+.btn-wallet {
+  height: 40px;
+  background-color: #ff8200;
+  color: #fff;
+  font-size: 0.75rem;
+  border-radius: 5px;
+  width: 100%;
 }
 
 /* custom radio buttons */
