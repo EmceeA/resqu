@@ -155,9 +155,9 @@ namespace Resqu.API.Controllers
 
 
         [HttpGet]
-        public async Task<IActionResult> EndService(string phone)
+        public async Task<IActionResult> EndService(string bookingId)
         {
-            var result = await _customer.EndService(phone);
+            var result = await _customer.EndService(bookingId);
             return Ok(result);
         }
 

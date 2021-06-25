@@ -443,6 +443,40 @@ namespace Resq.Web.Controllers
             return View(allCustomer);
         }
 
+        public ActionResult VendorRequestHistory(int? id)
+        {
+            ViewBag.ServicePageUrls = _context.BackOfficeRoles.Where(b => b.RoleName == HttpContext.Session.GetString("role")).Select(p => new Resqu.Core.Entities.RoleUrl
+            {
+                PageName = p.PageName,
+                PageUrl = p.PageUrl,
+                PageNameClass = p.PageNameClass,
+                PageUrlClass = p.PageUrlClass,
+                ActionName = p.ActionName,
+                ControllerName = p.ControllerName
+            }).ToList();
+
+            var allCustomer = _context.Customers.ToList();
+            ViewBag.ProfilePicture = _context.BackOfficeUsers.Where(d => d.UserName == HttpContext.Session.GetString("userName")).Select(e => e.ProfilePicture).FirstOrDefault();
+            ViewBag.FullName = _context.BackOfficeUsers.Where(d => d.UserName == HttpContext.Session.GetString("userName")).Select(e => e.FirstName + " " + e.LastName).FirstOrDefault();
+            var history = (from hist in _context.ResquServices
+                           where hist.VendorId == id.ToString()
+                           join trans in _context.Transactions 
+                           on hist.BookingId equals trans.BookingId
+                           select new HistoryDto
+                           {
+                               Amount = trans.TotalAmount,
+                               CustomerName = trans.CustomerName,
+                               StartDate = hist.DateStarted.ToString("dd-MM-yyyy hh:mm tt"),
+                               EndDate = hist.DateEnded.ToString("dd-MM-yyyy hh:mm tt"),
+                               Location = hist.CustomerLocation,
+                               ServiceName = hist.ServiceName,
+                               SubCategory = hist.SubCategoryName
+                           }).ToList();
+
+            ViewBag.Counter = history.Count();
+            return View(history);
+        }
+
         public ActionResult WalletPage()
         {
             ViewBag.ServicePageUrls = _context.BackOfficeRoles.Where(b => b.RoleName == HttpContext.Session.GetString("role")).Select(p => new Resqu.Core.Entities.RoleUrl

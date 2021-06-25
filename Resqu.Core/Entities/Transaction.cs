@@ -23,6 +23,7 @@ namespace Resqu.Core.Entities
         public string ServiceDate { get; set; }
         public string CustomerName { get; set; }
         public string VendorName { get; set; }
+        public string BookingId { get; set; }
         
         public int? VendorId { get; set; }
         public Vendor Vendor { get; set; }

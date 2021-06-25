@@ -370,6 +370,7 @@ namespace Resqu.Core.Dto
         public string VendorName { get; set; }
         public string VendorGender { get; set; }
         public string VendorPhone { get; set; }
+        public string ServiceAmount { get; set; }
     }
     public class MakeCardRequest
     {
@@ -591,7 +592,16 @@ namespace Resqu.Core.Dto
 
     //public int? ExpertiseCategoryId { get; set; }
     //public ExpertiseCategory GetExpertiseCategory { get; set; }
-
+    public class HistoryDto
+    {
+        public string StartDate { get; set; }
+        public string EndDate { get; set; }
+        public string ServiceName { get; set; }
+        public string SubCategory { get; set; }
+        public decimal Amount { get; set; }
+        public string CustomerName { get; set; }
+        public string Location { get; set; }
+    }
     public class ExpertiseDto
     {
         public string ExpertiseName { get; set; }

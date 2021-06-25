@@ -354,15 +354,19 @@ namespace Resqu.Core.Services
             {
                 return null;
             }
+            var getExpertisePrice = _context.ExpertiseCategories.Where(e => e.Name == service.SubCategoryName).Select(u=>u.Price).FirstOrDefault();
+            //var subCatPrice = _context.ExpertiseCategories.Where(e=>e.ExpertiseId  == )
             var serviceModel = new ResquService
             {
+                
                 ServiceName = service.ServiceName,
                 SubCategoryName = service.SubCategoryName,
-                Price = service.SubCategoryPrice,
+                Price = getExpertisePrice,
                 BookingId = $"{service.ServiceName.Substring(0, 3).ToUpper()}/{GenerateRandom(10)}",
-                IsStarted = true,
+                IsStarted = false,
                 Description = service.Description,
-                Status = "ONGOING",
+                Status = "Booked",
+                DateCreated = DateTime.Now,
                 CustomerLocation = service.CustomerAddress,
                 CustomerPhone = phoneNumber,
                 VendorId =getNearestVendor.VendorId.ToString(),
@@ -376,7 +380,6 @@ namespace Resqu.Core.Services
             _context.SaveChanges();
             return new ServiceResponseDto
             {
-                
                 Description = service.Description,
                 ServiceName = service.ServiceName,
                 SubCategoryName = service.SubCategoryName,
@@ -386,7 +389,8 @@ namespace Resqu.Core.Services
                 VendorGender = getNearestVendor.Gender,
                 VendorPhone = getNearestVendor.Phone,
                 Distance  = getNearestVendor.Distance,
-                Time = Math.Round(getNearestVendor.Time)
+                Time = Math.Round(getNearestVendor.Time),
+                ServiceAmount = getNearestVendor.Price.ToString()
             };
         }
 
@@ -638,6 +642,7 @@ namespace Resqu.Core.Services
                 BackOfficeTransactionType = "CR",
                 ServiceType = payment.ServiceName,
                 SubCategory = payment.SubCategoryId.ToString(),
+                BookingId = bookingId
             };
             _context.Transactions.Add(transaction);
             _context.SaveChanges();
