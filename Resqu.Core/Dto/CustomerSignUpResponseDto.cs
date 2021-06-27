@@ -34,7 +34,7 @@ namespace Resqu.Core.Dto
     }
     public class CustomerSignInRequest
     {
-        public string PhoneNumber { get; set; }
+        public string UserName { get; set; }
         public string Password { get; set; }
     }
 

@@ -35,7 +35,7 @@ namespace Resqu.Core.Utility
 
         public ValidateResponse IsValidUserCredentials(CustomerSignInRequest customer)
         {
-            var user = _db.Customers.Where(c => c.PhoneNumber == customer.PhoneNumber).FirstOrDefault();
+            var user = _db.Customers.Where(c => c.PhoneNumber == customer.UserName).FirstOrDefault();
             if (user == null)
             {
                 return new ValidateResponse
@@ -45,7 +45,7 @@ namespace Resqu.Core.Utility
                 };
             }
 
-            var validateCreds = _db.Customers.Where(d => d.PhoneNumber == customer.PhoneNumber && d.Pin == customer.Password).FirstOrDefault();
+            var validateCreds = _db.Customers.Where(d => d.PhoneNumber == customer.UserName && d.Pin == customer.Password).FirstOrDefault();
 
             if (validateCreds == null)
             {

@@ -42,7 +42,7 @@ namespace Resqu.Core.Services
         public async Task<CustomerSignInResponse> SignInCustomer(CustomerSignInRequest signInModel)
         {
             CustomerSignInResponse response = null;
-            string custCacheId = ConstantValue.USER_LOGIN_CACHE + signInModel.PhoneNumber + signInModel.Password;
+            string custCacheId = ConstantValue.USER_LOGIN_CACHE + signInModel.UserName + signInModel.Password;
             var cachedString = _cache.GetCachedValue(custCacheId, ConstantValue.CACHE_KEY_APP_DEFAULT).Result;
             //string cachedString = null;
 
@@ -84,8 +84,36 @@ namespace Resqu.Core.Services
 
         public async Task<CustomerSignInResponse> CustomerSignIn(CustomerSignInRequest signInModel)
         {
-            var getUserName = _context.Customers.Where(d => d.PhoneNumber == signInModel.PhoneNumber && d.IsDeleted == false).FirstOrDefault();
-            _http.HttpContext.Session.SetString("customerPhone", signInModel.PhoneNumber);
+            var getUserDetail = _context.Customers.Where(s => s.PhoneNumber == signInModel.UserName || s.EmailAddress == signInModel.UserName).FirstOrDefault();
+
+            if (getUserDetail == null)
+            {
+                return new CustomerSignInResponse
+                {
+                    Response = "User Not Found",
+                    Status = "Valid User is Required"
+                };
+            }
+
+            if (getUserDetail.IsDeleted)
+            {
+                return new CustomerSignInResponse
+                {
+                    Response = "User does not exist",
+                    Status = "Valid User is Required"
+                };
+            }
+            var getUserName = _context.Customers.Where(d =>d.PhoneNumber == signInModel.UserName || (d.EmailAddress == signInModel.UserName) && d.IsOtpVerified == true && d.IsDeleted == false).FirstOrDefault();
+
+            if (getUserDetail.IsOtpVerified == false)
+            {
+                return new CustomerSignInResponse
+                {
+                    Response = "Kindly Validate Otp and Proceed to Login",
+                    Status = "Unable to Login"
+                };
+            }
+            _http.HttpContext.Session.SetString("customerPhone", signInModel.UserName);
             if (getUserName == null)
             {
                 return new CustomerSignInResponse
@@ -95,32 +123,31 @@ namespace Resqu.Core.Services
             }
             string pin = DecodePin(getUserName.Pin);
 
-            var getUser = await _context.Customers.Where(c => c.PhoneNumber == signInModel.PhoneNumber && signInModel.Password == pin).FirstOrDefaultAsync();
-            if (getUser == null)
-            {
-                return new CustomerSignInResponse
-                {
-                    Response = "Invalid Credentials"
-                };
-            }
-            if (getUser.IsBan == true)
+            //var getUser = await _context.Customers.Where(c =>c.PhoneNumber == signInModel.UserName || (c.EmailAddress == signInModel.UserName) && signInModel.Password == pin).FirstOrDefaultAsync();
+            //if (getUser == null)
+            //{
+            //    return new CustomerSignInResponse
+            //    {
+            //        Response = "Invalid Credentials"
+            //    };
+            //}
+            if (getUserDetail.IsBan == true)
             {
                 return new CustomerSignInResponse
                 {
                     Response = "Oops, You have been banned; Kindly Contact the Administrator"
                 };
             }
-            getUser.LastLoginDate = DateTime.Now;
+            getUserDetail.LastLoginDate = DateTime.Now;
             _context.SaveChanges();
             return new CustomerSignInResponse
             {
-                EmailAddress = getUser.EmailAddress,
-                FirstName = getUser.FirstName,
-                LastName = getUser.LastName,
-                PhoneNumber = getUser.PhoneNumber,
-                RegulatoryIdentity = getUser.RegulatoryIndentity,
-                Status = getUser.isVerified == true ? "Active": "Not Active",
-
+                EmailAddress = getUserDetail.EmailAddress,
+                FirstName = getUserDetail.FirstName,
+                LastName = getUserDetail.LastName,
+                PhoneNumber = getUserDetail.PhoneNumber,
+                RegulatoryIdentity = getUserDetail.RegulatoryIndentity,
+                Status = getUserDetail.isVerified == true ? "Active": "Not Active",
                 Response = "Successfully Logged In"
             };
         }
@@ -354,13 +381,13 @@ namespace Resqu.Core.Services
             {
                 return null;
             }
-            var getExpertisePrice = _context.ExpertiseCategories.Where(e => e.Name == service.SubCategoryName).Select(u=>u.Price).FirstOrDefault();
+            var getExpertisePrice = _context.VendorProcessServiceTypes.Where(e => e.ServiceTypeName == service.SubCategoryName).Select(u=>u.Cost).FirstOrDefault();
             //var subCatPrice = _context.ExpertiseCategories.Where(e=>e.ExpertiseId  == )
             var serviceModel = new ResquService
             {
                 
                 ServiceName = service.ServiceName,
-                SubCategoryName = service.SubCategoryName,
+                SubCategoryName = getExpertisePrice.ToString(),
                 Price = getExpertisePrice,
                 BookingId = $"{service.ServiceName.Substring(0, 3).ToUpper()}/{GenerateRandom(10)}",
                 IsStarted = false,
@@ -827,6 +854,8 @@ namespace Resqu.Core.Services
             if (validateOtp != null && DateTime.Now < validateOtp.ExpiryDate)
             {
                 validateOtp.Status = "USED";
+                var getCustomer = _context.Customers.Where(w => w.PhoneNumber == validateOtp.Phone).FirstOrDefault();
+                getCustomer.IsOtpVerified = true;
                 _context.SaveChanges();
                 return new OtpConfirmationResponseDto
                 {
@@ -945,21 +974,21 @@ namespace Resqu.Core.Services
         {
             List<VendorDistanceRequestDto> destination = new List<VendorDistanceRequestDto>();
             var getCustomerLatLong = await GetLatitudeLongitudeByAddress(customerLocation);
-            var getExpertiseIdByName = _context.Expertises.Where(e => e.Name == serviceName).Select(d=>d.Id).FirstOrDefault();
+            var getExpertiseIdByName = _context.CustomerRequestServices.Where(e => e.ServiceName == serviceName).Select(d=>d.Id).FirstOrDefault();
             //var getSubCategory = _context.VendorServiceSubCategories.Where(e => e.ServiceName == serviceName).ToList();
-            var linqQuery = (from cats in _context.VendorServiceSubCategories
+            var linqQuery = (from cats in _context.CustomerRequestServices
                             where cats.ServiceName == serviceName
-                            join ven in _context.Vendors
-                            on cats.VendorId equals ven.Id
+                            join ven in _context.Vendors.Where(r=>r.CustomerRequestServiceId == getExpertiseIdByName)
+                            on cats.Id equals ven.CustomerRequestServiceId
                             select new
                             {
-                                cats.VendorId,
-                                cats.SubCategoryId,
+                                ven.Id,
+                                cats.ServiceName,
                             }).ToList();
             var getVendorAddresses = new List<Entities.Vendor>();
             foreach (var subCat in linqQuery)
             {
-                var getVendorInfo = _context.Vendors.Where(v => v.ExpertiseId == getExpertiseIdByName && v.AvailabilityStatus == "Online" && v.Id == subCat.VendorId).FirstOrDefault();
+                var getVendorInfo = _context.Vendors.Where(v => v.CustomerRequestServiceId == getExpertiseIdByName && v.AvailabilityStatus == "Online" && v.Id == subCat.Id).FirstOrDefault();
                 if (getVendorInfo != null)
                 {
                     getVendorAddresses.Add(getVendorInfo);
@@ -1073,7 +1102,7 @@ namespace Resqu.Core.Services
                     Status = false
                 };
             }
-            if (getVendor  != null && getVendor.AvailabilityStatus == "Offline")
+            if (getVendor  != null && (getVendor.AvailabilityStatus == "Offline" || getVendor.AvailabilityStatus == null))
             {
                 getVendor.AvailabilityStatus = "Online";
                 _context.SaveChanges();

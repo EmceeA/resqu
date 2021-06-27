@@ -18,16 +18,17 @@ namespace Resq.Web.Controllers
     public class BackOfficeController : Controller
     {
         private readonly ResquContext _context;
-        //private readonly IHttpContextAccessor _http;
+        private readonly IHttpContextAccessor _http;
         private IBackOffice _back;
         private readonly Resq.Web.Interface.IVendor _vendor;
         private readonly IWebHostEnvironment _hosting;
-        public BackOfficeController(ResquContext context, IBackOffice back, Resq.Web.Interface.IVendor vendor, IWebHostEnvironment hosting)
+        public BackOfficeController(ResquContext context, IBackOffice back, Resq.Web.Interface.IVendor vendor, IWebHostEnvironment hosting,IHttpContextAccessor http)
         {
             _context = context;
             _back = back;
             _vendor = vendor;
             _hosting = hosting;
+            _http = http;
             //_http = http;
         }
 
@@ -69,6 +70,7 @@ namespace Resq.Web.Controllers
             {
                 return View(ModelState);
             }
+
              await _context.VendorProcessServiceTypes.AddAsync(vendor);
             _context.SaveChanges();
             return RedirectToAction("BackOfficeDashboard");
@@ -188,8 +190,8 @@ namespace Resq.Web.Controllers
 
         public IActionResult AddService()
         {
-            ViewData["ExpertiseId"] = new SelectList(_context.ServiceTypes, "Id", "Name");
-            ViewData["ServiceName"] = new SelectList(_context.VendorSpecializations, "Id", "Name");
+            ViewData["ExpertiseId"] = new SelectList(_context.VendorProcessServiceTypes, "Id", "ServiceTypeName");
+            ViewData["ServiceName"] = new SelectList(_context.CustomerRequestServices, "Id", "ServiceName");
             ViewBag.ServicePageUrls = _context.BackOfficeRoles.Where(b => b.RoleName == HttpContext.Session.GetString("role")).Select(p => new Resqu.Core.Entities.RoleUrl
             {
                 PageName = p.PageName,
@@ -233,10 +235,10 @@ namespace Resq.Web.Controllers
                 }).ToList();
                 ViewBag.ProfilePicture = _context.BackOfficeUsers.Where(d => d.UserName == HttpContext.Session.GetString("userName")).Select(e => e.ProfilePicture).FirstOrDefault();
                 ViewBag.FullName = _context.BackOfficeUsers.Where(d => d.UserName == HttpContext.Session.GetString("userName")).Select(e => e.FirstName + " " + e.LastName).FirstOrDefault();
-                return RedirectToAction("Services");
+                return RedirectToAction("ServiceList");
             }
-            ViewData["ExpertiseId"] = new SelectList(_context.ServiceTypes, "Id", "Name", expertiseDto.ExpertiseCategoryId);
-            ViewData["ServiceName"] = new SelectList(_context.VendorSpecializations, "Id", "Name", expertiseDto.ExpertiseId);
+            ViewData["ExpertiseId"] = new SelectList(_context.VendorProcessServiceTypes, "Id", "ServiceTypeName", expertiseDto.ExpertiseCategoryId);
+            ViewData["ServiceName"] = new SelectList(_context.CustomerRequestServices, "Id", "ServiceName", expertiseDto.ExpertiseId);
             ViewBag.ServicePageUrls = _context.BackOfficeRoles.Where(b => b.RoleName == HttpContext.Session.GetString("role")).Select(p => new Resqu.Core.Entities.RoleUrl
             {
                 PageName = p.PageName,
@@ -285,7 +287,7 @@ namespace Resq.Web.Controllers
         [HttpGet]
         public IActionResult AddVendor()
         {
-            ViewData["ServiceName"] = new SelectList(_context.Expertises, "Id", "Name");
+            ViewData["ServiceName"] = new SelectList(_context.CustomerRequestServices, "Id", "ServiceName");
             ViewBag.ServicePageUrls = _context.BackOfficeRoles.Where(b => b.RoleName == HttpContext.Session.GetString("role")).Select(p => new Resqu.Core.Entities.RoleUrl
             {
                 PageName = p.PageName,
@@ -385,7 +387,7 @@ namespace Resq.Web.Controllers
                 return RedirectToAction("Success");
             }
             ViewBag.Response = addVend;
-            ViewData["ServiceName"] = new SelectList(_context.Expertises, "Id", "Name",addVendor.ServiceName);
+            ViewData["ServiceName"] = new SelectList(_context.CustomerRequestServices, "Id", "ServiceName",addVendor.ServiceName);
             ViewBag.ServicePageUrls = _context.BackOfficeRoles.Where(b => b.RoleName == HttpContext.Session.GetString("role")).Select(p => new Resqu.Core.Entities.RoleUrl
             {
                 PageName = p.PageName,
@@ -428,7 +430,7 @@ namespace Resq.Web.Controllers
             ViewBag.ProfilePicture = _context.BackOfficeUsers.Where(d => d.UserName == HttpContext.Session.GetString("userName")).Select(e => e.ProfilePicture).FirstOrDefault();
             ViewBag.FullName = _context.BackOfficeUsers.Where(d => d.UserName == HttpContext.Session.GetString("userName")).Select(e => e.FirstName + " " + e.LastName).FirstOrDefault();
             ViewData["ProductVendorList"] = new SelectList(_context.ProductVendors, "Id", "VendorName");
-            ViewData["ProductCategory"] = new SelectList(_context.Expertises, "Id", "Name");
+            ViewData["ProductCategory"] = new SelectList(_context.CustomerRequestServices, "Id", "ServiceName");
             return View();
         }
 
@@ -446,10 +448,10 @@ namespace Resq.Web.Controllers
             }).ToList();
             ViewBag.ProfilePicture = _context.BackOfficeUsers.Where(d => d.UserName == HttpContext.Session.GetString("userName")).Select(e => e.ProfilePicture).FirstOrDefault();
             ViewBag.FullName = _context.BackOfficeUsers.Where(d => d.UserName == HttpContext.Session.GetString("userName")).Select(e => e.FirstName + " " + e.LastName).FirstOrDefault();
-            var category = _context.Expertises.Where(e => e.Id == 1).Select(s => s.Name).FirstOrDefault();
+            //var category = _context.CustomerRequestServices.Where(e => e.Id == ).Select(s => s.ServiceName).FirstOrDefault();
             var products = _context.Products.Select(d=> new ProductListDtos { 
                 DateCreated = d.DateCreated.Value,
-                ProductCategory = _context.Expertises.Where(e=>e.Id == Convert.ToInt32(d.ProductCategory)).Select(s=>s.Name).FirstOrDefault(),
+                ProductCategory = _context.CustomerRequestServices.Where(e=>e.Id == Convert.ToInt32(d.ProductCategory)).Select(s=>s.ServiceName).FirstOrDefault(),
                 VendorName = _context.ProductVendors.Where(e => e.Id == Convert.ToInt32(d.VendorName)).Select(s => s.VendorName).FirstOrDefault(),
                 ProductImage= d.ProductImage,
                 ProductName = d.ProductName,
@@ -481,7 +483,7 @@ namespace Resq.Web.Controllers
             }
             var models = new Product
             {
-                CreatedBy = "",
+                CreatedBy = _http.HttpContext.Session.GetString("userName"),
                 DateCreated = DateTime.Now,
                 DateModified = DateTime.Now,
                 ProductCategory = productDto.ProductCategory,
@@ -494,8 +496,8 @@ namespace Resq.Web.Controllers
             _context.Products.Add(models);
             _context.SaveChanges();
             ViewData["ProductVendorList"] = new SelectList(_context.ProductVendors, "Id", "VendorName", productDto.VendorName);
-            ViewData["ProductCategory"] = new SelectList(_context.Expertises, "Id", "Name", productDto.ProductCategory);
-            return View();
+            ViewData["ProductCategory"] = new SelectList(_context.CustomerRequestServices, "Id", "ServiceName", productDto.ProductCategory);
+            return RedirectToAction("ProductList");
         }
 
         public string UploadImage(ProductDto createVendor)
@@ -663,20 +665,20 @@ namespace Resq.Web.Controllers
             var getAllTransactions = _context.Transactions.ToList();
             //var getAllServices = _context.Expertises.ToList();
             //var 
-            var getAllExpertise = _context.Expertises.ToList();
+            var getAllExpertise = _context.CustomerRequestServices.ToList();
 
             foreach (var expertise in getAllExpertise)
             {
-                var getSubCategory = _context.Expertises.Where(c => c.Name == expertise.Name).ToList().Count();
-                var getAllVendors = _context.Vendors.Where(c => c.ExpertiseId == expertise.Id).ToList().Count();
-                var getNoOfUsers = _context.Transactions.Where(c => c.ServiceType == expertise.Name).ToList().Count();
+                var getSubCategory = _context.CustomerRequestServices.Where(c => c.ServiceName == expertise.ServiceName).ToList().Count();
+                var getAllVendors = _context.Vendors.Where(c => c.CustomerRequestServiceId == expertise.Id).ToList().Count();
+                var getNoOfUsers = _context.Transactions.Where(c => c.ServiceType == expertise.ServiceName).ToList().Count();
                 var description = _context.Expertises.Where(e => e.Id == expertise.Id).Select(d => d.Description).FirstOrDefault();
                 var expertiser = new AvailableServiceDetailViewModel
                 {
                     Description = description,
                     NumberOfUsers = getNoOfUsers,
                     NumberOfVendors = getAllVendors,
-                    ServiceType = expertise.Name,
+                    ServiceType = expertise.ServiceName,
                     SubCategory = getSubCategory
                 };
                 availableServices.Add(expertiser);
@@ -774,8 +776,8 @@ namespace Resq.Web.Controllers
                     {
                         Picture = vendo.VendorPicture,
                         Rating = rating.TotalRating,
-                        SubCategory = vendo.Expertise.Name,
-                        Description = vendo.Expertise.Description,
+                        SubCategory = vendo.CustomerRequestService.ServiceName,
+                        Description = vendo.CustomerRequestService.Description,
                         VendorName = vendo.CompanyName,
                         CompletedRequest = completedRequests,
                         DaysAgo = minusDate.Days
@@ -815,7 +817,7 @@ namespace Resq.Web.Controllers
         public ActionResult VendorDetails(int id)
         {
             var vemdor = _context.Vendors.Find(id);
-            ViewBag.Expertise = _context.Expertises.Where(c => c.Id == vemdor.ExpertiseId).Select(e => e.Name).FirstOrDefault();
+            ViewBag.Expertise = _context.CustomerRequestServices.Where(c => c.Id == vemdor.CustomerRequestServiceId).Select(e => e.ServiceName).FirstOrDefault();
             ViewBag.ServicePageUrls = _context.BackOfficeRoles.Where(b => b.RoleName == HttpContext.Session.GetString("role")).Select(p => new Resqu.Core.Entities.RoleUrl
             {
                 PageName = p.PageName,
@@ -875,8 +877,8 @@ namespace Resq.Web.Controllers
                     {
                         Picture = vendo.VendorPicture,
                         Rating = rating.TotalRating,
-                        SubCategory = _context.Vendors.Where(v=>v.Id == vendo.Id).Select(s=>s.Expertise.Name).FirstOrDefault(),
-                        Description = _context.Vendors.Where(v => v.Id == vendo.Id).Select(s => s.Expertise.Description).FirstOrDefault(),
+                        SubCategory = _context.Vendors.Where(v=>v.Id == vendo.Id).Select(s=>s.CustomerRequestService.ServiceName).FirstOrDefault(),
+                        Description = _context.Vendors.Where(v => v.Id == vendo.Id).Select(s => s.CustomerRequestService.Description).FirstOrDefault(),
                         VendorName = vendo.CompanyName,
                         CompletedRequest = completedRequests,
                         DaysAgo = minusDate.Days
@@ -1009,7 +1011,7 @@ namespace Resq.Web.Controllers
                 EmailAddress = d.EmailAddress,
                 Gender = d.Gender,
                 PhoneNumber = d.PhoneNo,
-                ServiceCategory = _context.Expertises.Where(e=>e.Id == d.ExpertiseId).Select(s=>s.Name).FirstOrDefault(),
+                ServiceCategory = _context.CustomerRequestServices.Where(e=>e.Id == d.CustomerRequestServiceId).Select(s=>s.ServiceName).FirstOrDefault(),
                 VendorName = d.FirstName + " "+ d.LastName,
                 CompletedRequest = _context.Transactions.Where(c=>c.VendorId == d.Id && c.Status == "Completed").Count().ToString()
             }).ToList();
@@ -1042,7 +1044,7 @@ namespace Resq.Web.Controllers
                 EmailAddress = d.EmailAddress,
                 Gender = d.Gender,
                 PhoneNumber = d.PhoneNo,
-                ServiceCategory = _context.Expertises.Where(e => e.Id == d.ExpertiseId).Select(s => s.Name).FirstOrDefault(),
+                ServiceCategory = _context.CustomerRequestServices.Where(e => e.Id == d.CustomerRequestServiceId).Select(s => s.ServiceName).FirstOrDefault(),
                 VendorName = d.FirstName + " " + d.LastName,
                 CompletedRequest = _context.Transactions.Where(c => c.VendorId == d.Id && c.Status == "Completed").Count().ToString()
             }).ToList();
@@ -1097,8 +1099,8 @@ namespace Resq.Web.Controllers
             var getDetails = _context.CustomerRequestServices.Where(e => e.Id == Convert.ToInt32(serviceId)).Select(s => new ServiceDetail
             {
                 Id = s.Id,
-                CreatedBy = "",
-                DateCreated ="", //s.DateCreated.Value.ToString("yyyy-MM-dd hh:mm tt"),
+                CreatedBy = _http.HttpContext.Session.GetString("userName"),
+                DateCreated = _context.Products.Where(r => r.Id == s.Id).Select(e => e.DateCreated.Value.ToString("yyyy-MM-dd hh:mm tt")).FirstOrDefault(),
                 Description = _context.VendorProcessServices.Where(r=>r.CustomerRequestServiceId == s.Id).Select(e=>e.Description).FirstOrDefault(),
                 ServiceCategory = s.ServiceName,
                 SubCategories = experts.Count(),

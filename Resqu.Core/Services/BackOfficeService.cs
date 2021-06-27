@@ -15,11 +15,13 @@ namespace Resqu.Core.Services
     public class BackOfficeService : IBackOffice
     {
         private readonly ResquContext _context;
+        private readonly IHttpContextAccessor _http;
         private readonly IWebHostEnvironment _hosting;
-        public BackOfficeService(ResquContext context, IWebHostEnvironment hosting)
+        public BackOfficeService(ResquContext context, IWebHostEnvironment hosting, IHttpContextAccessor http)
         {
             _context = context;
             _hosting = hosting;
+            _http = http;
         }
         public async Task<UpdateCustomerResponseDto> BanCustomer(string phone)
         {
@@ -318,9 +320,8 @@ namespace Resqu.Core.Services
         public async Task<UpdateCustomerResponseDto> AddService(ExpertiseDto expertiseDto)
         {
             try
-
             {
-                var checkExistence = _context.Expertises.Where(s => s.Name == _context.Expertises.Where(g=>g.Id == expertiseDto.ExpertiseId).Select(e=>e.Name).FirstOrDefault() && s.ExpertiseCategoryId == expertiseDto.ExpertiseCategoryId).Any();
+                var checkExistence = _context.VendorProcessServices.Where(s => s.CustomerRequestServiceId == expertiseDto.ExpertiseId && s.VendorProcessServiceTypeId == expertiseDto.ExpertiseCategoryId).Any();
                 if (checkExistence)
                 {
                     return new UpdateCustomerResponseDto
@@ -329,32 +330,16 @@ namespace Resqu.Core.Services
                         Status = false
                     };
                 }
-                var expert = new Expertise
+                var vendorProcessService = new VendorProcessService
                 {
-                    
                     Cost = expertiseDto.Cost,
-                    Description = expertiseDto.Description,
-                    Name = _context.VendorSpecializations.Where(d=>d.Id == expertiseDto.ExpertiseId).Select(e=>e.Name).FirstOrDefault(),
+                    CreatedBy = _http.HttpContext.Session.GetString("userName"),
+                    CustomerRequestServiceId = expertiseDto.ExpertiseId.Value,
                     DateCreated = DateTime.Now,
-                    ExpertiseCategoryId = expertiseDto.ExpertiseCategoryId,
-                    VendorSpecializationId = expertiseDto.ExpertiseId.Value,
-                    ServiceTypeId = expertiseDto.ExpertiseCategoryId.Value
-
+                    Description = expertiseDto.Description,
+                    VendorProcessServiceTypeId = expertiseDto.ExpertiseCategoryId.Value,
                 };
-
-                _context.Expertises.Add(expert);
-
-                await _context.SaveChangesAsync();
-                var expertiseCat = new ExpertiseCategory
-                {
-                    ExpertiseId = expert.Id,
-                    Name = _context.ServiceTypes.Where(e => e.Id == expert.ExpertiseCategoryId).Select(r => r.Name).FirstOrDefault(),
-                    Price = expert.Cost,
-                    VendorSpecializationId = expertiseDto.ExpertiseId.Value,
-                    ServiceTypeId = expertiseDto.ExpertiseCategoryId.Value
-                };
-                _context.ExpertiseCategories.Add(expertiseCat);
-
+                _context.VendorProcessServices.Add(vendorProcessService);
                 await _context.SaveChangesAsync();
                 return new UpdateCustomerResponseDto
                 {
@@ -490,7 +475,7 @@ namespace Resqu.Core.Services
 
             }
             getCurrentVendor.VendorPicture = UploadImage(vendor);
-            getCurrentVendor.ExpertiseId = vendor.ExpertiseId;
+            getCurrentVendor.CustomerRequestServiceId = vendor.ExpertiseId;
             getCurrentVendor.FirstName = vendor.FirstName;
             getCurrentVendor.MiddleName = vendor.MiddleName;
             getCurrentVendor.LastName = vendor.LastName;

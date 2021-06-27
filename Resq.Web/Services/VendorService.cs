@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Resq.Web.Interface;
 using Resq.Web.ViewModels;
 using Resqu.Core.Entities;
@@ -15,17 +16,19 @@ namespace Resq.Web.Services
     {
         private readonly ResquContext _context;
         private readonly IWebHostEnvironment _hosting;
-        public VendorService(ResquContext context, IWebHostEnvironment hosting)
+        private readonly IHttpContextAccessor _http;
+        public VendorService(ResquContext context, IWebHostEnvironment hosting, IHttpContextAccessor http)
         {
             _context = context;
             _hosting = hosting;
+            _http = http;
         }
         public string CreateVendor(CreateVendorViewModel createVendor)
         {
             var uploadedImage = UploadImage(createVendor);
             Vendor employee = new Vendor
             {
-                ExpertiseId = createVendor.ServiceName,
+                CustomerRequestServiceId = createVendor.ServiceName,
                 FirstName = createVendor.FirstName,
                 LastName = createVendor.LastName,
                 EmailAddress = createVendor.EmailAddress,
@@ -47,14 +50,14 @@ namespace Resq.Web.Services
                 IsFullyVerified = false,
                 IsDeleted= false,
                 isVerified = false,
-                CreatedBy ="",
+                CreatedBy =_http.HttpContext.Session.GetString("userName"),
                 Pin = GenerateRandom(8),
                 Gender = createVendor.Gender,
-                NextOfKinEmail = createVendor.NextOfKinEmail
+                NextOfKinEmail = createVendor.NextOfKinEmail,
                 
                 
             };
-            var getExistingVendor = _context.Vendors.Where(c => c.FirstName == employee.FirstName && c.LastName == employee.LastName &&c.CompanyName == employee.CompanyName && c.MiddleName == employee.MiddleName && c.ExpertiseId == employee.ExpertiseId).Any();
+            var getExistingVendor = _context.Vendors.Where(c => c.FirstName == employee.FirstName && c.LastName == employee.LastName &&c.CompanyName == employee.CompanyName && c.MiddleName == employee.MiddleName && c.CustomerRequestServiceId == employee.CustomerRequestServiceId).Any();
             if (!getExistingVendor)
             {
                 _context.Vendors.Add(employee);

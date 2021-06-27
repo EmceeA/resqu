@@ -301,16 +301,16 @@ namespace Resqu.API.Controllers
             var register = await _customer.CustomerSignIn(signUp);
             var claims = new[]
         {
-            new Claim(ClaimTypes.Name,signUp.PhoneNumber),
+            new Claim(ClaimTypes.Name,signUp.UserName),
         };
 
-            var jwtResult = _jwtAuthManager.GenerateTokens(signUp.PhoneNumber, claims, DateTime.Now);
-            _logger.LogInformation($"User [{signUp.PhoneNumber}] logged in the system.");
+            var jwtResult = _jwtAuthManager.GenerateTokens(signUp.UserName, claims, DateTime.Now);
+            _logger.LogInformation($"User [{signUp.UserName}] logged in the system.");
             if (register.Response == "Successfully Logged In")
             {
                 return Ok(new CustomerSignInResponse
                 {
-                    PhoneNumber = signUp.PhoneNumber,
+                    PhoneNumber = signUp.UserName,
                     AccessToken = jwtResult.AccessToken,
                     RefreshToken = jwtResult.RefreshToken.TokenString,
                     EmailAddress = register.EmailAddress,

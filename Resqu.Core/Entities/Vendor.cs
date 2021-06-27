@@ -35,7 +35,7 @@
         public string AvailabilityStatus { get; set; }
         public string Pin { get; set; }
         public string VendorPicture { get; set; }
-        public int? ExpertiseId { get; set; }
-        public Expertise Expertise { get; set; }
+        public int? CustomerRequestServiceId { get; set; }
+        public CustomerRequestService CustomerRequestService { get; set; }
     }
 }

@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace Resqu.Core.Entities
 {
 
-    public class VendorProcessService
+    public class VendorProcessService: CustomerAudit
     {
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         [Key]
@@ -17,6 +17,10 @@ namespace Resqu.Core.Entities
         public string Description { get; set; }
         public int VendorProcessServiceTypeId { get; set; }
         public VendorProcessServiceType VendorProcessServiceType { get; set; }
+        [Required]
+        public decimal Cost { get; set; }
+
+        
 
     }
 
@@ -36,7 +40,8 @@ namespace Resqu.Core.Entities
         [Required]
 
         public string ServiceName { get; set; }
-        
+        public string Description { get; set; }
+
     }
     public class Customer : CustomerAudit
     {
@@ -54,6 +59,7 @@ namespace Resqu.Core.Entities
         public string Pin { get; set; }
         public bool IsCustomerCreated  { get; set; }
         public bool IsDedicatedCreated  { get; set; }
+        public bool IsOtpVerified  { get; set; }
 
         public DateTime LastLoginDate { get; set; }
         public DateTime LastServiceDate { get; set; }

@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Resqu.Core.Entities;
 
 namespace Resqu.Core.Migrations
 {
     [DbContext(typeof(ResquContext))]
-    partial class ResquContextModelSnapshot : ModelSnapshot
+    [Migration("20210627113505_initialers")]
+    partial class initialers
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -236,9 +238,6 @@ namespace Resqu.Core.Migrations
                     b.Property<bool>("IsModified")
                         .HasColumnType("bit");
 
-                    b.Property<bool>("IsOtpVerified")
-                        .HasColumnType("bit");
-
                     b.Property<DateTime>("LastLoginDate")
                         .HasColumnType("datetime2");
 
@@ -274,9 +273,6 @@ namespace Resqu.Core.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("Description")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ServiceName")
                         .IsRequired()
@@ -849,9 +845,6 @@ namespace Resqu.Core.Migrations
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("CustomerRequestServiceId")
-                        .HasColumnType("int");
-
                     b.Property<DateTime?>("DateCreated")
                         .HasColumnType("datetime2");
 
@@ -860,6 +853,9 @@ namespace Resqu.Core.Migrations
 
                     b.Property<string>("EmailAddress")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("ExpertiseId")
+                        .HasColumnType("int");
 
                     b.Property<string>("FirstName")
                         .HasColumnType("nvarchar(max)");
@@ -923,7 +919,7 @@ namespace Resqu.Core.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CustomerRequestServiceId");
+                    b.HasIndex("ExpertiseId");
 
                     b.ToTable("Vendors");
                 });
@@ -1324,11 +1320,11 @@ namespace Resqu.Core.Migrations
 
             modelBuilder.Entity("Resqu.Core.Entities.Vendor", b =>
                 {
-                    b.HasOne("Resqu.Core.Entities.CustomerRequestService", "CustomerRequestService")
+                    b.HasOne("Resqu.Core.Entities.Expertise", "Expertise")
                         .WithMany()
-                        .HasForeignKey("CustomerRequestServiceId");
+                        .HasForeignKey("ExpertiseId");
 
-                    b.Navigation("CustomerRequestService");
+                    b.Navigation("Expertise");
                 });
 
             modelBuilder.Entity("Resqu.Core.Entities.VendorProcessService", b =>

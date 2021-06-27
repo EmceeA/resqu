@@ -25,7 +25,7 @@ namespace Resq.Web.Controllers
         // GET: Vendors
         public async Task<IActionResult> Index()
         {
-            var resquContext = _context.Vendors.Include(v => v.Expertise);
+            var resquContext = _context.Vendors.Include(v => v.CustomerRequestService);
             return View(await resquContext.ToListAsync());
         }
 
@@ -38,7 +38,7 @@ namespace Resq.Web.Controllers
             }
 
             var vendor = await _context.Vendors
-                .Include(v => v.Expertise)
+                .Include(v => v.CustomerRequestService)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (vendor == null)
             {
@@ -89,7 +89,7 @@ namespace Resq.Web.Controllers
             {
                 return NotFound();
             }
-            ViewData["ExpertiseId"] = new SelectList(_context.Expertises, "Id", "Id", vendor.ExpertiseId);
+            ViewData["ExpertiseId"] = new SelectList(_context.Expertises, "Id", "Id", vendor.CustomerRequestServiceId);
             return View(vendor);
         }
 
@@ -125,7 +125,7 @@ namespace Resq.Web.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["ExpertiseId"] = new SelectList(_context.Expertises, "Id", "Id", vendor.ExpertiseId);
+            ViewData["ExpertiseId"] = new SelectList(_context.Expertises, "Id", "Id", vendor.CustomerRequestServiceId);
             return View(vendor);
         }
 
@@ -138,7 +138,7 @@ namespace Resq.Web.Controllers
             }
 
             var vendor = await _context.Vendors
-                .Include(v => v.Expertise)
+                .Include(v => v.CustomerRequestService)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (vendor == null)
             {
