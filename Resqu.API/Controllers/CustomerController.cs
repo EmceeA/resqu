@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Resqu.Core.Dto;
+using Resqu.Core.Entities;
 using Resqu.Core.Interface;
 using Resqu.Core.Utility;
 using System;
@@ -21,12 +22,15 @@ namespace Resqu.API.Controllers
         private readonly IHttpContextAccessor _accessor;
         private readonly IJwtAuthManager _jwtAuthManager;
         private readonly ILogger<CustomerController> _logger;
-        public CustomerController(ICustomer customer, IJwtAuthManager jwtAuthManager, ILogger<CustomerController> logger, IHttpContextAccessor accessor)
+        private readonly ResquContext _context;
+
+        public CustomerController(ICustomer customer, IJwtAuthManager jwtAuthManager, ILogger<CustomerController> logger, IHttpContextAccessor accessor,ResquContext context)
         {
             _customer = customer;
             _jwtAuthManager = jwtAuthManager;
             _logger = logger;
             _accessor = accessor;
+            _context = context;
         }
 
         [HttpPost]
@@ -78,9 +82,13 @@ namespace Resqu.API.Controllers
         //[Authorize]
         public async Task<ActionResult> ValidateOtp(OtpDto requestDto)
         {
-            
-            requestDto.Phone = _accessor.HttpContext.Session.GetString("phone");
-            //requestDto.Phone = phone;
+
+            var phone = _accessor.HttpContext.Session.GetString("phone");
+            if (phone == null)
+            {
+                phone = _context.Customers.Where(d => d.PhoneNumber == requestDto.Phone).Select(s => s.PhoneNumber).FirstOrDefault();
+            }
+            requestDto.Phone = phone;
             var activate = await _customer.ConfirmOtp(requestDto);
             if (activate.Status == true)
             {

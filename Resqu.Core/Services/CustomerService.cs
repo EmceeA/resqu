@@ -807,7 +807,7 @@ namespace Resqu.Core.Services
         public async Task<OtpConfirmationResponseDto> ConfirmOtp(OtpDto otp)
         {
             //otp.Phone = otp.Phone.Substring(4, 10);
-            var phone = _http.HttpContext.Session.GetString("phone");
+            
             var validateOtp = await _context.Otps.Where(e => e.Phone == otp.Phone && e.OtpNumber == otp.Otp).FirstOrDefaultAsync();
 
             //var otpExpiry = validateOtp.ExpiryDate;
