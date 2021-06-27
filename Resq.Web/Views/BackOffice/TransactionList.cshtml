@@ -23,7 +23,7 @@
                 <div class="bg-white add-service-div p-4">
                     <div class="row align-items-center justify-content-between">
                         <div class="col-lg-4 col-xl-3">
-                            <div class="row align-items-center">
+                            @*<div class="row align-items-center">
                                 <div class="col-lg-3">
                                     <h6>Filter:</h6>
                                 </div>
@@ -35,12 +35,12 @@
                                         </select>
                                     </div>
                                 </div>
-                            </div>
+                            </div>*@
                         </div>
                         <div class="col-lg-3">
                             <h4 class="text-center">TOTAL: @ViewBag.Transactions </h4>
                         </div>
-                        <div class="col-lg-5 col-xl-5">
+                        @*<div class="col-lg-5 col-xl-5">
                             <div class="row">
                                 <div class="col-lg-8">
                                     <input type="text" class="input-field-search">
@@ -48,7 +48,7 @@
                                 <div class="col-lg-4">
                                     <button class="btn btn-search">Search</button>
                                 </div>
-                            </div>
+                            </div>*@
                         </div>
                     </div>
                 </div>
@@ -58,7 +58,7 @@
             <div class="col-lg-12">
                 <div class="bg-white py-5 mb-5">
                     <div class="table-responsive">
-                        <table class="table table-vendors">
+                        <table class="table table-vendors" id="table_id">
                             <thead>
                                 <tr>
                                     <th>S/N</th>
@@ -74,35 +74,39 @@
                                 </tr>
                             </thead>
                             <tbody>
+                                @{int index = 0;}
                                 @foreach (var item in Model)
                                 {
 
 
-                                <tr>
-                                    <td>S/N</td>
-
-                                    @if (item.CustomerTransactionType == "DR" && item.VendorTransactionType == "CR")
-                                    {
+                                    <tr>
                                         <td>
-                                            Inflow
+                                            @{index++;}
+                                            @index
                                         </td>
 
-                                    }
-                                    else if (item.CustomerTransactionType == "CR" && item.VendorTransactionType == "DR")
-                                    {
-                                        <td>
-                                            Outflow
-                                        </td>
-                                    }
+                                        @if (item.CustomerTransactionType == "DR" && item.VendorTransactionType == "CR")
+                                        {
+                                            <td>
+                                                Inflow
+                                            </td>
 
-                                    <td>@item.SubCategory</td>
-                                    <td>@item.ServiceType</td>
-                                    <td>@item.ServiceDate</td>
-                                    <td>@item.TotalAmount</td>
-                                    <td>@item.CustomerName</td>
-                                    <td>@item.VendorName</td>
-                                    <td>@item.PaymentType</td>
-                                </tr>
+                                        }
+                                        else if (item.CustomerTransactionType == "CR" && item.VendorTransactionType == "DR")
+                                        {
+                                            <td>
+                                                Outflow
+                                            </td>
+                                        }
+
+                                        <td>@item.SubCategory</td>
+                                        <td>@item.ServiceType</td>
+                                        <td>@item.ServiceDate</td>
+                                        <td>@item.TotalAmount</td>
+                                        <td>@item.CustomerName</td>
+                                        <td>@item.VendorName</td>
+                                        <td>@item.PaymentType</td>
+                                    </tr>
                                 }
                             </tbody>
                         </table>

@@ -18,7 +18,7 @@
                 <div class="bg-white add-service-div p-4">
                     <div class="row align-items-center justify-content-between">
                         <div class="col-lg-4 col-xl-3">
-                            <div class="row align-items-center">
+                            @*<div class="row align-items-center">
                                 <div class="col-lg-3">
                                     <h6>Filter:</h6>
                                 </div>
@@ -27,20 +27,20 @@
                                         <select class="filter-field"></select>
                                     </div>
                                 </div>
-                            </div>
+                            </div>*@
                         </div>
                         <div class="col-lg-3">
                             <h4 class="text-center">TOTAL: @Model.Count() Customers</h4>
                         </div>
                         <div class="col-lg-5 col-xl-5">
-                            <div class="row">
+                            @*<div class="row">
                                 <div class="col-lg-8">
                                     <input type="text" class="input-field-search">
                                 </div>
                                 <div class="col-lg-4">
                                     <button class="btn btn-search">Search</button>
                                 </div>
-                            </div>
+                            </div>*@
                         </div>
                     </div>
                 </div>
@@ -51,7 +51,7 @@
             <div class="col-lg-12">
                 <div class="bg-white py-5 mb-5">
                     <div class="table-responsive">
-                        <table class="table table-vendors">
+                        <table class="table table-vendors" id="table_id">
                             <thead>
                                 <tr>
                                     <th>S/N</th>
@@ -65,19 +65,23 @@
                                 </tr>
                             </thead>
                             <tbody>
+                                @{int index = 0;}
                                 @foreach (var item in Model)
                                 {
-                                <tr>
-                                    <td>S/N</td>
+                                    <tr>
+                                        <td>
+                                            @{index++;}
+                                        @index
+                                    </td>
                                     <td>@item.FirstName   @item.LastName</td>
-                                    <td>Male</td>
+                                    <td>@item.Gender</td>
                                     <td>@item.PhoneNumber</td>
                                     <td>@item.EmailAddress</td>
                                     <!--<td>-->@*<a href="#" class="text-blue" data-toggle="modal" data-target="#completed-request-history">150</a>*@<!--</td>-->
                                     <td>@item.LastLoginDate.ToString("dd/MM/yyyy") <span class="px-2">@item.LastLoginDate.TimeOfDay.ToString()</span></td>
                                     <td>@item.LastServiceDate.ToString("dd/MM/yyyy") <span class="px-2">@item.LastServiceDate.TimeOfDay.ToString()</span></td>
                                 </tr>
-                                }
+                            }
                             </tbody>
                         </table>
                     </div>
@@ -88,140 +92,3 @@
 </div>
 
 
-<h1>Cust</h1>
-
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.PhoneNumber)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.EmailAddress)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.FirstName)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.LastName)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.AccountId)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.RegulatoryIndentity)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Pin)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.IsCustomerCreated)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.IsDedicatedCreated)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.LastLoginDate)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.LastServiceDate)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.DateCreated)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.DateModified)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.IsDeleted)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.IsModified)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.isVerified)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.CreatedBy)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.IsBan)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.IsFullyVerified)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.PhoneNumber)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.EmailAddress)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.FirstName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.LastName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.AccountId)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.RegulatoryIndentity)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Pin)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.IsCustomerCreated)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.IsDedicatedCreated)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.LastLoginDate)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.LastServiceDate)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.DateCreated)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.DateModified)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.IsDeleted)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.IsModified)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.isVerified)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.CreatedBy)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.IsBan)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.IsFullyVerified)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
-        </tr>
-}
-    </tbody>
-</table>

@@ -40,6 +40,21 @@ namespace Resqu.API.Controllers
             return BadRequest(banCustomer);
         }
 
+        [HttpGet]
+        public async Task<IActionResult> GetDetailsById(int? id)
+        {
+
+            var details = await _customer.GetDetailsById(id);
+            return Ok(details);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> GetServiceDetailsById(int? id)
+        {
+            var details = await _customer.GetDetailsById(id);
+            return Ok(details);
+        }
+
 
         [HttpGet]
         public async Task<IActionResult> VendorBan(int id)

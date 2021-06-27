@@ -34,4 +34,11 @@ namespace Resqu.Core.Entities
         public string RatingComment { get; set; }
 
     }
+
+    public class VendorSpecialization
+    {
+        public int Id { get; set; }
+
+        public string Name { get; set; }
+    }
 }

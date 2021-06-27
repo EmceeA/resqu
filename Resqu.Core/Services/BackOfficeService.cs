@@ -334,11 +334,27 @@ namespace Resqu.Core.Services
                     
                     Cost = expertiseDto.Cost,
                     Description = expertiseDto.Description,
-                    Name = _context.Expertises.Where(d=>d.Id == expertiseDto.ExpertiseId).Select(e=>e.Name).FirstOrDefault(),
+                    Name = _context.VendorSpecializations.Where(d=>d.Id == expertiseDto.ExpertiseId).Select(e=>e.Name).FirstOrDefault(),
                     DateCreated = DateTime.Now,
                     ExpertiseCategoryId = expertiseDto.ExpertiseCategoryId,
+                    VendorSpecializationId = expertiseDto.ExpertiseId.Value,
+                    ServiceTypeId = expertiseDto.ExpertiseCategoryId.Value
+
                 };
+
                 _context.Expertises.Add(expert);
+
+                await _context.SaveChangesAsync();
+                var expertiseCat = new ExpertiseCategory
+                {
+                    ExpertiseId = expert.Id,
+                    Name = _context.ServiceTypes.Where(e => e.Id == expert.ExpertiseCategoryId).Select(r => r.Name).FirstOrDefault(),
+                    Price = expert.Cost,
+                    VendorSpecializationId = expertiseDto.ExpertiseId.Value,
+                    ServiceTypeId = expertiseDto.ExpertiseCategoryId.Value
+                };
+                _context.ExpertiseCategories.Add(expertiseCat);
+
                 await _context.SaveChangesAsync();
                 return new UpdateCustomerResponseDto
                 {
@@ -493,6 +509,35 @@ namespace Resqu.Core.Services
                 Message = "Vendor Profile Updated Successfully",
                 Status = true
             };
+        }
+
+        public async Task<ServiceDetail> GetDetailsById(int? id)
+        {
+            try
+            {
+                var experts = await _context.ExpertiseCategories.Where(d => d.ExpertiseId == id).Select(c => new SubCategoryList
+                {
+                    SubCategory = c.Name,
+                    Price = c.Price.ToString()
+                }).ToListAsync();
+
+                var getDetails = _context.Expertises.Where(e => e.Id == Convert.ToInt32(id)).Select(s => new ServiceDetail
+                {
+                    CreatedBy = s.CreatedBy,
+                    DateCreated = s.DateCreated.Value.ToString("yyyy-MM-dd hh:mm tt"),
+                    Description = s.Description,
+                    ServiceCategory = s.Name,
+                    SubCategories = experts.Count(),
+                    SubCategoryList = experts
+                }).FirstOrDefault();
+                return getDetails;
+            }
+            catch (Exception ex)
+            {
+
+                throw;
+            }
+            
         }
     }
 }

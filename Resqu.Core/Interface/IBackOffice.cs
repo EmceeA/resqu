@@ -11,6 +11,7 @@ namespace Resqu.Core.Interface
     {
         Task<List<CustomerSignInResponse>> UnbannedCustomers();
         Task<List<CustomerSignInResponse>> BannedCustomers();
+        Task<ServiceDetail> GetDetailsById(int? id);
 
         Task<UpdateCustomerResponseDto> BanCustomer(string phone);
 

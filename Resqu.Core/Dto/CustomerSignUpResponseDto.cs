@@ -492,6 +492,36 @@ namespace Resqu.Core.Dto
     }
 
 
+
+    public class SubCategoryList
+    {
+        public string SubCategory { get; set; }
+
+        public string Price { get; set; }
+
+    }
+
+    public class CustomerProcId
+    {
+        public string SubCategory { get; set; }
+
+        public decimal Cost { get; set; }
+
+    }
+
+    public class ServiceDetail
+    {
+        public int Id { get; set; }
+        public string ServiceCategory { get; set; }
+        public string DateCreated { get; set; }
+
+        public string CreatedBy { get; set; }
+        public int SubCategories { get; set; }
+
+        public List<SubCategoryList> SubCategoryList { get; set; }
+        public string Description { get; set; }
+    }
+
     public class CustomerSignInResponse
     {
         public string PhoneNumber { get; set; }

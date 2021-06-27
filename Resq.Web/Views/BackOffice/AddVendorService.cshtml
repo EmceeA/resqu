@@ -1,0 +1,39 @@
+﻿@model Resqu.Core.Entities.VendorProcessService
+
+@{
+    ViewData["Title"] = "AddVendorService";
+    Layout = "~/Views/Shared/_LayoutServices.cshtml";
+}
+
+<h1>AddVendorService</h1>
+
+<h4>VendorProcessService</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="AddVendorService">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="CustomerRequestServiceId" class="control-label"></label>
+                <select asp-for="CustomerRequestServiceId" class="form-control" asp-items="ViewBag.CustomerRequestServiceId"></select>
+            </div>
+            <div class="form-group">
+                <label asp-for="Description" class="control-label"></label>
+                <input asp-for="Description" class="form-control" />
+                <span asp-validation-for="Description" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="VendorProcessServiceTypeId" class="control-label"></label>
+                <select asp-for="VendorProcessServiceTypeId" class ="form-control" asp-items="ViewBag.VendorProcessServiceTypeId"></select>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+

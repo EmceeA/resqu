@@ -31,6 +31,101 @@ namespace Resq.Web.Controllers
             //_http = http;
         }
 
+        [HttpGet]
+        public async Task<IActionResult> AddVendorServiceType()
+        {
+            ViewBag.ServicePageUrls = _context.BackOfficeRoles.Where(b => b.RoleName == HttpContext.Session.GetString("role")).Select(p => new Resqu.Core.Entities.RoleUrl
+            {
+                PageName = p.PageName,
+                PageUrl = p.PageUrl,
+                PageNameClass = p.PageNameClass,
+                PageUrlClass = p.PageUrlClass,
+                ActionName = p.ActionName,
+                ControllerName = p.ControllerName
+            }).ToList();
+            ViewBag.ProfilePicture = _context.BackOfficeUsers.Where(d => d.UserName == HttpContext.Session.GetString("userName")).Select(e => e.ProfilePicture).FirstOrDefault();
+            ViewBag.FullName = _context.BackOfficeUsers.Where(d => d.UserName == HttpContext.Session.GetString("userName")).Select(e => e.FirstName + " " + e.LastName).FirstOrDefault();
+
+            ViewData["VendorProcessServiceTypeId"] = new SelectList(_context.VendorProcessServiceTypes, "Id", "ServiceTypeName");
+            return View();
+        }
+        [HttpPost]
+        public async Task<IActionResult> AddVendorServiceType(VendorProcessServiceType vendor)
+        {
+            ViewBag.ServicePageUrls = _context.BackOfficeRoles.Where(b => b.RoleName == HttpContext.Session.GetString("role")).Select(p => new Resqu.Core.Entities.RoleUrl
+            {
+                PageName = p.PageName,
+                PageUrl = p.PageUrl,
+                PageNameClass = p.PageNameClass,
+                PageUrlClass = p.PageUrlClass,
+                ActionName = p.ActionName,
+                ControllerName = p.ControllerName
+            }).ToList();
+            ViewBag.ProfilePicture = _context.BackOfficeUsers.Where(d => d.UserName == HttpContext.Session.GetString("userName")).Select(e => e.ProfilePicture).FirstOrDefault();
+            ViewBag.FullName = _context.BackOfficeUsers.Where(d => d.UserName == HttpContext.Session.GetString("userName")).Select(e => e.FirstName + " " + e.LastName).FirstOrDefault();
+
+            ViewData["VendorProcessServiceTypeId"] = new SelectList(_context.VendorProcessServiceTypes, "Id", "ServiceTypeName");
+            if (!ModelState.IsValid)
+            {
+                return View(ModelState);
+            }
+             await _context.VendorProcessServiceTypes.AddAsync(vendor);
+            _context.SaveChanges();
+            return RedirectToAction("BackOfficeDashboard");
+        }
+
+
+
+        [HttpGet]
+        public async Task<IActionResult> AddVendorService()
+        {
+            ViewBag.ServicePageUrls = _context.BackOfficeRoles.Where(b => b.RoleName == HttpContext.Session.GetString("role")).Select(p => new Resqu.Core.Entities.RoleUrl
+            {
+                PageName = p.PageName,
+                PageUrl = p.PageUrl,
+                PageNameClass = p.PageNameClass,
+                PageUrlClass = p.PageUrlClass,
+                ActionName = p.ActionName,
+                ControllerName = p.ControllerName
+            }).ToList();
+            ViewBag.ProfilePicture = _context.BackOfficeUsers.Where(d => d.UserName == HttpContext.Session.GetString("userName")).Select(e => e.ProfilePicture).FirstOrDefault();
+            ViewBag.FullName = _context.BackOfficeUsers.Where(d => d.UserName == HttpContext.Session.GetString("userName")).Select(e => e.FirstName + " " + e.LastName).FirstOrDefault();
+            ViewData["CustomerRequestServiceId"] = new SelectList(_context.CustomerRequestServices, "Id", "ServiceName");
+            ViewData["VendorProcessServiceTypeId"] = new SelectList(_context.VendorProcessServiceTypes, "Id", "ServiceTypeName");
+            return View();
+        }
+        [HttpPost]
+        public async Task<IActionResult> AddVendorService(VendorProcessService vendor)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(ModelState);
+            }
+            ViewBag.ServicePageUrls = _context.BackOfficeRoles.Where(b => b.RoleName == HttpContext.Session.GetString("role")).Select(p => new Resqu.Core.Entities.RoleUrl
+            {
+                PageName = p.PageName,
+                PageUrl = p.PageUrl,
+                PageNameClass = p.PageNameClass,
+                PageUrlClass = p.PageUrlClass,
+                ActionName = p.ActionName,
+                ControllerName = p.ControllerName
+            }).ToList();
+            ViewBag.ProfilePicture = _context.BackOfficeUsers.Where(d => d.UserName == HttpContext.Session.GetString("userName")).Select(e => e.ProfilePicture).FirstOrDefault();
+            ViewBag.FullName = _context.BackOfficeUsers.Where(d => d.UserName == HttpContext.Session.GetString("userName")).Select(e => e.FirstName + " " + e.LastName).FirstOrDefault();
+
+            await _context.VendorProcessServices.AddAsync(vendor);
+            _context.SaveChanges();
+            ViewData["CustomerRequestServiceId"] = new SelectList(_context.CustomerRequestServices, "Id", "ServiceName",vendor.CustomerRequestServiceId);
+            ViewData["VendorProcessServiceTypeId"] = new SelectList(_context.VendorProcessServiceTypes, "Id", "ServiceTypeName", vendor.VendorProcessServiceTypeId);
+            return RedirectToAction("BackOfficeDashboard");
+        }
+
+
+
+
+
+
+
         // GET: BackOffice
         public async Task<IActionResult> Index()
         {
@@ -93,8 +188,8 @@ namespace Resq.Web.Controllers
 
         public IActionResult AddService()
         {
-            ViewData["ExpertiseId"] = new SelectList(_context.ExpertiseCategories, "Id", "Name");
-            ViewData["ServiceName"] = new SelectList(_context.Expertises, "Id", "Name");
+            ViewData["ExpertiseId"] = new SelectList(_context.ServiceTypes, "Id", "Name");
+            ViewData["ServiceName"] = new SelectList(_context.VendorSpecializations, "Id", "Name");
             ViewBag.ServicePageUrls = _context.BackOfficeRoles.Where(b => b.RoleName == HttpContext.Session.GetString("role")).Select(p => new Resqu.Core.Entities.RoleUrl
             {
                 PageName = p.PageName,
@@ -140,8 +235,8 @@ namespace Resq.Web.Controllers
                 ViewBag.FullName = _context.BackOfficeUsers.Where(d => d.UserName == HttpContext.Session.GetString("userName")).Select(e => e.FirstName + " " + e.LastName).FirstOrDefault();
                 return RedirectToAction("Services");
             }
-            ViewData["ExpertiseId"] = new SelectList(_context.ExpertiseCategories, "Id", "Name", expertiseDto.ExpertiseCategoryId);
-            ViewData["ServiceName"] = new SelectList(_context.Expertises, "Id", "Name", expertiseDto.ExpertiseId);
+            ViewData["ExpertiseId"] = new SelectList(_context.ServiceTypes, "Id", "Name", expertiseDto.ExpertiseCategoryId);
+            ViewData["ServiceName"] = new SelectList(_context.VendorSpecializations, "Id", "Name", expertiseDto.ExpertiseId);
             ViewBag.ServicePageUrls = _context.BackOfficeRoles.Where(b => b.RoleName == HttpContext.Session.GetString("role")).Select(p => new Resqu.Core.Entities.RoleUrl
             {
                 PageName = p.PageName,
@@ -864,7 +959,7 @@ namespace Resq.Web.Controllers
 
         [HttpPost]
         public ActionResult UpdateVendorProfile(int id,Resqu.Core.Dto.Vendor vendor)
-        {
+        { 
             try
             {
                 var update = _back.UpdateVendorProfile(id, vendor).Result;
@@ -939,6 +1034,82 @@ namespace Resq.Web.Controllers
 
 
         [HttpGet]
+        public ActionResult VendorsHistory()
+        {
+            var getAllVendors = _context.Vendors.Where(c => c.IsDeleted == false).Select(d => new VendorsViewModel
+            {
+                Id = d.Id,
+                EmailAddress = d.EmailAddress,
+                Gender = d.Gender,
+                PhoneNumber = d.PhoneNo,
+                ServiceCategory = _context.Expertises.Where(e => e.Id == d.ExpertiseId).Select(s => s.Name).FirstOrDefault(),
+                VendorName = d.FirstName + " " + d.LastName,
+                CompletedRequest = _context.Transactions.Where(c => c.VendorId == d.Id && c.Status == "Completed").Count().ToString()
+            }).ToList();
+            if (getAllVendors.Count == 0)
+            {
+                return RedirectToAction("EmptyVendor");
+            }
+            ViewBag.Vendors = getAllVendors;
+            ViewBag.ServicePageUrls = _context.BackOfficeRoles.Where(b => b.RoleName == HttpContext.Session.GetString("role")).Select(p => new Resqu.Core.Entities.RoleUrl
+            {
+                PageName = p.PageName,
+                PageUrl = p.PageUrl,
+                PageNameClass = p.PageNameClass,
+                PageUrlClass = p.PageUrlClass,
+                ActionName = p.ActionName,
+                ControllerName = p.ControllerName
+            }).ToList();
+            ViewBag.ProfilePicture = _context.BackOfficeUsers.Where(d => d.UserName == HttpContext.Session.GetString("userName")).Select(e => e.ProfilePicture).FirstOrDefault();
+            ViewBag.FullName = _context.BackOfficeUsers.Where(d => d.UserName == HttpContext.Session.GetString("userName")).Select(e => e.FirstName + " " + e.LastName).FirstOrDefault();
+            return View();
+        }
+
+
+        
+        public PartialViewResult ServiceDetails(int serviceId)
+        {
+            
+
+            var experts = _context.VendorProcessServices.Where(e => e.CustomerRequestServiceId == serviceId).Select(u => new SubCategoryList
+            {
+                SubCategory = _context.VendorProcessServiceTypes.Where(w=>w.Id == u.VendorProcessServiceTypeId).Select(r=>r.ServiceTypeName).FirstOrDefault(),
+                Price = _context.VendorProcessServiceTypes.Where(w => w.Id == u.VendorProcessServiceTypeId).Select(r => r.Cost).FirstOrDefault().ToString()
+            }).ToList();
+
+
+            ViewBag.SubCategoryList = experts;
+            
+            var serviceList = new HashSet<Service>();
+            var services = _context.Expertises.ToList();
+            int subCategories = 0;
+            foreach (var service in services)
+            {
+                subCategories = _context.Expertises.Where(e => e.Id == service.Id).Select(d => d.ExpertiseCategoryId).ToList().Count();
+                var serv = new Service
+                {
+                    ServiceId = service.Id,
+                    ServiceType = service.Name,
+                    SubCategory = _context.Expertises.Where(e=>e.Id == service.Id).Select(d=>d.ExpertiseCategoryId).ToList().Count()
+                };
+                serviceList.Add(serv);
+            }
+            var getDetails = _context.CustomerRequestServices.Where(e => e.Id == Convert.ToInt32(serviceId)).Select(s => new ServiceDetail
+            {
+                Id = s.Id,
+                CreatedBy = "",
+                DateCreated ="", //s.DateCreated.Value.ToString("yyyy-MM-dd hh:mm tt"),
+                Description = _context.VendorProcessServices.Where(r=>r.CustomerRequestServiceId == s.Id).Select(e=>e.Description).FirstOrDefault(),
+                ServiceCategory = s.ServiceName,
+                SubCategories = experts.Count(),
+                SubCategoryList = experts
+            }).FirstOrDefault();
+            //return getDetails;
+            return PartialView(getDetails);
+        }
+
+
+        [HttpGet]
         public IActionResult EmptyVendor()
         {
             ViewBag.ServicePageUrls = _context.BackOfficeRoles.Where(b => b.RoleName == HttpContext.Session.GetString("role")).Select(p => new Resqu.Core.Entities.RoleUrl
@@ -954,6 +1125,50 @@ namespace Resq.Web.Controllers
             ViewBag.FullName = _context.BackOfficeUsers.Where(d => d.UserName == HttpContext.Session.GetString("userName")).Select(e => e.FirstName + " " + e.LastName).FirstOrDefault();
             return View();
         }
+        public ActionResult ServiceList()
+        {
+
+            var getAllServices = _context.CustomerRequestServices.ToList();
+            var serviceList = new HashSet<Service>();
+            foreach (var server in getAllServices)
+            {
+                var subCategories = _context.VendorProcessServices.Where(d => d.CustomerRequestServiceId == server.Id).ToList().Count();
+                var serv = new Service
+                {
+                    ServiceId = server.Id,
+                    ServiceType = server.ServiceName,
+                    SubCategory = subCategories
+                };
+                serviceList.Add(serv);
+            }
+            //var serviceList = new HashSet<Service>();
+            //var services = _context.Expertises.ToList();
+            //foreach (var service in services)
+            //{
+            //    var subCategories = _context.Expertises.Where(e => e.Name == service.Name).Select(s => s.VendorSpecializationId).ToList().Count();
+            //    var serv = new Service
+            //    {
+            //        ServiceId = service.Id,
+            //        ServiceType = service.Name,
+            //        SubCategory = subCategories
+            //    };
+            //    serviceList.Add(serv);
+            //}
+            ViewBag.ServiceCount = serviceList.Count();
+            ViewBag.ServicePageUrls = _context.BackOfficeRoles.Where(b => b.RoleName == HttpContext.Session.GetString("role")).Select(p => new Resqu.Core.Entities.RoleUrl
+            {
+                PageName = p.PageName,
+                PageUrl = p.PageUrl,
+                PageNameClass = p.PageNameClass,
+                PageUrlClass = p.PageUrlClass,
+                ActionName = p.ActionName,
+                ControllerName = p.ControllerName
+            }).ToList();
+            ViewBag.ProfilePicture = _context.BackOfficeUsers.Where(d => d.UserName == HttpContext.Session.GetString("userName")).Select(e => e.ProfilePicture).FirstOrDefault();
+            ViewBag.FullName = _context.BackOfficeUsers.Where(d => d.UserName == HttpContext.Session.GetString("userName")).Select(e => e.FirstName + " " + e.LastName).FirstOrDefault();
+            return View(serviceList);
+        }
+
         public ActionResult Services()
         {
             var serviceList = new HashSet<Service>();
@@ -966,6 +1181,7 @@ namespace Resq.Web.Controllers
 
                 var serv = new Service
                 {
+                    ServiceId =service.Id,
                     ServiceType = service.Name,
                     SubCategory = subCategories
                 };
@@ -1005,6 +1221,9 @@ namespace Resq.Web.Controllers
             ViewBag.FullName = _context.BackOfficeUsers.Where(d => d.UserName == HttpContext.Session.GetString("userName")).Select(e => e.FirstName + " " + e.LastName).FirstOrDefault();
             return View();
         }
+
+
+
             // GET: BackOffice/Details/5
         public async Task<IActionResult> Details(long? id)
         {
@@ -1021,6 +1240,57 @@ namespace Resq.Web.Controllers
             }
 
             return View(transaction);
+        }
+
+
+        public async Task<IActionResult> EditService(long? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var transaction = await _context.Expertises.FindAsync(id);
+            if (transaction == null)
+            {
+                return NotFound();
+            }
+            return View(transaction);
+        }
+
+        // POST: BackOffice/Edit/5
+        // To protect from overposting attacks, enable the specific properties you want to bind to.
+        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> EditService(long id, [Bind("VendorAmount,PlatformCharge,TotalAmount,PhoneNumber,Status,TransactionRef,ServiceType,TransactionType,SubCategory,ServiceDate,CustomerName,VendorName,PaymentType,Id")] Expertise expertise)
+        {
+            if (id != expertise.Id)
+            {
+                return NotFound();
+            }
+
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    _context.Update(expertise);
+                    await _context.SaveChangesAsync();
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (!ExpertiseExists(expertise.Id))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+                return RedirectToAction(nameof(Index));
+            }
+            return View(expertise);
         }
 
         // GET: BackOffice/Create
@@ -1128,6 +1398,11 @@ namespace Resq.Web.Controllers
         private bool TransactionExists(long id)
         {
             return _context.Transactions.Any(e => e.Id == id);
+        }
+
+        private bool ExpertiseExists(long id)
+        {
+            return _context.Expertises.Any(e => e.Id == id);
         }
     }
 }

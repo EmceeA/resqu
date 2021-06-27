@@ -60,4 +60,11 @@ namespace Resqu.Core.Entities
         public bool IsVendorArrived { get; set; }
         public bool IsVendorRejected { get; set; }
     }
+
+    public class ServiceType
+    {
+        public int Id { get; set; }
+
+        public string Name { get; set; }
+    }
 }

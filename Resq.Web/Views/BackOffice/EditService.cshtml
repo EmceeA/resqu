@@ -1,0 +1,88 @@
+﻿@model Resqu.Core.Entities.Expertise
+@{
+    ViewData["Title"] = "AddService";
+    Layout = "~/Views/Shared/_LayoutServices.cshtml";
+}
+
+
+<!-- MAIN CONTENT-->
+<div class="main-content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-lg-12 mt-4">
+                <h4>Services</h4>
+            </div>
+        </div>
+        <div class="row my-4">
+            <div class="col-lg-12">
+                <div class="add-service-div p-5">
+                    <div>
+                        <h1 class="text-danger">@ViewBag.Message</h1>
+                        <h5>Fill in the fields below to add a new service category</h5>
+                    </div>
+                    <form action="EditService" method="post">
+                        <div class="row">
+                            <div class="col-lg-6 mt-4">
+                                <div class="form-group">
+                                    <label for="Service-name">Name of Service <span class="text-danger">*</span></label>
+                                    <select type="text" asp-items="@ViewBag.ServiceName" asp-for="Id" placeholder="Enter the name of the service" class="form-control"></select>
+                                    @*<input type="text" asp-for="ExpertiseName" class="input-field" asp-items="ViewBag.ExpertiseId" placeholder="Enter the name of the service to be added">*@
+                                </div>
+                                <div class="form-group">
+                                    <label for="sub-categories">Does this service include sub-categories? <span class="text-danger">*</span></label>
+                                    <div class="row">
+                                        <p class="col-lg-3 col-xl-2">
+                                            <input type="radio" id="test1" name="radio-group" value="sub-category-1">
+                                            <label for="test1">Yes</label>
+                                        </p>
+                                        <p class="col-lg-3 col-xl-2">
+                                            <input type="radio" id="test2" name="radio-group" value="cost-of-service">
+                                            <label for="test2">No</label>
+                                        </p>
+                                    </div>
+                                </div>
+                                <div class="row sub-category-1 box">
+                                    <div class="col-lg-6">
+                                        <div class="form-group">
+                                            <label for="sub-categories-1">Add Sub-category 1 <span class="text-danger">*</span></label>
+                                            <select type="text" asp-items="ViewBag.ExpertiseId" asp-for="ExpertiseCategoryId" placeholder="Enter the name of the sub-category to be added" class="form-control"></select>
+                                            @*<input type="text" class="input-field" placeholder="Enter the name of the sub-category to be added">*@
+                                        </div>
+                                        <a href="#">+Add More Sub-category</a>
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <div class="form-group">
+                                            <label for="sub-categories-1">Enter Cost of Service <span class="text-danger">*</span></label>
+                                            <input type="text" asp-for="Cost" class="form-control">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row cost-of-service box">
+                                    <div class="col-lg-12">
+                                        <div class="form-group">
+                                            <label for="sub-categories-1">Enter Cost of Service <span class="text-danger">*</span></label>
+                                            <input type="text" asp-for="Cost" class="input-field">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-6 mt-4">
+                                <div class="form-group">
+                                    <label for="Service-description">Brief Description of Service<span class="text-danger">*</span></label>
+                                    <textarea name="description" asp-for="Description" id="ServiceDescription"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row justify-content-center mt-5">
+                            <div class="col-lg-5">
+                                <button class="btn btn-services mt-3">Submit</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- END MAIN CONTENT-->
+<!-- END PAGE CONTAINER-->

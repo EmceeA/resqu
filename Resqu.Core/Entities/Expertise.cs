@@ -10,6 +10,8 @@ namespace Resqu.Core.Entities
 
         public decimal Cost { get; set; }
         public int?  ExpertiseCategoryId { get; set; }
+        public int ServiceTypeId { get; set; }
+        public int VendorSpecializationId { get; set; }
         public List<ExpertiseCategory> GetExpertiseCategory { get; set; }
     }
 }

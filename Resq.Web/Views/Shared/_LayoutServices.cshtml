@@ -16,10 +16,15 @@
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@300;400;500;600;700&display=swap"
           rel="stylesheet">
+
     <!-- <link href="~/dashboard/assets/css/font-face.css" rel="stylesheet" media="all"> -->
     <link href="~/dashboard/assets/vendor/font-awesome-4.7/css/font-awesome.min.css" rel="stylesheet" media="all">
+    <link href="https://cdn.datatables.net/1.10.22/css/jquery.dataTables.min.css" rel="stylesheet" media="all">
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.11.1/themes/smoothness/jquery-ui.css" />
+
     <link href="~/dashboard/assets/vendor/font-awesome-5/css/fontawesome-all.min.css" rel="stylesheet" media="all">
     <link href="~/dashboard/assets/vendor/css-hamburgers/hamburgers.min.css" rel="stylesheet" media="all">
+
 
     <!-- Bootstrap CSS-->
     <link href="~/dashboard/assets/vendor/bootstrap-4.1/bootstrap.min.css" rel="stylesheet" media="all">
@@ -138,6 +143,9 @@
 
         <!-- Jquery JS-->
         <script src="~/dashboard/assets/vendor/jquery-3.2.1.min.js"></script>
+        <script type="text/javascript" src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
+
+        <script src="https://code.jquery.com/ui/1.11.1/jquery-ui.min.js"></script>
         <!-- Bootstrap JS-->
         <script src="~/dashboard/assets/vendor/bootstrap-4.1/popper.min.js"></script>
         <script src="~/dashboard/assets/vendor/bootstrap-4.1/bootstrap.js"></script>
@@ -177,14 +185,19 @@
                     $(targetBox).style.display = "flex";
                 });
             });</script>
-        
-        <script>
+
+        @*<script>
             $('.modal-auto-clear').on('shown.bs.modal', function (e) {
                 console.log(e.target)
                 $(this).delay(1000).fadeOut(200, function () {
                     $(this).modal('hide');
                 });
             })
+        </script>*@
+        <script>
+            $(document).ready(function () {
+                $('#table_id').DataTable();
+            });
         </script>
 
 </body>

@@ -61,6 +61,7 @@ namespace Resq.Web.ViewModels
 
     public class Service : IEquatable<Service>
     { 
+        public int ServiceId { get; set; }
         public string ServiceType { get; set; }
         public int SubCategory { get; set; }
 
