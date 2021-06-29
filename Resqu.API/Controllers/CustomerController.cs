@@ -241,6 +241,30 @@ namespace Resqu.API.Controllers
         }
 
         [HttpGet]
+
+        public async Task<IActionResult> GetServiceCategoryByService(int serviceId)
+        {
+            var serviceCategoryList = await _customer.GetServiceCategoryByService(serviceId);
+            return Ok(serviceCategoryList);
+        }
+
+        [HttpGet]
+
+        public async Task<IActionResult> GetAllServices()
+        {
+            var serviceCategoryList = await _customer.GetAllServices();
+            return Ok(serviceCategoryList);
+        }
+
+        [HttpPost]
+
+        public async Task<IActionResult> AddServiceCategoryToService(AddServiceCategoryToService categoryToService)
+        {
+            var serviceCategoryList = await _customer.AddServiceCategoryToService(categoryToService);
+            return Ok(serviceCategoryList);
+        }
+
+        [HttpGet]
         public async Task<IActionResult> ProductList()
         {
             var productList = await _customer.ProductList();

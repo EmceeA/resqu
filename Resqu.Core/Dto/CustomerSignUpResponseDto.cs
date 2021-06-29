@@ -431,6 +431,40 @@ namespace Resqu.Core.Dto
         public decimal ProductPrice { get; set; }
     }
 
+    public class GetServiceCategoryByServiceDto
+    {
+        public string ServiceName { get; set; }
+        public List<ServiceCategorysDto> ServiceCategorysDtos { get; set; }
+    }
+
+
+    public class GetAllServiceDto
+    {
+        public int Id { get; set; }
+        public string ServiceName { get; set; }
+    }
+
+
+
+    public class ServiceCategorysDto
+    {
+
+        public int Id { get; set; }
+        public string ServiceCategoryName { get; set; }
+        public decimal Price { get; set; }
+    }
+
+
+
+    public class AddServiceCategoryToService
+    {
+        public int? ServiceId { get; set; }
+
+        public int? ServiceTypeId { get; set; }
+
+
+        public DateTime DateCreated { get; set; }
+    }
     public class ServiceCatDto
     {
         

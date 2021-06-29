@@ -1,11 +1,15 @@
 ﻿using Resqu.Core.Dto;
-using System.Collections.Generic; 
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Resqu.Core.Interface
 {
     public interface ICustomer
     {
+        Task<List<GetAllServiceDto>> GetAllServices();
+        Task<GetServiceCategoryByServiceDto> GetServiceCategoryByService(int serviceId);
+        Task<Response> AddServiceCategoryToService(AddServiceCategoryToService categoryToService);
         Task<CustomerSignUpResponseDto> CustomerSignUp(CustomerSignUpRequestDto signUpModel);
         Task<CustomerSignInResponse> CustomerSignIn(CustomerSignInRequest signInModel);
         Task<CustomerSignInResponse> SignInCustomer(CustomerSignInRequest signInModel);

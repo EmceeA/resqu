@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -19,6 +21,20 @@ namespace Resqu.Core.Entities
        
     }
 
+    public class ServiceToSericeCategory
+    {
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public int Id { get; set; }
+        public int? ServiceId { get; set; }
+        public CustomerRequestService CustomerRequestService { get; set; }
+
+        public int? ServiceTypeId { get; set; }
+
+        public VendorProcessServiceType VendorProcessServiceType { get; set; }
+
+        public DateTime DateCreated { get; set; }
+    }
     public class ProductVendor: CustomerAudit
     {
         public string VendorName { get; set; }

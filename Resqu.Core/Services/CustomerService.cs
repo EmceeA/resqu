@@ -423,23 +423,79 @@ namespace Resqu.Core.Services
 
         public async Task<List<ServiceListDto>> ServiceList()
         {
-            var getAllService = await _context.Expertises.Select(d => new ServiceListDto
+            var getAllService = await _context.CustomerRequestServices.Select(d => new ServiceListDto
             {
                 ServiceId = d.Id,
-                ServiceName = d.Name
+                ServiceName = d.ServiceName
             }).ToListAsync();
             return getAllService;
         }
 
         public async Task<List<ServiceCategoryListDto>> ServiceCategoryList()
         {
-            var getAllServiceCategory = await _context.ExpertiseCategories.Select(d => new ServiceCategoryListDto
+            var getAllServiceCategory = await _context.VendorProcessServiceTypes.Select(d => new ServiceCategoryListDto
             {
                 ServiceCategoryId = d.Id,
-                ServiceCategoryName = d.Name,
-                ServiceCategoryPrice = d.Price
+                ServiceCategoryName = d.ServiceTypeName,
+                ServiceCategoryPrice = d.Cost
             }).ToListAsync();
             return getAllServiceCategory;
+        }
+
+        public async Task<GetServiceCategoryByServiceDto> GetServiceCategoryByService(int serviceId)
+        {
+            var getServiceCategoryByService =  _context.ServiceToSericeCategorys.Where(c => c.ServiceId == serviceId)
+                .Select(w => new GetServiceCategoryByServiceDto
+                {
+                    ServiceName = _context.CustomerRequestServices.Where(s=>s.Id == serviceId).Select(x=>x.ServiceName).FirstOrDefault(),
+                    ServiceCategorysDtos = _context.ServiceToSericeCategorys.Where(e => e.ServiceId == serviceId).Select(s => new ServiceCategorysDto
+                    {
+                        Id = s.ServiceTypeId.Value,
+                        ServiceCategoryName = _context.VendorProcessServiceTypes.Where(g=>g.Id == s.ServiceTypeId).Select(x => x.ServiceTypeName).FirstOrDefault(),
+                        Price = _context.VendorProcessServiceTypes.Where(g => g.Id == s.ServiceTypeId).Select(x => x.Cost).FirstOrDefault()
+                    }).ToList()
+                }).FirstOrDefault();
+            return getServiceCategoryByService;
+        }
+
+
+
+        public async Task<List<GetAllServiceDto>> GetAllServices()
+        {
+            var getServiceCategoryByService = _context.CustomerRequestServices.Select(x => new GetAllServiceDto
+            {
+                Id = x.Id,
+                ServiceName = x.ServiceName
+            }).ToList();
+            return getServiceCategoryByService;
+        }
+
+
+        public async Task<Response> AddServiceCategoryToService(AddServiceCategoryToService categoryToService)
+        {
+            try
+            {
+                var service = new ServiceToSericeCategory
+                {
+                    ServiceId = categoryToService.ServiceId,
+                    ServiceTypeId = categoryToService.ServiceTypeId,
+                    DateCreated = DateTime.Now,
+                };
+                await _context.ServiceToSericeCategorys.AddAsync(service);
+                _context.SaveChanges();
+                return new Response
+                {
+                    Message = "Added Successfully",
+                    ResponseCode = "00"
+                };
+            }
+            catch (Exception ex)
+            {
+
+                throw;
+            }
+            
+
         }
 
         public async Task<EndServiceDto> EndService(string bookingId,string paymentType)
