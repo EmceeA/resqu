@@ -264,10 +264,25 @@ namespace Resqu.API.Controllers
             return Ok(serviceCategoryList);
         }
 
+        [HttpPost]
+
+        public async Task<IActionResult> AddIssue(IssuesDto issue)
+        {
+            var serviceCategoryList = await _customer.AddIssue(issue);
+            return Ok(serviceCategoryList);
+        }
+
         [HttpGet]
         public async Task<IActionResult> ProductList()
         {
             var productList = await _customer.ProductList();
+            return Ok(productList);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetIssueByServiceTypeId(int serviceTypeId)
+        {
+            var productList = await _customer.GetIssueByServiceTypeId(serviceTypeId);
             return Ok(productList);
         }
 

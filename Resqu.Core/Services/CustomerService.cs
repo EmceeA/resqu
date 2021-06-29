@@ -459,6 +459,18 @@ namespace Resqu.Core.Services
         }
 
 
+        public async Task<List<GetIssueDto>> GetIssueByServiceTypeId(int serviceTypeId)
+        {
+            var getServiceCategoryByService = _context.Issues.Where(c => c.ServiceTypeId == serviceTypeId)
+                .Select(w => new GetIssueDto
+                {
+                    IssueDescription = w.Description,
+                    Price = w.Price
+                }).ToList();
+            return getServiceCategoryByService;
+        }
+
+
 
         public async Task<List<GetAllServiceDto>> GetAllServices()
         {
@@ -494,7 +506,41 @@ namespace Resqu.Core.Services
 
                 throw;
             }
+
+
+
             
+
+        }
+
+        public async Task<Response> AddIssue(IssuesDto issue)
+        {
+            try
+            {
+                var service = new Issue
+                {
+                    Description = issue.Description,
+                    ServiceTypeId = issue.ServiceTypeId,
+                    Price = issue.Price,
+                    DateCreated = DateTime.Now,
+                };
+                await _context.Issues.AddAsync(service);
+                _context.SaveChanges();
+                return new Response
+                {
+                    Message = "Added Successfully",
+                    ResponseCode = "00"
+                };
+            }
+            catch (Exception ex)
+            {
+
+                throw;
+            }
+
+
+
+
 
         }
 

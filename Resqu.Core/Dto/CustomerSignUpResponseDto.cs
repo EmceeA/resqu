@@ -438,6 +438,13 @@ namespace Resqu.Core.Dto
     }
 
 
+    public class GetIssueDto
+    {
+        public string IssueDescription { get; set; }
+        public decimal Price { get; set; }
+    }
+
+
     public class GetAllServiceDto
     {
         public int Id { get; set; }
@@ -464,6 +471,25 @@ namespace Resqu.Core.Dto
 
 
         public DateTime DateCreated { get; set; }
+    }
+
+    public class IssueDto
+    {
+        public int IssueId{ get; set; }
+
+        public int? ServiceTypeId { get; set; }
+
+    }
+
+
+    public class IssuesDto
+    {
+       
+        public string Description { get; set; }
+        public decimal Price { get; set; }
+        public int? ServiceTypeId { get; set; }
+
+
     }
     public class ServiceCatDto
     {

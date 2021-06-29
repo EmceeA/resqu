@@ -11,6 +11,7 @@ namespace Resqu.Core.Entities
 
         public DbSet<Role> Roles { get; set; }
         public DbSet<ResquService> ResquServices { get; set; }
+        public DbSet<Issue> Issues { get; set; }
         public DbSet<ServiceToSericeCategory> ServiceToSericeCategorys { get; set; }
         public DbSet<ServiceType> ServiceTypes { get; set; }
         public DbSet<VendorProcessService> VendorProcessServices { get; set; }

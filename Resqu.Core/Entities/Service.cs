@@ -35,6 +35,21 @@ namespace Resqu.Core.Entities
 
         public DateTime DateCreated { get; set; }
     }
+
+
+    public class Issue
+    {
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public int Id { get; set; }
+        public string Description { get; set; }
+        public decimal Price { get; set; }
+        public int? ServiceTypeId { get; set; }
+
+        public VendorProcessServiceType VendorProcessServiceType { get; set; }
+        public DateTime DateCreated { get; set; }
+    }
+
     public class ProductVendor: CustomerAudit
     {
         public string VendorName { get; set; }

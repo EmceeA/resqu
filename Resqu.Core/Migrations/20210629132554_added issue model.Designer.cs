@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Resqu.Core.Entities;
 
 namespace Resqu.Core.Migrations
 {
     [DbContext(typeof(ResquContext))]
-    partial class ResquContextModelSnapshot : ModelSnapshot
+    [Migration("20210629132554_added issue model")]
+    partial class addedissuemodel
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -380,15 +382,7 @@ namespace Resqu.Core.Migrations
                     b.Property<decimal>("Price")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<int?>("ServiceTypeId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("VendorProcessServiceTypeId")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
-
-                    b.HasIndex("VendorProcessServiceTypeId");
 
                     b.ToTable("Issues");
                 });
@@ -1320,15 +1314,6 @@ namespace Resqu.Core.Migrations
                         .IsRequired();
 
                     b.Navigation("Expertise");
-                });
-
-            modelBuilder.Entity("Resqu.Core.Entities.Issue", b =>
-                {
-                    b.HasOne("Resqu.Core.Entities.VendorProcessServiceType", "VendorProcessServiceType")
-                        .WithMany()
-                        .HasForeignKey("VendorProcessServiceTypeId");
-
-                    b.Navigation("VendorProcessServiceType");
                 });
 
             modelBuilder.Entity("Resqu.Core.Entities.Otp", b =>
