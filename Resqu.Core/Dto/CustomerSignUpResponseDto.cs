@@ -248,9 +248,10 @@ namespace Resqu.Core.Dto
     }
     public class ServiceDto
     {
-        public string ServiceName { get; set; }
-        public string SubCategoryName { get; set; }
-        public decimal SubCategoryPrice { get; set; }
+        public int ServiceId { get; set; }
+        public int SubCategoryId { get; set; }
+        public int IssueId { get; set; }
+        
         public string Description { get; set; }
         public string CustomerAddress { get; set; }
     }
@@ -362,7 +363,7 @@ namespace Resqu.Core.Dto
     {
         public string ServiceName { get; set; }
         public string SubCategoryName { get; set; }
-        public decimal SubCategoryPrice { get; set; }
+        //public decimal SubCategoryPrice { get; set; }
         public double Distance { get; set; }
         public double Time { get; set; }
         public string Description { get; set; }

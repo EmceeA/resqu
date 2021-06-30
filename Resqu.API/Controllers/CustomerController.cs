@@ -140,6 +140,19 @@ namespace Resqu.API.Controllers
 
 
         [HttpGet]
+        public async Task<IActionResult> GetServiceByName(string serviceName)
+        {
+            var result = await _customer.GetServiceByName(serviceName);
+            if (result.Count == 0)
+            {
+                return Ok("Result not found");
+            }
+            return Ok(result);
+        }
+
+
+
+        [HttpGet]
         public async Task<IActionResult> AcceptRequest(string bookingId)
         {
             var result = await _customer.AcceptRequest(bookingId);

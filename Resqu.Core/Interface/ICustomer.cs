@@ -8,6 +8,7 @@ namespace Resqu.Core.Interface
     public interface ICustomer
     {
         Task<List<GetAllServiceDto>> GetAllServices();
+        Task<List<GetAllServiceDto>> GetServiceByName(string serviceName);
 
         Task<List<GetIssueDto>> GetIssueByServiceTypeId(int serviceTypeId);
         Task<Response> AddIssue(IssuesDto issue);

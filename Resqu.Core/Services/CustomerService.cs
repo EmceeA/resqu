@@ -376,20 +376,31 @@ namespace Resqu.Core.Services
         public async Task<ServiceResponseDto> BookService(ServiceDto service)
         {
             var phoneNumber = _http.HttpContext.Session.GetString("customerPhone");
-            var getNearestVendor = await CalculateShortestDistance(service.CustomerAddress, null, service.SubCategoryName, service.ServiceName);
+            var serviceName = _context.CustomerRequestServices.Where(e => e.Id == service.ServiceId).Select(p => p.ServiceName).FirstOrDefault();
+            var serviceSubCategoryName = _context.VendorProcessServiceTypes.Where(e => e.Id == service.SubCategoryId).FirstOrDefault();
+            var getNearestVendor = await CalculateShortestDistance(service.CustomerAddress, null, serviceSubCategoryName.ServiceTypeName, serviceName);
             if (getNearestVendor == null)
             {
                 return null;
             }
-            var getExpertisePrice = _context.VendorProcessServiceTypes.Where(e => e.ServiceTypeName == service.SubCategoryName).Select(u=>u.Cost).FirstOrDefault();
-            //var subCatPrice = _context.ExpertiseCategories.Where(e=>e.ExpertiseId  == )
+            if (getNearestVendor.Distance > 5)
+            {
+                return null;
+            }
+            var getExpertisePrice = _context.VendorProcessServiceTypes.Where(e => e.Id == service.SubCategoryId).Select(u=>u.Cost).FirstOrDefault();
+            var issues = _context.Issues.Where(e => e.Id == service.IssueId).FirstOrDefault();
             var serviceModel = new ResquService
             {
-                
-                ServiceName = service.ServiceName,
-                SubCategoryName = getExpertisePrice.ToString(),
-                Price = getExpertisePrice,
-                BookingId = $"{service.ServiceName.Substring(0, 3).ToUpper()}/{GenerateRandom(10)}",
+                ServiceId = service.ServiceId,
+                IssueId = service.IssueId,
+                IssuePrice = issues.Price.ToString(),
+                IssueDescription = issues.Description,
+                ServiceName = serviceName,
+                SubCategoryId = serviceSubCategoryName.Id,
+                SubCategoryName = serviceSubCategoryName.ServiceTypeName,
+                SubCategoryPrice = serviceSubCategoryName.Cost,
+                Price = serviceSubCategoryName.Cost + issues.Price,
+                BookingId = $"{serviceSubCategoryName.ServiceTypeName.Substring(0, 3).ToUpper()}/{GenerateRandom(10)}",
                 IsStarted = false,
                 Description = service.Description,
                 Status = "Booked",
@@ -408,16 +419,15 @@ namespace Resqu.Core.Services
             return new ServiceResponseDto
             {
                 Description = service.Description,
-                ServiceName = service.ServiceName,
-                SubCategoryName = service.SubCategoryName,
+                ServiceName = serviceModel.ServiceName,
+                SubCategoryName = serviceModel.SubCategoryName,
                 BookingId = serviceModel.BookingId,
-                SubCategoryPrice = getNearestVendor.Price,
                 VendorName = getNearestVendor.VendorName,
                 VendorGender = getNearestVendor.Gender,
                 VendorPhone = getNearestVendor.Phone,
                 Distance  = getNearestVendor.Distance,
                 Time = Math.Round(getNearestVendor.Time),
-                ServiceAmount = getNearestVendor.Price.ToString()
+                ServiceAmount = serviceModel.Price.ToString()
             };
         }
 
@@ -1110,7 +1120,7 @@ namespace Resqu.Core.Services
                 var getTime = await GetTravelTime(Convert.ToSingle(distance));
                 var vend = new VendorDistanceResponseDto
                 {
-                    Distance = sourceDestination.GetDistanceTo(vendorDestination),
+                    Distance = sourceDestination.GetDistanceTo(vendorDestination)/1000,
                     VendorId = dest.VendorId,
                     VendorName = dest.VendorName,
                     Price = _context.ExpertiseCategories.Where(s => s.ExpertiseId == getExpertiseIdByName).Select(p => p.Price).FirstOrDefault(),
@@ -1357,6 +1367,16 @@ namespace Resqu.Core.Services
                     Status = false
                 };
             }
+        }
+
+        public async Task<List<GetAllServiceDto>> GetServiceByName(string serviceName)
+        {
+            var getServiceCategoryByService = await _context.CustomerRequestServices.Where(e=>e.ServiceName.Contains(serviceName)).Select(x => new GetAllServiceDto
+            {
+                Id = x.Id,
+                ServiceName = x.ServiceName
+            }).ToListAsync();
+            return getServiceCategoryByService;
         }
     }
 }

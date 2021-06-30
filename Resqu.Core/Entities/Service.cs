@@ -60,6 +60,9 @@ namespace Resqu.Core.Entities
     {
         public long Id { get; set; }
         public string ProductName { get; set; }
+        public int? IssueId { get; set; }
+        public string IssueDescription { get; set; }
+        public string IssuePrice { get; set; }
         public string Status { get; set; }
         public decimal ProductPrice { get; set; }
         public string VendorGender { get; set; }
@@ -70,6 +73,7 @@ namespace Resqu.Core.Entities
         public long SubCategoryId { get; set; }
         public string  ServiceName { get; set; }
         public string SubCategoryName { get; set; }
+        public decimal SubCategoryPrice { get; set; }
         public DateTime  DateStarted { get; set; }
         public DateTime  DateEnded { get; set; }
         public string CustomerPhone { get; set; }
