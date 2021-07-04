@@ -1,10 +1,11 @@
 {
   "version": 2,
-  "dgSpecHash": "iC+s8l1esX3BOyQItkJEq3xgLufssw/iJ5ZX4R9COv/x7UGKM48msXmNfLIgO9JFJ5N9x5gWb+gKcURMxbY/8Q==",
+  "dgSpecHash": "oHrK8mbzzkV3vq9JynvLJouHrwHxIZhKQirgtjtTEZOL7GVpXDkpAoU1TWpQfkRyKmShPZjPMTf9WzCR6H36LQ==",
   "success": true,
   "projectFilePath": "C:\\Users\\HFET\\source\\repos\\Resqu.API\\Resque.Test\\Resque.Test.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\HFET\\.nuget\\packages\\coverlet.collector\\1.3.0\\coverlet.collector.1.3.0.nupkg.sha512",
+    "C:\\Users\\HFET\\.nuget\\packages\\microsoft.aspnet.signalr.core\\2.4.2\\microsoft.aspnet.signalr.core.2.4.2.nupkg.sha512",
     "C:\\Users\\HFET\\.nuget\\packages\\microsoft.codecoverage\\16.7.1\\microsoft.codecoverage.16.7.1.nupkg.sha512",
     "C:\\Users\\HFET\\.nuget\\packages\\microsoft.csharp\\4.0.1\\microsoft.csharp.4.0.1.nupkg.sha512",
     "C:\\Users\\HFET\\.nuget\\packages\\microsoft.net.test.sdk\\16.7.1\\microsoft.net.test.sdk.16.7.1.nupkg.sha512",
@@ -96,5 +97,16 @@
     "C:\\Users\\HFET\\.nuget\\packages\\xunit.extensibility.execution\\2.4.1\\xunit.extensibility.execution.2.4.1.nupkg.sha512",
     "C:\\Users\\HFET\\.nuget\\packages\\xunit.runner.visualstudio\\2.4.3\\xunit.runner.visualstudio.2.4.3.nupkg.sha512"
   ],
-  "logs": []
+  "logs": [
+    {
+      "code": "NU1701",
+      "level": "Warning",
+      "warningLevel": 1,
+      "message": "Package 'Microsoft.AspNet.SignalR.Core 2.4.2' was restored using '.NETFramework,Version=v4.6.1, .NETFramework,Version=v4.6.2, .NETFramework,Version=v4.7, .NETFramework,Version=v4.7.1, .NETFramework,Version=v4.7.2, .NETFramework,Version=v4.8' instead of the project target framework 'net5.0'. This package may not be fully compatible with your project.",
+      "libraryId": "Microsoft.AspNet.SignalR.Core",
+      "targetGraphs": [
+        "net5.0"
+      ]
+    }
+  ]
 }

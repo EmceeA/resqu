@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "MnLROOGlKKAYYLUaDrz41Qh/54LVWqykNvjl4G2fj4HjosxMpga6/lhPnurku50GWI6004633yulie/RcNTlAQ==",
+  "dgSpecHash": "Xtxszd2KNZaWTXV16J/8YNf+0vJDR/l5UPIlrwa/e8AfI8zE1OitJtAHsmaCooqY29MPM7LK/oLcRr3opg0r9w==",
   "success": true,
   "projectFilePath": "C:\\Users\\HFET\\source\\repos\\Resqu.API\\Resq.Web\\Resq.Web.csproj",
   "expectedPackageFiles": [
@@ -9,6 +9,7 @@
     "C:\\Users\\HFET\\.nuget\\packages\\geocoordinate\\2.0.1\\geocoordinate.2.0.1.nupkg.sha512",
     "C:\\Users\\HFET\\.nuget\\packages\\geocoordinate.netcore\\1.0.0.1\\geocoordinate.netcore.1.0.0.1.nupkg.sha512",
     "C:\\Users\\HFET\\.nuget\\packages\\humanizer.core\\2.8.26\\humanizer.core.2.8.26.nupkg.sha512",
+    "C:\\Users\\HFET\\.nuget\\packages\\microsoft.aspnet.signalr.core\\2.4.2\\microsoft.aspnet.signalr.core.2.4.2.nupkg.sha512",
     "C:\\Users\\HFET\\.nuget\\packages\\microsoft.aspnetcore.cryptography.internal\\5.0.6\\microsoft.aspnetcore.cryptography.internal.5.0.6.nupkg.sha512",
     "C:\\Users\\HFET\\.nuget\\packages\\microsoft.aspnetcore.cryptography.keyderivation\\5.0.6\\microsoft.aspnetcore.cryptography.keyderivation.5.0.6.nupkg.sha512",
     "C:\\Users\\HFET\\.nuget\\packages\\microsoft.aspnetcore.diagnostics.entityframeworkcore\\5.0.6\\microsoft.aspnetcore.diagnostics.entityframeworkcore.5.0.6.nupkg.sha512",
@@ -206,6 +207,16 @@
       "warningLevel": 1,
       "message": "Package 'CrossPlatformLibrary.Geolocation 1.0.25' was restored using '.NETFramework,Version=v4.6.1, .NETFramework,Version=v4.6.2, .NETFramework,Version=v4.7, .NETFramework,Version=v4.7.1, .NETFramework,Version=v4.7.2, .NETFramework,Version=v4.8' instead of the project target framework 'net5.0'. This package may not be fully compatible with your project.",
       "libraryId": "CrossPlatformLibrary.Geolocation",
+      "targetGraphs": [
+        "net5.0"
+      ]
+    },
+    {
+      "code": "NU1701",
+      "level": "Warning",
+      "warningLevel": 1,
+      "message": "Package 'Microsoft.AspNet.SignalR.Core 2.4.2' was restored using '.NETFramework,Version=v4.6.1, .NETFramework,Version=v4.6.2, .NETFramework,Version=v4.7, .NETFramework,Version=v4.7.1, .NETFramework,Version=v4.7.2, .NETFramework,Version=v4.8' instead of the project target framework 'net5.0'. This package may not be fully compatible with your project.",
+      "libraryId": "Microsoft.AspNet.SignalR.Core",
       "targetGraphs": [
         "net5.0"
       ]

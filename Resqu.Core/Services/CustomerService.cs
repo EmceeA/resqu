@@ -1369,14 +1369,35 @@ namespace Resqu.Core.Services
             }
         }
 
-        public async Task<List<GetAllServiceDto>> GetServiceByName(string serviceName)
+        public async Task<List<GetAllServiceDto>> GetServiceByName(GetServiceByNameRequest request)
         {
-            var getServiceCategoryByService = await _context.CustomerRequestServices.Where(e=>e.ServiceName.Contains(serviceName)).Select(x => new GetAllServiceDto
+            var getServiceCategoryByService = await _context.CustomerRequestServices.Where(e=>e.ServiceName.Contains(request.ServiceName)).Select(x => new GetAllServiceDto
             {
                 Id = x.Id,
                 ServiceName = x.ServiceName
             }).ToListAsync();
             return getServiceCategoryByService;
+        }
+
+        public async Task<CustomerRequestResponseDto> CustomerRequestDetails(string vendorId)
+        {
+
+            var getTodaysDateMinutes = DateTime.Now.Minute;
+            CustomerRequestResponseDto service = new CustomerRequestResponseDto
+            {
+
+            };
+            var getCustomerRequestDetails = _context.ResquServices.Where(e => e.VendorId == vendorId && e.IsVendorAccepted == false).ToList();
+            foreach (var request in getCustomerRequestDetails)
+            {
+                service.BookingId = request.BookingId;
+                service.Description = request.Description;
+                service.ServiceName = request.ServiceName;
+                service.SubCategoryName = request.SubCategoryName;
+                service.CustomerName = request.CustomerName;
+                service.CustomerPhone = request.CustomerPhone;
+            }
+            return service;
         }
     }
 }

@@ -373,6 +373,24 @@ namespace Resqu.Core.Dto
         public string VendorPhone { get; set; }
         public string ServiceAmount { get; set; }
     }
+
+
+    public class CustomerRequestResponseDto
+    {
+        public string ServiceName { get; set; }
+        public string SubCategoryName { get; set; }
+        //public decimal SubCategoryPrice { get; set; }
+        public double Distance { get; set; }
+        public double Time { get; set; }
+        public string Description { get; set; }
+        public string BookingId { get; set; }
+        public string CustomerName { get; set; }
+        public string CustomerPhone { get; set; }
+        public string VendorName { get; set; }
+        public string VendorGender { get; set; }
+        public string VendorPhone { get; set; }
+        public string ServiceAmount { get; set; }
+    }
     public class MakeCardRequest
     {
         public string CardNo { get; set; }
@@ -449,6 +467,11 @@ namespace Resqu.Core.Dto
     public class GetAllServiceDto
     {
         public int Id { get; set; }
+        public string ServiceName { get; set; }
+    }
+
+    public class GetServiceByNameRequest
+    {
         public string ServiceName { get; set; }
     }
 

@@ -76,3 +76,4 @@ C:\Users\HFET\source\repos\Resqu.API\Resqu.API\bin\Debug\net5.0\CrossPlatformLib
 C:\Users\HFET\source\repos\Resqu.API\Resqu.API\bin\Debug\net5.0\CrossPlatformLibrary.dll
 C:\Users\HFET\source\repos\Resqu.API\Resqu.API\bin\Debug\net5.0\CrossPlatformLibrary.Geolocation.dll
 C:\Users\HFET\source\repos\Resqu.API\Resqu.API\bin\Debug\net5.0\System.Device.Portable.dll
+C:\Users\HFET\source\repos\Resqu.API\Resqu.API\bin\Debug\net5.0\Microsoft.AspNet.SignalR.Core.dll

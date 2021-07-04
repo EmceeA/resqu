@@ -138,15 +138,21 @@ namespace Resqu.API.Controllers
             return Ok(result);
         }
 
-
-        [HttpGet]
-        public async Task<IActionResult> GetServiceByName(string serviceName)
+        [HttpPost]
+        public async Task<IActionResult> GetServiceByName(GetServiceByNameRequest request)
         {
-            var result = await _customer.GetServiceByName(serviceName);
+            var result = await _customer.GetServiceByName(request);
             if (result.Count == 0)
             {
                 return Ok("Result not found");
             }
+            return Ok(result);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> CustomerRequestDetails(string vendorId)
+        {
+            var result = await _customer.CustomerRequestDetails(vendorId);
             return Ok(result);
         }
 

@@ -8,7 +8,7 @@ namespace Resqu.Core.Interface
     public interface ICustomer
     {
         Task<List<GetAllServiceDto>> GetAllServices();
-        Task<List<GetAllServiceDto>> GetServiceByName(string serviceName);
+        Task<List<GetAllServiceDto>> GetServiceByName(GetServiceByNameRequest request);
 
         Task<List<GetIssueDto>> GetIssueByServiceTypeId(int serviceTypeId);
         Task<Response> AddIssue(IssuesDto issue);
@@ -21,6 +21,8 @@ namespace Resqu.Core.Interface
         Task<UpdateCustomerResponseDto> ActivateCustomerProfile(UpdateCustomerRequestDto requestDto);
         bool DebitCredit(decimal backOfficeCost, decimal vendorCost, string backOfficeWallet, string destinationWallet, string sourceWallet, decimal totalAmount);
         Task<ServiceResponseDto> BookService(ServiceDto service);
+
+        Task<CustomerRequestResponseDto> CustomerRequestDetails(string vendorId);
         Task<float> GetTravelTime(float distance);
         Task<UpdateCustomerResponseDto> AcceptRequest(string bookingId);
         Task<UpdateCustomerResponseDto> RejectRequest(string bookingId);

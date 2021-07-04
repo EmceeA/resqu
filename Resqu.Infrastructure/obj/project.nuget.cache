@@ -1,8 +1,21 @@
 {
   "version": 2,
-  "dgSpecHash": "r6JRRPyw+RiNtXqNPMx+qX4+yZL55sAdksOrNTwhX9EENzdiWe29dNiC1DUb8ahIJMUkWYWAbkyQqzEtq/6YFA==",
+  "dgSpecHash": "CYlBy8lCaM+V9b2mrb+8bR679i3b5wjaHRTYQVZKo3M2CuHECNhh75rA2+/9w/6IFNlKRWsWR1Ur4+LbW66FqQ==",
   "success": true,
   "projectFilePath": "C:\\Users\\HFET\\source\\repos\\Resqu.API\\Resqu.Infrastructure\\Resqu.Infrastructure.csproj",
-  "expectedPackageFiles": [],
-  "logs": []
+  "expectedPackageFiles": [
+    "C:\\Users\\HFET\\.nuget\\packages\\microsoft.aspnet.signalr.core\\2.4.2\\microsoft.aspnet.signalr.core.2.4.2.nupkg.sha512"
+  ],
+  "logs": [
+    {
+      "code": "NU1701",
+      "level": "Warning",
+      "warningLevel": 1,
+      "message": "Package 'Microsoft.AspNet.SignalR.Core 2.4.2' was restored using '.NETFramework,Version=v4.6.1, .NETFramework,Version=v4.6.2, .NETFramework,Version=v4.7, .NETFramework,Version=v4.7.1, .NETFramework,Version=v4.7.2, .NETFramework,Version=v4.8' instead of the project target framework 'net5.0'. This package may not be fully compatible with your project.",
+      "libraryId": "Microsoft.AspNet.SignalR.Core",
+      "targetGraphs": [
+        "net5.0"
+      ]
+    }
+  ]
 }
