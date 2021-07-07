@@ -116,6 +116,18 @@ namespace Resqu.API.Controllers
             return BadRequest(generate);
         }
 
+        [HttpPost]
+
+        public async Task<IActionResult> EstimatePrice(EstimatePriceRequestDto service)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var result = await _customer.EstimatePrice(service);
+            return Ok(result);
+        }
 
 
         [HttpPost]

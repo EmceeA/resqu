@@ -248,11 +248,6 @@ namespace Resqu.Core.Dto
     }
     public class ServiceDto
     {
-        public int ServiceId { get; set; }
-        public int SubCategoryId { get; set; }
-        public int IssueId { get; set; }
-        
-        public string Description { get; set; }
         public string CustomerAddress { get; set; }
     }
 
@@ -358,6 +353,19 @@ namespace Resqu.Core.Dto
         public string Description { get; set; }
     }
 
+    public class EstimatePriceRequestDto {
+        public int SubCategoryId { get; set; }
+        public int ServiceId { get; set; }
+        public int IssueId { get; set; }
+        public string Description { get; set; }
+        public string CustomerAddress { get; set; }
+
+    }
+    public class EstimatePriceResponseDto
+    {
+        public string BookingId { get; set; }
+        public string EstimatedPrice { get; set; }
+    }
 
     public class ServiceResponseDto
     {
@@ -535,6 +543,17 @@ namespace Resqu.Core.Dto
     }
     public class UpdateCustomerResponseDto
     {
+        public string Message { get; set; }
+        public bool Status { get; set; }
+    }
+
+    public class AcceptRequestDto
+    {
+        public string BookingId { get; set; }
+        public string CustomerName { get; set; }
+        public string ServiceName { get; set; }
+        public string ServiceDescription { get; set; }
+        public string Location { get; set; }
         public string Message { get; set; }
         public bool Status { get; set; }
     }

@@ -499,3 +499,4 @@ C:\Users\HFET\source\repos\Resqu.API\Resq.Web\obj\Debug\net5.0\Razor\Views\BackO
 C:\Users\HFET\source\repos\Resqu.API\Resq.Web\obj\Debug\net5.0\Razor\Views\BackOffice\ServiceDetails.cshtml.g.cs
 C:\Users\HFET\source\repos\Resqu.API\Resq.Web\obj\Debug\net5.0\Razor\Views\BackOffice\AddVendorServiceType.cshtml.g.cs
 C:\Users\HFET\source\repos\Resqu.API\Resq.Web\obj\Debug\net5.0\Razor\Views\BackOffice\AddVendorService.cshtml.g.cs
+C:\Users\HFET\source\repos\Resqu.API\Resq.Web\bin\Debug\net5.0\Microsoft.AspNet.SignalR.Core.dll

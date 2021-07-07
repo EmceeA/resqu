@@ -622,8 +622,8 @@ namespace Resq.Web.Controllers
             {
                 return RedirectToAction("Login");
             }
-            ViewBag.ServiceCategory = _context.Expertises.ToList().Count();
-            ViewBag.ServiceSubCategory = _context.ExpertiseCategories.ToList().Count();
+            ViewBag.ServiceCategory = _context.CustomerRequestServices.ToList().Count();
+            ViewBag.ServiceSubCategory = _context.VendorProcessServiceTypes.ToList().Count();
             ViewBag.Vendors = _context.Vendors.Where(d => d.IsBan == false && d.IsDeleted == false).ToList().Count();
             ViewBag.Customers = _context.Customers.Where(e => e.IsBan == false && e.IsDeleted == false).ToList().Count();
             List<Resqu.Core.Dto.Vendor> vendors = new List<Resqu.Core.Dto.Vendor>();
@@ -669,10 +669,10 @@ namespace Resq.Web.Controllers
 
             foreach (var expertise in getAllExpertise)
             {
-                var getSubCategory = _context.CustomerRequestServices.Where(c => c.ServiceName == expertise.ServiceName).ToList().Count();
+                var getSubCategory = _context.ServiceToSericeCategorys.Where(c => c.ServiceId == expertise.Id).Select(e=>e.ServiceTypeId).ToList().Count();
                 var getAllVendors = _context.Vendors.Where(c => c.CustomerRequestServiceId == expertise.Id).ToList().Count();
                 var getNoOfUsers = _context.Transactions.Where(c => c.ServiceType == expertise.ServiceName).ToList().Count();
-                var description = _context.Expertises.Where(e => e.Id == expertise.Id).Select(d => d.Description).FirstOrDefault();
+                var description = _context.CustomerRequestServices.Where(e => e.Id == expertise.Id).Select(d => d.Description).FirstOrDefault();
                 var expertiser = new AvailableServiceDetailViewModel
                 {
                     Description = description,
@@ -1087,12 +1087,13 @@ namespace Resq.Web.Controllers
             int subCategories = 0;
             foreach (var service in services)
             {
-                subCategories = _context.Expertises.Where(e => e.Id == service.Id).Select(d => d.ExpertiseCategoryId).ToList().Count();
+               // subCategories = _context.CustomerRequestServices.Where(e => e.Id == service.Id).Select().ToList().Count();
                 var serv = new Service
                 {
                     ServiceId = service.Id,
                     ServiceType = service.Name,
-                    SubCategory = _context.Expertises.Where(e=>e.Id == service.Id).Select(d=>d.ExpertiseCategoryId).ToList().Count()
+
+                    SubCategory = _context.ServiceToSericeCategorys.Where(e=>e.ServiceId == service.Id).ToList().Count()
                 };
                 serviceList.Add(serv);
             }
@@ -1134,7 +1135,7 @@ namespace Resq.Web.Controllers
             var serviceList = new HashSet<Service>();
             foreach (var server in getAllServices)
             {
-                var subCategories = _context.VendorProcessServices.Where(d => d.CustomerRequestServiceId == server.Id).ToList().Count();
+                var subCategories = _context.ServiceToSericeCategorys.Where(d => d.ServiceId == server.Id).Select(e=>e.ServiceTypeId).ToList().Count();
                 var serv = new Service
                 {
                     ServiceId = server.Id,

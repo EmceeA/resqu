@@ -373,21 +373,30 @@ namespace Resqu.Core.Services
             var res = new string(result);
             return res;
         }
-        public async Task<ServiceResponseDto> BookService(ServiceDto service)
+
+        public async Task<EstimatePriceResponseDto> EstimatePrice(EstimatePriceRequestDto service)
         {
+            var getRequest = _context.CustomerRequestServices.Where(e => e.Id == service.ServiceId).FirstOrDefault();
+            if (getRequest == null)
+            {
+                return null;
+            }
+            var getEstimatedPrice = _context.VendorProcessServiceTypes.Where(e => e.Id == service.SubCategoryId).Select(w => w.Cost).FirstOrDefault();
+            
+
             var phoneNumber = _http.HttpContext.Session.GetString("customerPhone");
             var serviceName = _context.CustomerRequestServices.Where(e => e.Id == service.ServiceId).Select(p => p.ServiceName).FirstOrDefault();
             var serviceSubCategoryName = _context.VendorProcessServiceTypes.Where(e => e.Id == service.SubCategoryId).FirstOrDefault();
-            var getNearestVendor = await CalculateShortestDistance(service.CustomerAddress, null, serviceSubCategoryName.ServiceTypeName, serviceName);
-            if (getNearestVendor == null)
-            {
-                return null;
-            }
-            if (getNearestVendor.Distance > 5)
-            {
-                return null;
-            }
-            var getExpertisePrice = _context.VendorProcessServiceTypes.Where(e => e.Id == service.SubCategoryId).Select(u=>u.Cost).FirstOrDefault();
+            ////var getNearestVendor = await CalculateShortestDistance(service.CustomerAddress, null, serviceSubCategoryName.ServiceTypeName, serviceName);
+            //if (getNearestVendor == null)
+            //{
+            //    return null;
+            //}
+            //if (getNearestVendor.Distance > 5)
+            //{
+            //    return null;
+            //}
+            //var getExpertisePrice = _context.VendorProcessServiceTypes.Where(e => e.Id == service.SubCategoryId).Select(u => u.Cost).FirstOrDefault();
             var issues = _context.Issues.Where(e => e.Id == service.IssueId).FirstOrDefault();
             var serviceModel = new ResquService
             {
@@ -403,14 +412,65 @@ namespace Resqu.Core.Services
                 BookingId = $"{serviceSubCategoryName.ServiceTypeName.Substring(0, 3).ToUpper()}/{GenerateRandom(10)}",
                 IsStarted = false,
                 Description = service.Description,
+                Status = "Price Estimated",
+                DateCreated = DateTime.Now,
+                CustomerLocation = service.CustomerAddress,
+                CustomerPhone = phoneNumber,
+                //VendorId = getNearestVendor.VendorId.ToString(),
+                //VendorName = getNearestVendor.VendorName,
+                //VendorPhone = getNearestVendor.Phone,
+                CustomerId = _context.Customers.Where(w => w.PhoneNumber == phoneNumber).Select(e => e.Id).FirstOrDefault().ToString(),
+                CustomerName = _context.Customers.Where(w => w.PhoneNumber == phoneNumber).Select(e => e.FirstName + " " + e.LastName).FirstOrDefault()
+            };
+            _http.HttpContext.Session.SetString("bookingId", serviceModel.BookingId);
+            _context.ResquServices.Add(serviceModel);
+            _context.SaveChanges();
+            return new EstimatePriceResponseDto
+            {
+                EstimatedPrice = getEstimatedPrice.ToString(),
+                BookingId = serviceModel.BookingId
+            };
+        }
+        public async Task<ServiceResponseDto> BookService(ServiceDto service)
+        {
+            var bookingId = _http.HttpContext.Session.GetString("bookingId");
+            var getBookingDetails = _context.ResquServices.Where(b => b.BookingId == bookingId).FirstOrDefault();
+            var phoneNumber = _http.HttpContext.Session.GetString("customerPhone");
+            var serviceName = _context.CustomerRequestServices.Where(e => e.Id == getBookingDetails.ServiceId).Select(p => p.ServiceName).FirstOrDefault();
+            var serviceSubCategoryName = _context.VendorProcessServiceTypes.Where(e => e.Id == getBookingDetails.SubCategoryId).FirstOrDefault();
+            var getNearestVendor = await CalculateShortestDistance(service.CustomerAddress, null, serviceSubCategoryName.ServiceTypeName, serviceName);
+            if (getNearestVendor == null)
+            {
+                return null;
+            }
+            if (getNearestVendor.Distance > 5)
+            {
+                return null;
+            }
+            var getExpertisePrice = _context.VendorProcessServiceTypes.Where(e => e.Id == getBookingDetails.SubCategoryId).Select(u => u.Cost).FirstOrDefault();
+            var issues = _context.Issues.Where(e => e.Id == getBookingDetails.IssueId).FirstOrDefault();
+            var serviceModel = new ResquService
+            {
+                ServiceId = getBookingDetails.ServiceId,
+                IssueId = getBookingDetails.IssueId,
+                IssuePrice = issues.Price.ToString(),
+                IssueDescription = issues.Description,
+                ServiceName = serviceName,
+                SubCategoryId = serviceSubCategoryName.Id,
+                SubCategoryName = serviceSubCategoryName.ServiceTypeName,
+                SubCategoryPrice = serviceSubCategoryName.Cost,
+                Price = serviceSubCategoryName.Cost + issues.Price,
+                BookingId = bookingId,
+                IsStarted = false,
+                Description = getBookingDetails.Description,
                 Status = "Booked",
                 DateCreated = DateTime.Now,
                 CustomerLocation = service.CustomerAddress,
                 CustomerPhone = phoneNumber,
-                VendorId =getNearestVendor.VendorId.ToString(),
+                VendorId = getNearestVendor.VendorId.ToString(),
                 VendorName = getNearestVendor.VendorName,
                 VendorPhone = getNearestVendor.Phone,
-                CustomerId = _context.Customers.Where(w=>w.PhoneNumber == phoneNumber).Select(e=>e.Id).FirstOrDefault().ToString(),
+                CustomerId = _context.Customers.Where(w => w.PhoneNumber == phoneNumber).Select(e => e.Id).FirstOrDefault().ToString(),
                 CustomerName = _context.Customers.Where(w => w.PhoneNumber == phoneNumber).Select(e => e.FirstName + " " + e.LastName).FirstOrDefault()
             };
 
@@ -418,14 +478,14 @@ namespace Resqu.Core.Services
             _context.SaveChanges();
             return new ServiceResponseDto
             {
-                Description = service.Description,
+                Description = getBookingDetails.Description,
                 ServiceName = serviceModel.ServiceName,
                 SubCategoryName = serviceModel.SubCategoryName,
-                BookingId = serviceModel.BookingId,
+                BookingId = bookingId,
                 VendorName = getNearestVendor.VendorName,
                 VendorGender = getNearestVendor.Gender,
                 VendorPhone = getNearestVendor.Phone,
-                Distance  = getNearestVendor.Distance,
+                Distance = getNearestVendor.Distance,
                 Time = Math.Round(getNearestVendor.Time),
                 ServiceAmount = serviceModel.Price.ToString()
             };
@@ -561,29 +621,44 @@ namespace Resqu.Core.Services
             {
                 return null;
             }
+            TimeSpan ts = DateTime.Now - getServiceByBookingNumber.DateStarted;
+            if ( ts.TotalMinutes > Convert.ToInt32(_config.GetSection("FixedMinute").Value))
+            {
+                getServiceByBookingNumber.IsEnded = true;
+                getServiceByBookingNumber.DateEnded = DateTime.Now;
+
+                TimeSpan timeSpan = getServiceByBookingNumber.DateEnded - getServiceByBookingNumber.DateStarted;
+                var minuteCharge = _config.GetSection("AmountPerMinute").Value;
+                var doubleCharge = Convert.ToDouble(minuteCharge);
+                var serviceCharge = doubleCharge * Convert.ToInt32(timeSpan.TotalMinutes);
+                var materialCost = _context.Products.Where(e => e.Id == getServiceByBookingNumber.ProductId).Select(u => u.ProductPrice).FirstOrDefault();
+                getServiceByBookingNumber.TotalPrice = (Convert.ToDecimal(serviceCharge) + materialCost).ToString();
+                getServiceByBookingNumber.Price = Convert.ToDecimal(serviceCharge);
+                getServiceByBookingNumber.ProductPrice = materialCost;
+                getServiceByBookingNumber.PaymentType = paymentType;
+                getServiceByBookingNumber.Status = "COMPLETED";
+                _context.SaveChanges();
+
+               
+            }
+            getServiceByBookingNumber.TotalPrice = (Convert.ToDouble(getServiceByBookingNumber.IssuePrice) + Convert.ToDouble(getServiceByBookingNumber.SubCategoryPrice)).ToString();
+            getServiceByBookingNumber.Status = "COMPLETED";
             getServiceByBookingNumber.IsEnded = true;
             getServiceByBookingNumber.DateEnded = DateTime.Now;
-            TimeSpan timeSpan = getServiceByBookingNumber.DateEnded - getServiceByBookingNumber.DateStarted;
-            var serviceCharge = Convert.ToInt32(_config.GetSection("AmountPerMinute").Value) * timeSpan.TotalMinutes;
-            var materialCost = _context.Products.Where(e => e.Id == getServiceByBookingNumber.ProductId).Select(u => u.ProductPrice).FirstOrDefault();
-            getServiceByBookingNumber.TotalPrice = (Convert.ToDecimal(serviceCharge) + materialCost).ToString();
-            getServiceByBookingNumber.Price = Convert.ToDecimal(serviceCharge);
-            getServiceByBookingNumber.ProductPrice = materialCost;
             getServiceByBookingNumber.PaymentType = paymentType;
-            getServiceByBookingNumber.Status = "COMPLETED";
             _context.SaveChanges();
-
             return new EndServiceDto
             {
                 BookingId = bookingId,
-                StartDate = getServiceByBookingNumber.DateStarted.ToString("dd-MM-yyyy hh:MMMM"),
-                EndDate = getServiceByBookingNumber.DateEnded.ToString("dd-MM-yyyy hh:MMMM"),
-                ServiceCharge = Convert.ToDecimal(serviceCharge),
-                MaterialCost = materialCost,
+                StartDate = getServiceByBookingNumber.DateStarted.ToString("dd-MM-yyyy hh:mm tt"),
+                EndDate = getServiceByBookingNumber.DateEnded.ToString("dd-MM-yyyy hh:mm tt"),
+                ServiceCharge = 0,
+                MaterialCost = 0,
                 PaymentType = paymentType,
-                Total = Convert.ToDecimal(serviceCharge) + materialCost,
+                Total = Convert.ToDecimal(getServiceByBookingNumber.TotalPrice),
                 VendorName = getServiceByBookingNumber.VendorName
             };
+
         }
 
         public async Task<List<ProductListDto>> ProductList()
@@ -1178,14 +1253,19 @@ namespace Resqu.Core.Services
             return Task.FromResult<float>(timeInMinutes);
         }
 
-        public async Task<UpdateCustomerResponseDto> AcceptRequest(string bookingId)
+        public async Task<AcceptRequestDto> AcceptRequest(string bookingId)
         {
             var getBookingDetails = await _context.ResquServices.Where(e => e.BookingId == bookingId).FirstOrDefaultAsync();
             _http.HttpContext.Session.SetString("bookingId", bookingId);
             getBookingDetails.IsVendorAccepted = true;
             _context.SaveChanges();
-            return new UpdateCustomerResponseDto
+            return new AcceptRequestDto
             {
+                BookingId = getBookingDetails.BookingId,
+                CustomerName = getBookingDetails.CustomerName,
+                Location = getBookingDetails.CustomerLocation,
+                ServiceDescription = getBookingDetails.Description,
+                ServiceName = getBookingDetails.ServiceName,
                 Message = "Accepted",
                 Status = true
             };
@@ -1369,6 +1449,20 @@ namespace Resqu.Core.Services
             }
         }
 
+        //public async Task<double> CalculateServiceCost(string bookingId)
+        //{
+        //    var getService = _context.ResquServices.Where(r => r.BookingId == bookingId).FirstOrDefault();
+        //    if (getService == null)
+        //    {
+        //        return 0;
+        //    }
+        //    var getPrice = getService.TotalPrice;
+        //    if (getService.DateEnded.Minute - getService.DateStarted.Minute > Convert.ToInt32(_config.GetSection("").Value))
+        //    {
+        //        var extraTime = (getService.DateEnded.Minute + getService.DateStarted.Minute) - (getService.DateEnded.Minute - getService.DateStarted.Minute);
+
+        //    }
+        //}
         public async Task<List<GetAllServiceDto>> GetServiceByName(GetServiceByNameRequest request)
         {
             var getServiceCategoryByService = await _context.CustomerRequestServices.Where(e=>e.ServiceName.Contains(request.ServiceName)).Select(x => new GetAllServiceDto

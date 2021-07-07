@@ -9,7 +9,7 @@ namespace Resqu.Core.Interface
     {
         Task<List<GetAllServiceDto>> GetAllServices();
         Task<List<GetAllServiceDto>> GetServiceByName(GetServiceByNameRequest request);
-
+        Task<EstimatePriceResponseDto> EstimatePrice(EstimatePriceRequestDto service);
         Task<List<GetIssueDto>> GetIssueByServiceTypeId(int serviceTypeId);
         Task<Response> AddIssue(IssuesDto issue);
         Task<GetServiceCategoryByServiceDto> GetServiceCategoryByService(int serviceId);
@@ -24,7 +24,7 @@ namespace Resqu.Core.Interface
 
         Task<CustomerRequestResponseDto> CustomerRequestDetails(string vendorId);
         Task<float> GetTravelTime(float distance);
-        Task<UpdateCustomerResponseDto> AcceptRequest(string bookingId);
+        Task<AcceptRequestDto> AcceptRequest(string bookingId);
         Task<UpdateCustomerResponseDto> RejectRequest(string bookingId);
         Task<UpdateCustomerResponseDto> GoOnline(string mobileNo);
         Task<UpdateCustomerResponseDto> GoOffline(string mobileNo);
