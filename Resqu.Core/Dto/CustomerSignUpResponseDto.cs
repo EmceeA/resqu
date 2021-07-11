@@ -267,6 +267,7 @@ namespace Resqu.Core.Dto
     public class ServiceDto
     {
         public string CustomerAddress { get; set; }
+        public string BookingId { get; set; }
     }
 
 

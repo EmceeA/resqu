@@ -30,6 +30,8 @@ namespace Resqu.Core.Interface
         Task<UpdateCustomerResponseDto> GoOffline(string mobileNo);
         Task<RootObject> GetAddress(double lat, double lon);
         Task<Location> GetLatitudeLongitudeByAddress(string address);
+
+        Task<bool> BookNow(string bookingId);
         Task<GetNearestVendorByLocationResponse> GetLatitudeLongitudeByAddress(GetNearestVendorByLocationRequest request);
         Task<double> CalculateDistance(double slat, double slon, double dlat, double dlon);
         Task<VendorDistanceResponseDto> CalculateShortestDistance(string customerLocation, string vendorLocation, string subCategory, string serviceName);

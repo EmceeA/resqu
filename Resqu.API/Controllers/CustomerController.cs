@@ -143,6 +143,13 @@ namespace Resqu.API.Controllers
             return Ok(result);
         }
 
+        [HttpPost]
+        public async Task<IActionResult> BookNow(string bookingId)
+        {
+            var result = await _customer.BookNow(bookingId);
+            return Ok(result);
+        }
+
         [HttpGet]
         public async Task<IActionResult> GetAddress(double lat, double lon)
         {

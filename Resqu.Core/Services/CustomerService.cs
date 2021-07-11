@@ -433,7 +433,16 @@ namespace Resqu.Core.Services
         }
         public async Task<ServiceResponseDto> BookService(ServiceDto service)
         {
-            var bookingId = _http.HttpContext.Session.GetString("bookingId");
+            string bookingId = null;
+            if (string.IsNullOrEmpty(service.BookingId))
+            {
+             bookingId = _http.HttpContext.Session.GetString("bookingId");
+
+            }
+            else
+            {
+                bookingId = service.BookingId;
+            }
             var getBookingDetails = _context.ResquServices.Where(b => b.BookingId == bookingId).FirstOrDefault();
             var phoneNumber = _http.HttpContext.Session.GetString("customerPhone");
             var serviceName = _context.CustomerRequestServices.Where(e => e.Id == getBookingDetails.ServiceId).Select(p => p.ServiceName).FirstOrDefault();
@@ -463,7 +472,7 @@ namespace Resqu.Core.Services
                 BookingId = bookingId,
                 IsStarted = false,
                 Description = getBookingDetails.Description,
-                Status = "Booked",
+                Status = "Service Booked",
                 DateCreated = DateTime.Now,
                 CustomerLocation = service.CustomerAddress,
                 CustomerPhone = phoneNumber,
@@ -1497,6 +1506,18 @@ namespace Resqu.Core.Services
         public Task<GetNearestVendorByLocationResponse> GetLatitudeLongitudeByAddress(GetNearestVendorByLocationRequest request)
         {
             throw new NotImplementedException();
+        }
+
+        public async Task<bool> BookNow(string bookingId)
+        {
+            var getBookingById = await _context.ResquServices.Where(e => e.BookingId == bookingId).FirstOrDefaultAsync();
+            if (getBookingById == null)
+            {
+                return false;
+            }
+            getBookingById.Status = "Booked";
+            _context.SaveChanges();
+            return true;
         }
     }
 }
