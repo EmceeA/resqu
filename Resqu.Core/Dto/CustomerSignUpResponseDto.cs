@@ -246,6 +246,24 @@ namespace Resqu.Core.Dto
         public string Message { get; set; }
         public bool Status { get; set; }
     }
+
+    public class GetNearestVendorByLocationRequest
+    {
+        public string CustomerAddress { get; set; }
+    }
+
+
+    public class GetNearestVendorByLocationResponse
+    {
+        public string ServiceName { get; set; }
+        public string SubCategoryName { get; set; }
+        public string Description { get; set; }
+        public string BookingId { get; set; }
+        public string VendorName { get; set; }
+        public string VendorGender { get; set; }
+        public string VendorPhone { get; set; }
+        
+    }
     public class ServiceDto
     {
         public string CustomerAddress { get; set; }
@@ -358,7 +376,7 @@ namespace Resqu.Core.Dto
         public int ServiceId { get; set; }
         public int IssueId { get; set; }
         public string Description { get; set; }
-        public string CustomerAddress { get; set; }
+        //public string CustomerAddress { get; set; }
 
     }
     public class EstimatePriceResponseDto

@@ -414,7 +414,7 @@ namespace Resqu.Core.Services
                 Description = service.Description,
                 Status = "Price Estimated",
                 DateCreated = DateTime.Now,
-                CustomerLocation = service.CustomerAddress,
+                //CustomerLocation = service.CustomerAddress,
                 CustomerPhone = phoneNumber,
                 //VendorId = getNearestVendor.VendorId.ToString(),
                 //VendorName = getNearestVendor.VendorName,
@@ -1492,6 +1492,11 @@ namespace Resqu.Core.Services
                 service.CustomerPhone = request.CustomerPhone;
             }
             return service;
+        }
+
+        public Task<GetNearestVendorByLocationResponse> GetLatitudeLongitudeByAddress(GetNearestVendorByLocationRequest request)
+        {
+            throw new NotImplementedException();
         }
     }
 }
