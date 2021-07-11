@@ -543,6 +543,7 @@ namespace Resqu.Core.Services
             var getServiceCategoryByService = _context.Issues.Where(c => c.ServiceTypeId == serviceTypeId)
                 .Select(w => new GetIssueDto
                 {
+                    Id = w.Id,
                     IssueDescription = w.Description,
                     Price = w.Price
                 }).ToList();

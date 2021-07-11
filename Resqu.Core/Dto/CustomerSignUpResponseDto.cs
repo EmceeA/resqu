@@ -486,6 +486,8 @@ namespace Resqu.Core.Dto
 
     public class GetIssueDto
     {
+
+        public int Id { get; set; }
         public string IssueDescription { get; set; }
         public decimal Price { get; set; }
     }
