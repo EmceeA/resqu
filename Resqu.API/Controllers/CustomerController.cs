@@ -151,9 +151,9 @@ namespace Resqu.API.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAddress(double lat, double lon)
+        public async Task<IActionResult> GetAddress(double latitude, double longitude)
         {
-            var result = await _customer.GetAddress(lat,lon);
+            var result = await _customer.GetAddress(latitude,longitude);
             return Ok(result);
         }
 

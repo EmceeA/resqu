@@ -540,13 +540,13 @@ namespace Resqu.Core.Services
 
         public async Task<List<GetIssueDto>> GetIssueByServiceTypeId(int serviceTypeId)
         {
-            var getServiceCategoryByService = _context.Issues.Where(c => c.ServiceTypeId == serviceTypeId)
+            var getServiceCategoryByService = await _context.Issues.Where(c => c.ServiceTypeId == serviceTypeId)
                 .Select(w => new GetIssueDto
                 {
                     Id = w.Id,
                     IssueDescription = w.Description,
                     Price = w.Price
-                }).ToList();
+                }).ToListAsync();
             return getServiceCategoryByService;
         }
 
