@@ -98,3 +98,4 @@ C:\Users\HFET\source\repos\Resqu.API\Resque.Test\obj\Debug\net5.0\Resque.Test.dl
 C:\Users\HFET\source\repos\Resqu.API\Resque.Test\obj\Debug\net5.0\ref\Resque.Test.dll
 C:\Users\HFET\source\repos\Resqu.API\Resque.Test\obj\Debug\net5.0\Resque.Test.pdb
 C:\Users\HFET\source\repos\Resqu.API\Resque.Test\obj\Debug\net5.0\Resque.Test.genruntimeconfig.cache
+C:\Users\HFET\source\repos\Resqu.API\Resque.Test\bin\Debug\net5.0\Microsoft.AspNet.SignalR.Core.dll

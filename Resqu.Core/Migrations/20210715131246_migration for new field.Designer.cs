@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Resqu.Core.Entities;
 
 namespace Resqu.Core.Migrations
 {
     [DbContext(typeof(ResquContext))]
-    partial class ResquContextModelSnapshot : ModelSnapshot
+    [Migration("20210715131246_migration for new field")]
+    partial class migrationfornewfield
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

@@ -13,7 +13,7 @@ namespace Resqu.Core.Dto
         public string LastName { get; set; }
 
         public string EmailAddress { get; set; }
-        public string RegulatoryIdentity { get; set; }
+        //public string RegulatoryIdentity { get; set; }
 
         public string Status { get; set; }
     }
@@ -797,7 +797,12 @@ namespace Resqu.Core.Dto
         public string RefreshToken { get; set; }
     }
 
-
+    public class AddServiceDetailDto
+    {
+        public string ServiceName { get; set; }
+        public string Description { get; set; }
+        public IFormFile Image { get; set; }
+    }
 
 
 }

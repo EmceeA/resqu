@@ -94,7 +94,8 @@
                         @foreach (RoleUrl item in ViewBag.PageUrls)
                         {
                         <li class="has-sub">
-                            <a asp-action="@item.ActionName" asp-controller="@item.ControllerName" class="@item.PageUrlClass">
+                            <a asp-action="@item.ActionName" asp-controller="@item.ControllerName" class="@item.PageUrlClass" target="_blank">
+                                @*@item.PageName*@
                                 <i class="@item.PageNameClass"></i>@item.PageName
                             </a>
                         </li>
