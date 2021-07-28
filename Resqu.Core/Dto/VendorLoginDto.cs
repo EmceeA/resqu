@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Resqu.Core.Utility;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -38,6 +39,8 @@ namespace Resqu.Core.Dto
     public class VendorLoginResponseDto
     {
         public string Response { get; set; }
+        public string token { get; set; }
+        public RefreshToken resettoken { get; set; }
         public VendorDetails VendorDetails { get; set; }
 
     }
