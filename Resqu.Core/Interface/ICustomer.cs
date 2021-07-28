@@ -62,7 +62,7 @@ namespace Resqu.Core.Interface
     public interface IVendor
     {
         Task<CustomerSignUpResponseDto> RegisterVendor(CustomerSignUpRequestDto signUpModel);
-
+        Task<VendorLoginResponseDto> VendorLogin(VendorLoginRequestDto vendorLogin);
         //Task<CustomerSignUpResponseDto> RegisterVendor(CustomerSignUpRequestDto signUpModel);
 
 

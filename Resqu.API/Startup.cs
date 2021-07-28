@@ -40,6 +40,7 @@ namespace Resqu.API
             services.AddControllers();
             services.AddDbContext<ResquContext>(options => options.UseSqlServer(Configuration.GetConnectionString("ResquContext")));
             services.AddScoped<ICustomer, CustomerService>();
+            services.AddScoped<IVendor, VendorMobileService>();
             services.AddTransient<IHttpContextAccessor, HttpContextAccessor>();
             services.AddScoped<IBackOffice, BackOfficeService>();
             services.AddSingleton<IJwtAuthManager, JwtAuthManager>();

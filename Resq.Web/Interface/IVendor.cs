@@ -11,5 +11,6 @@ namespace Resq.Web.Interface
         public string UploadImage(CreateVendorViewModel createVendor);
         public string CreateVendor(CreateVendorViewModel createVendor);
         public string GenerateCode();
+
     }
 }

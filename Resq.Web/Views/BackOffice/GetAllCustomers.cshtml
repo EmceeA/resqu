@@ -51,6 +51,18 @@
             <div class="col-lg-12">
                 <div class="bg-white py-5 mb-5">
                     <div class="table-responsive">
+                        <table>
+                            <tbody>
+                                <tr>
+                                    <td>Minimum age:</td>
+                                    <td><input type="date" id="min" name="min"></td>
+                                </tr>
+                                <tr>
+                                    <td>Maximum age:</td>
+                                    <td><input type="date" id="max" name="max"></td>
+                                </tr>
+                            </tbody>
+                        </table>
                         <table class="table table-vendors" id="table_id">
                             <thead>
                                 <tr>
@@ -71,17 +83,17 @@
                                     <tr>
                                         <td>
                                             @{index++;}
-                                        @index
-                                    </td>
-                                    <td>@item.FirstName   @item.LastName</td>
-                                    <td>@item.Gender</td>
-                                    <td>@item.PhoneNumber</td>
-                                    <td>@item.EmailAddress</td>
-                                    <!--<td>-->@*<a href="#" class="text-blue" data-toggle="modal" data-target="#completed-request-history">150</a>*@<!--</td>-->
-                                    <td>@item.LastLoginDate.ToString("dd/MM/yyyy") <span class="px-2">@item.LastLoginDate.TimeOfDay.ToString()</span></td>
-                                    <td>@item.LastServiceDate.ToString("dd/MM/yyyy") <span class="px-2">@item.LastServiceDate.TimeOfDay.ToString()</span></td>
-                                </tr>
-                            }
+                                            @index
+                                        </td>
+                                        <td>@item.FirstName   @item.LastName</td>
+                                        <td>@item.Gender</td>
+                                        <td>@item.PhoneNumber</td>
+                                        <td>@item.EmailAddress</td>
+                                        <!--<td>-->@*<a href="#" class="text-blue" data-toggle="modal" data-target="#completed-request-history">150</a>*@<!--</td>-->
+                                        <td>@item.LastLoginDate.ToString("dd/MM/yyyy") <span class="px-2">@item.LastLoginDate.TimeOfDay.ToString()</span></td>
+                                        <td>@item.LastServiceDate.ToString("dd/MM/yyyy") <span class="px-2">@item.LastServiceDate.TimeOfDay.ToString()</span></td>
+                                    </tr>
+                                }
                             </tbody>
                         </table>
                     </div>
