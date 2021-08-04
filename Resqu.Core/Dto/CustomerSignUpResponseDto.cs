@@ -653,7 +653,7 @@ namespace Resqu.Core.Dto
         public string LastName { get; set; }
 
         public string EmailAddress { get; set; }
-        public string RegulatoryIdentity { get; set; }
+       // public string RegulatoryIdentity { get; set; }
 
         public string Status { get; set; }
         public string Response { get; set; }
