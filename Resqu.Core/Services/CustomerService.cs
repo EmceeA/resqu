@@ -1,4 +1,7 @@
-﻿using GeoCoordinatePortable;
+﻿using FirebaseAdmin;
+using FirebaseAdmin.Auth;
+using GeoCoordinatePortable;
+using Google.Apis.Auth.OAuth2;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -146,7 +149,7 @@ namespace Resqu.Core.Services
                 FirstName = getUserDetail.FirstName,
                 LastName = getUserDetail.LastName,
                 PhoneNumber = getUserDetail.PhoneNumber,
-                RegulatoryIdentity = getUserDetail.RegulatoryIndentity,
+                //RegulatoryIdentity = getUserDetail.RegulatoryIndentity,
                 Status = getUserDetail.isVerified == true ? "Active": "Not Active",
                 Response = "Successfully Logged In"
             };
@@ -1519,6 +1522,28 @@ namespace Resqu.Core.Services
             getBookingById.Status = "Booked";
             _context.SaveChanges();
             return true;
+        }
+
+        public async Task<string> GenerateFirebaseToken()
+        {
+            try
+            {
+                FirebaseApp.Create(new AppOptions()
+                {
+                    Credential = GoogleCredential.GetApplicationDefault(),
+                    ServiceAccountId = "my-client-id@my-project-id.iam.gserviceaccount.com",
+                });
+                var uid = Guid.NewGuid().ToString();
+
+                string customToken = await FirebaseAuth.DefaultInstance.CreateCustomTokenAsync(uid);
+                return customToken;
+            }
+            catch (Exception ex)
+            {
+
+                return ex.Message;
+            }
+
         }
     }
 }

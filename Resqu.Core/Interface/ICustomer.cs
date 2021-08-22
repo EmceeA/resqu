@@ -56,13 +56,16 @@ namespace Resqu.Core.Interface
         Task<List<ProductListDto>> ProductList();
         Task<List<ServiceCategoryListDto>> ServiceCategoryList();
         Task<List<ServiceCategoryDto>> ServiceCategoryByExpertise(int expertiseId);
-        
+        Task<string> GenerateFirebaseToken();
     }
 
     public interface IVendor
     {
         Task<CustomerSignUpResponseDto> RegisterVendor(CustomerSignUpRequestDto signUpModel);
         Task<VendorLoginResponseDto> VendorLogin(VendorLoginRequestDto vendorLogin);
+        Task<string> GenerateFirebaseToken();
+
+
         //Task<CustomerSignUpResponseDto> RegisterVendor(CustomerSignUpRequestDto signUpModel);
 
 

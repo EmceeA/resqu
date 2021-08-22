@@ -294,6 +294,15 @@ namespace Resqu.API.Controllers
             return Ok(serviceCategoryList);
         }
 
+
+
+        [HttpGet]
+        public async Task<IActionResult> GenerateFirebaseToken()
+        {
+            var token = await _customer.GenerateFirebaseToken();
+            return Ok(token);
+        }
+
         [HttpPost]
 
         public async Task<IActionResult> AddServiceCategoryToService(AddServiceCategoryToService categoryToService)
@@ -393,11 +402,11 @@ namespace Resqu.API.Controllers
                     EmailAddress = register.EmailAddress,
                     FirstName = register.FirstName,
                     LastName = register.LastName,
-                    RegulatoryIdentity = register.RegulatoryIdentity,
                     Response = register.Response,
+                    FirebaseToken = await _customer.GenerateFirebaseToken(),
                     Status = register.Status
-                    
-                });
+
+                }); ;
             }
             return BadRequest(register);
         }

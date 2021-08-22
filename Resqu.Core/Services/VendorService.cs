@@ -1,4 +1,7 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using FirebaseAdmin;
+using FirebaseAdmin.Auth;
+using Google.Apis.Auth.OAuth2;
+using Microsoft.EntityFrameworkCore;
 using Resqu.Core.Dto;
 using Resqu.Core.Entities;
 using Resqu.Core.Interface;
@@ -17,6 +20,28 @@ namespace Resqu.Core.Services
         {
             _context = context;
         }
+
+        public async Task<string> GenerateFirebaseToken()
+        {
+            try
+            {
+                FirebaseApp.Create(new AppOptions()
+                {
+                    Credential = GoogleCredential.GetApplicationDefault(),
+                    ServiceAccountId = "my-client-id@my-project-id.iam.gserviceaccount.com",
+                });
+                var uid = Guid.NewGuid().ToString();
+
+                string customToken = await FirebaseAuth.DefaultInstance.CreateCustomTokenAsync(uid);
+                return customToken;
+            }
+            catch (Exception ex)
+            {
+
+                return ex.Message;
+            }
+        }
+
         public Task<CustomerSignUpResponseDto> RegisterVendor(CustomerSignUpRequestDto signUpModel)
         {
             throw new NotImplementedException();

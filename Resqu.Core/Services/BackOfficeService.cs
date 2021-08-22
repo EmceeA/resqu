@@ -88,7 +88,6 @@ namespace Resqu.Core.Services
                 FirstName = c.FirstName,
                 LastName = c.LastName,
                 PhoneNumber = c.PhoneNumber,
-                RegulatoryIdentity = c.RegulatoryIndentity,
             }).ToListAsync();
             if (unbanned.Count > 0)
             {
@@ -106,7 +105,6 @@ namespace Resqu.Core.Services
                 FirstName = c.FirstName,
                 LastName = c.LastName,
                 PhoneNumber = c.PhoneNumber,
-                RegulatoryIdentity = c.RegulatoryIndentity,
             }).ToListAsync();
             if (banned.Count > 0)
             {

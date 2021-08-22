@@ -252,7 +252,6 @@ C:\Users\HFET\source\repos\Resqu.API\Resq.Web\bin\Debug\net5.0\refs\System.Text.
 C:\Users\HFET\source\repos\Resqu.API\Resq.Web\bin\Debug\net5.0\refs\System.Text.Encoding.dll
 C:\Users\HFET\source\repos\Resqu.API\Resq.Web\bin\Debug\net5.0\refs\System.Text.Encoding.Extensions.dll
 C:\Users\HFET\source\repos\Resqu.API\Resq.Web\bin\Debug\net5.0\refs\System.Text.Encodings.Web.dll
-C:\Users\HFET\source\repos\Resqu.API\Resq.Web\bin\Debug\net5.0\refs\System.Text.Json.dll
 C:\Users\HFET\source\repos\Resqu.API\Resq.Web\bin\Debug\net5.0\refs\System.Text.RegularExpressions.dll
 C:\Users\HFET\source\repos\Resqu.API\Resq.Web\bin\Debug\net5.0\refs\System.Threading.Channels.dll
 C:\Users\HFET\source\repos\Resqu.API\Resq.Web\bin\Debug\net5.0\refs\System.Threading.dll
@@ -501,3 +500,14 @@ C:\Users\HFET\source\repos\Resqu.API\Resq.Web\obj\Debug\net5.0\Razor\Views\BackO
 C:\Users\HFET\source\repos\Resqu.API\Resq.Web\obj\Debug\net5.0\Razor\Views\BackOffice\AddVendorService.cshtml.g.cs
 C:\Users\HFET\source\repos\Resqu.API\Resq.Web\bin\Debug\net5.0\Microsoft.AspNet.SignalR.Core.dll
 C:\Users\HFET\source\repos\Resqu.API\Resq.Web\obj\Debug\net5.0\Razor\Views\BackOffice\AddServiceDetail.cshtml.g.cs
+C:\Users\HFET\source\repos\Resqu.API\Resq.Web\bin\Debug\net5.0\AWSSDK.Core.dll
+C:\Users\HFET\source\repos\Resqu.API\Resq.Web\bin\Debug\net5.0\FirebaseAdmin.dll
+C:\Users\HFET\source\repos\Resqu.API\Resq.Web\bin\Debug\net5.0\Google.Api.Gax.dll
+C:\Users\HFET\source\repos\Resqu.API\Resq.Web\bin\Debug\net5.0\Google.Api.Gax.Rest.dll
+C:\Users\HFET\source\repos\Resqu.API\Resq.Web\bin\Debug\net5.0\Google.Apis.dll
+C:\Users\HFET\source\repos\Resqu.API\Resq.Web\bin\Debug\net5.0\Google.Apis.Auth.PlatformServices.dll
+C:\Users\HFET\source\repos\Resqu.API\Resq.Web\bin\Debug\net5.0\Google.Apis.Auth.dll
+C:\Users\HFET\source\repos\Resqu.API\Resq.Web\bin\Debug\net5.0\Google.Apis.Core.dll
+C:\Users\HFET\source\repos\Resqu.API\Resq.Web\bin\Debug\net5.0\jose-jwt.dll
+C:\Users\HFET\source\repos\Resqu.API\Resq.Web\bin\Debug\net5.0\BouncyCastle.Crypto.dll
+C:\Users\HFET\source\repos\Resqu.API\Resq.Web\bin\Debug\net5.0\System.Text.Json.dll

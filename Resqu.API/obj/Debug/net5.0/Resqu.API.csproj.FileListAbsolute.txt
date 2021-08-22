@@ -77,3 +77,15 @@ C:\Users\HFET\source\repos\Resqu.API\Resqu.API\bin\Debug\net5.0\CrossPlatformLib
 C:\Users\HFET\source\repos\Resqu.API\Resqu.API\bin\Debug\net5.0\CrossPlatformLibrary.Geolocation.dll
 C:\Users\HFET\source\repos\Resqu.API\Resqu.API\bin\Debug\net5.0\System.Device.Portable.dll
 C:\Users\HFET\source\repos\Resqu.API\Resqu.API\bin\Debug\net5.0\Microsoft.AspNet.SignalR.Core.dll
+C:\Users\HFET\source\repos\Resqu.API\Resqu.API\bin\Debug\net5.0\AWSSDK.Core.dll
+C:\Users\HFET\source\repos\Resqu.API\Resqu.API\bin\Debug\net5.0\FirebaseAdmin.dll
+C:\Users\HFET\source\repos\Resqu.API\Resqu.API\bin\Debug\net5.0\Google.Api.Gax.dll
+C:\Users\HFET\source\repos\Resqu.API\Resqu.API\bin\Debug\net5.0\Google.Api.Gax.Rest.dll
+C:\Users\HFET\source\repos\Resqu.API\Resqu.API\bin\Debug\net5.0\Google.Apis.dll
+C:\Users\HFET\source\repos\Resqu.API\Resqu.API\bin\Debug\net5.0\Google.Apis.Auth.PlatformServices.dll
+C:\Users\HFET\source\repos\Resqu.API\Resqu.API\bin\Debug\net5.0\Google.Apis.Auth.dll
+C:\Users\HFET\source\repos\Resqu.API\Resqu.API\bin\Debug\net5.0\Google.Apis.Core.dll
+C:\Users\HFET\source\repos\Resqu.API\Resqu.API\bin\Debug\net5.0\jose-jwt.dll
+C:\Users\HFET\source\repos\Resqu.API\Resqu.API\bin\Debug\net5.0\Microsoft.Bcl.AsyncInterfaces.dll
+C:\Users\HFET\source\repos\Resqu.API\Resqu.API\bin\Debug\net5.0\BouncyCastle.Crypto.dll
+C:\Users\HFET\source\repos\Resqu.API\Resqu.API\bin\Debug\net5.0\System.Text.Json.dll

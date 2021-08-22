@@ -658,6 +658,7 @@ namespace Resqu.Core.Dto
         public string Status { get; set; }
         public string Response { get; set; }
         public string AccessToken { get; set; }
+        public string FirebaseToken { get; set; }
         public string RefreshToken { get; set; }
     }
 

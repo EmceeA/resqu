@@ -39,6 +39,7 @@ namespace Resqu.API.Controllers
             {
                 result.token = jwtResult.AccessToken;
                 result.resettoken = jwtResult.RefreshToken;
+                result.firebase_token = await _vendor.GenerateFirebaseToken();
                 return Ok(result);
             }
             return BadRequest(result);

@@ -40,6 +40,7 @@ namespace Resqu.Core.Dto
     {
         public string Response { get; set; }
         public string token { get; set; }
+        public string firebase_token { get; set; }
         public RefreshToken resettoken { get; set; }
         public VendorDetails VendorDetails { get; set; }
 
