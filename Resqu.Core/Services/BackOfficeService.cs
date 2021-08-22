@@ -105,6 +105,7 @@ namespace Resqu.Core.Services
                 FirstName = c.FirstName,
                 LastName = c.LastName,
                 PhoneNumber = c.PhoneNumber,
+                
             }).ToListAsync();
             if (banned.Count > 0)
             {

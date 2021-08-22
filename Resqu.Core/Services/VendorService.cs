@@ -27,8 +27,8 @@ namespace Resqu.Core.Services
             {
                 FirebaseApp.Create(new AppOptions()
                 {
-                    Credential = GoogleCredential.GetApplicationDefault(),
-                    ServiceAccountId = "my-client-id@my-project-id.iam.gserviceaccount.com",
+                    Credential = GoogleCredential.FromFile(@"C:\Users\HFET\source\repos\Resqu.API\Resqu.Core\File\rezq-project-37b56a01bbe5.json"),
+                    ServiceAccountId = "rezq-project@appspot.gserviceaccount.com",
                 });
                 var uid = Guid.NewGuid().ToString();
 
