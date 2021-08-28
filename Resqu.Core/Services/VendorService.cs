@@ -38,6 +38,9 @@ namespace Resqu.Core.Services
             catch (Exception ex)
             {
 
+                var uid = Guid.NewGuid().ToString();
+                string customToken = await FirebaseAuth.DefaultInstance.CreateCustomTokenAsync(uid);
+                return customToken;
                 return ex.Message;
             }
         }
