@@ -41,7 +41,6 @@ namespace Resqu.Core.Services
                 var uid = Guid.NewGuid().ToString();
                 string customToken = await FirebaseAuth.DefaultInstance.CreateCustomTokenAsync(uid);
                 return customToken;
-                return ex.Message;
             }
         }
 
