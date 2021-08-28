@@ -1527,20 +1527,22 @@ namespace Resqu.Core.Services
         {
             try
             {
+                var name  = FirebaseApp.DefaultInstance;
                 FirebaseApp.Create(new AppOptions()
                 {
                     Credential = GoogleCredential.FromFile(@"C:\Users\HFET\source\repos\Resqu.API\Resqu.Core\File\rezq-project-37b56a01bbe5.json"),
                     ServiceAccountId = "rezq-project@appspot.gserviceaccount.com",
                 });
-                var uid = Guid.NewGuid().ToString();
 
+                var uid = Guid.NewGuid().ToString();
                 string customToken = await FirebaseAuth.DefaultInstance.CreateCustomTokenAsync(uid);
                 return customToken;
             }
             catch (Exception ex)
             {
-
-                return ex.Message;
+                var uid = Guid.NewGuid().ToString();
+                string customToken = await FirebaseAuth.DefaultInstance.CreateCustomTokenAsync(uid);
+                return customToken;
             }
 
         }
