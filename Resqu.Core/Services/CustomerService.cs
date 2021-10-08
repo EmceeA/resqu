@@ -303,7 +303,12 @@ namespace Resqu.Core.Services
                             DateCreated = DateTime.Now,
                             WalletId = input.WalletId,
                             PhoneNumber = input.PhoneNumber,
-                            DedicatedNuban = ""
+                            DedicatedNuban = "",
+                            AccountName = "",
+                            Bank = "",
+                            CustomerCode = "",
+                            Email = ""
+
                         };
                         await _context.WalletInfos.AddAsync(walletInfom);
                         await _context.SaveChangesAsync();
@@ -327,7 +332,11 @@ namespace Resqu.Core.Services
                         DateCreated = DateTime.Now,
                         WalletId = input.WalletId,
                         PhoneNumber = input.PhoneNumber,
-                        DedicatedNuban = createDedicatedNuban.data.account_number
+                        DedicatedNuban = createDedicatedNuban.data.account_number,
+                        AccountName = createDedicatedNuban.data.customer.first_name + " " + createDedicatedNuban.data.customer.last_name,
+                        Bank = createDedicatedNuban.data.bank.name,
+                        CustomerCode = createDedicatedNuban.data.customer.customer_code,
+                        Email = createDedicatedNuban.data.customer.email
                     };
 
 
