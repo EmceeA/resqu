@@ -21,8 +21,12 @@ namespace Resqu.Core.Services
         {
             _context = context;
             _hosting = hosting;
+         
             _http = http;
         }
+
+
+        
         public async Task<UpdateCustomerResponseDto> BanCustomer(string phone)
         {
             var customer = await _context.Customers.Where(d => d.PhoneNumber == phone && d.IsDeleted == false).FirstOrDefaultAsync();

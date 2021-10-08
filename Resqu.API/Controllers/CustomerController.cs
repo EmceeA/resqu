@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNet.SignalR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -23,7 +24,6 @@ namespace Resqu.API.Controllers
         private readonly IJwtAuthManager _jwtAuthManager;
         private readonly ILogger<CustomerController> _logger;
         private readonly ResquContext _context;
-
         public CustomerController(ICustomer customer, IJwtAuthManager jwtAuthManager, ILogger<CustomerController> logger, IHttpContextAccessor accessor,ResquContext context)
         {
             _customer = customer;
@@ -32,6 +32,8 @@ namespace Resqu.API.Controllers
             _accessor = accessor;
             _context = context;
         }
+
+       
 
         [HttpPost]
         public async Task<IActionResult> CustomerSignUp(CustomerSignUpRequestDto signUp)
@@ -50,7 +52,19 @@ namespace Resqu.API.Controllers
 
 
         [HttpPost]
-        [Authorize]
+        public async Task<IActionResult> UpdateWalletBalance(UpdateWalletBalanceDto  balanceDto)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            var register = await _customer.UpdateWalletBalance(balanceDto);
+            return Ok(register);
+        }
+
+
+        [HttpPost]
+        [Microsoft.AspNetCore.Authorization.Authorize]
         public ActionResult Logout()
         {
             var phone = User.Identity.Name;
@@ -63,7 +77,7 @@ namespace Resqu.API.Controllers
 
 
         [HttpPost]
-        [Authorize]
+        [Microsoft.AspNetCore.Authorization.Authorize]
         public async Task<ActionResult> ActivateProfile(UpdateCustomerRequestDto requestDto)
         {
             var phone = User.Identity.Name;
@@ -140,6 +154,16 @@ namespace Resqu.API.Controllers
             }
 
             var result = await _customer.BookService(service);
+            //await _hub.Clients.All.CustomerRequestDetails("customerrequestdetails", result.VendorPhone);
+            return Ok(result);
+        }
+
+        [HttpPost]
+
+        public async Task<IActionResult> DeleteCard(long id)
+        {
+            var result = await _customer.DeleteCard(id);
+            //await _hub.Clients.All.CustomerRequestDetails("customerrequestdetails", result.VendorPhone);
             return Ok(result);
         }
 
@@ -297,9 +321,9 @@ namespace Resqu.API.Controllers
 
 
         [HttpGet]
-        public async Task<IActionResult> GenerateFirebaseToken()
+        public async Task<IActionResult> GenerateFirebaseToken(string customerGuid)
         {
-            var token = await _customer.GenerateFirebaseToken();
+            var token = await _customer.GenerateFirebaseToken(customerGuid);
             return Ok(token);
         }
 
@@ -377,6 +401,40 @@ namespace Resqu.API.Controllers
             return Ok(balance);
         }
 
+
+        [HttpPost]
+        public async Task<IActionResult> GetCustomerWalletBalance(CustomerWalletBalanceRequestDto walletBalance)
+        {
+            var balance = await _customer.GetCustomerWalletBalance(walletBalance);
+            return Ok(balance);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> MakeServicePayment(PayVendorDto pay)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            var balance = await _customer.PayVendor(pay);
+            return Ok(balance);
+        }
+
+
+
+
+
+
+        [HttpPost]
+        public async Task<IActionResult> AddCard(AddCardDto addCardDto)
+        {
+            var card = await _customer.RegisterCard(addCardDto);
+            if (card.ResponseStatus == true && card.ResponseMessage == "Card Successfully Added")
+            {
+                return Ok(card);
+            }
+            return BadRequest(card);
+        }
         [HttpPost]
         public async Task<IActionResult> CustomerSignIn(CustomerSignInRequest signUp)
         {
@@ -403,7 +461,7 @@ namespace Resqu.API.Controllers
                     FirstName = register.FirstName,
                     LastName = register.LastName,
                     Response = register.Response,
-                    FirebaseToken = await _customer.GenerateFirebaseToken(),
+                    FirebaseToken = await _customer.GenerateFirebaseToken(register.CustomerGuid),
                     Status = register.Status
 
                 }); ;

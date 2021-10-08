@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Resqu.Core.Dto;
 using Resqu.Core.Interface;
+using Resqu.Core.Services;
 using Resqu.Core.Utility;
 using System;
 using System.Collections.Generic;
@@ -20,7 +21,7 @@ namespace Resqu.API.Controllers
         private readonly IBackOffice _customer;
         private readonly IJwtAuthManager _jwtAuthManager;
         private readonly ILogger<BackOfficeController> _logger;
-        public BackOfficeController(IBackOffice customer, IJwtAuthManager jwtAuthManager, ILogger<BackOfficeController> logger)
+        public BackOfficeController(IBackOffice customer,IJwtAuthManager jwtAuthManager, ILogger<BackOfficeController> logger)
         {
             _customer = customer;
             _jwtAuthManager = jwtAuthManager;
@@ -39,6 +40,9 @@ namespace Resqu.API.Controllers
             }
             return BadRequest(banCustomer);
         }
+
+
+        
 
         [HttpGet]
         public async Task<IActionResult> GetDetailsById(int? id)

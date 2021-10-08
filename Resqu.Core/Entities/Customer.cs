@@ -49,15 +49,18 @@ namespace Resqu.Core.Entities
         
 
         public string PhoneNumber { get; set; }
+        public string CustomerCode { get; set; }
 
         public string EmailAddress { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
+        public string WalletId { get; set; }
         public string Gender { get; set; }
         public string ProfilePicture { get; set; }
         public int AccountId { get; set; }
         public string RegulatoryIndentity { get; set; }
         public string Pin { get; set; }
+        public string CustomerGuid { get; set; }
         public bool IsCustomerCreated  { get; set; }
         public bool IsDedicatedCreated  { get; set; }
         public bool IsOtpVerified  { get; set; }

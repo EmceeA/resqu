@@ -16,7 +16,7 @@ namespace Resqu.Core.Migrations
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
-                .HasAnnotation("ProductVersion", "5.0.6")
+                .HasAnnotation("ProductVersion", "5.0.5")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
             modelBuilder.Entity("Resqu.Core.Entities.BackOfficeRole", b =>
@@ -94,6 +94,42 @@ namespace Resqu.Core.Migrations
                     b.HasIndex("BackOfficeRoleId");
 
                     b.ToTable("BackOfficeUsers");
+                });
+
+            modelBuilder.Entity("Resqu.Core.Entities.Card", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<bool>("Active")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("CardNo")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("CustomerId")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Cvv")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("DateCreated")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("ExpiryMonth")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ExpiryYear")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("HolderName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Cards");
                 });
 
             modelBuilder.Entity("Resqu.Core.Entities.CardPayment", b =>
@@ -190,6 +226,42 @@ namespace Resqu.Core.Migrations
                     b.ToTable("CashPayments");
                 });
 
+            modelBuilder.Entity("Resqu.Core.Entities.CompanyCharge", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<double>("Amount")
+                        .HasColumnType("float");
+
+                    b.Property<string>("CompanyWallet")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("CustomerId")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("CustomerName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("DateCreated")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("DestinationWallet")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PhoneNumber")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("WalletId")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("CompanyCharges");
+                });
+
             modelBuilder.Entity("Resqu.Core.Entities.Customer", b =>
                 {
                     b.Property<int>("Id")
@@ -201,6 +273,12 @@ namespace Resqu.Core.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("CustomerCode")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("CustomerGuid")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("DateCreated")
@@ -260,12 +338,63 @@ namespace Resqu.Core.Migrations
                     b.Property<string>("RegulatoryIndentity")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("WalletId")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<bool>("isVerified")
                         .HasColumnType("bit");
 
                     b.HasKey("Id");
 
                     b.ToTable("Customers");
+                });
+
+            modelBuilder.Entity("Resqu.Core.Entities.CustomerInflow", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<double>("Amount")
+                        .HasColumnType("float");
+
+                    b.Property<string>("Channel")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<double>("CurrentBalance")
+                        .HasColumnType("float");
+
+                    b.Property<string>("CustomerId")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("CustomerName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("DateCreated")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Narration")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PhoneNumber")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<double>("PreviousBalance")
+                        .HasColumnType("float");
+
+                    b.Property<string>("TransactionType")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("TransactionTypeDescription")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("WalletId")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("CustomerInflows");
                 });
 
             modelBuilder.Entity("Resqu.Core.Entities.CustomerRequestService", b =>
@@ -429,6 +558,45 @@ namespace Resqu.Core.Migrations
                     b.HasIndex("GetCustomerId");
 
                     b.ToTable("Otps");
+                });
+
+            modelBuilder.Entity("Resqu.Core.Entities.PaymentHistory", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<double>("Amount")
+                        .HasColumnType("float");
+
+                    b.Property<string>("CustomerId")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("CustomerName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("DateCreated")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("DestinationWallet")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Narration")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PhoneNumber")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Status")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("WalletId")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("PaymentHistorys");
                 });
 
             modelBuilder.Entity("Resqu.Core.Entities.Product", b =>
@@ -1254,6 +1422,39 @@ namespace Resqu.Core.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Wallets");
+                });
+
+            modelBuilder.Entity("Resqu.Core.Entities.WalletInfo", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<double>("Balance")
+                        .HasColumnType("float");
+
+                    b.Property<string>("CustomerId")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("CustomerName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("DateCreated")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("DedicatedNuban")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PhoneNumber")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("WalletId")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("WalletInfos");
                 });
 
             modelBuilder.Entity("Resqu.Core.Entities.WalletPayment", b =>

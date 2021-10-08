@@ -19,9 +19,13 @@ namespace Resqu.Core.Interface
         Task<CustomerSignInResponse> SignInCustomer(CustomerSignInRequest signInModel);
        
         Task<UpdateCustomerResponseDto> ActivateCustomerProfile(UpdateCustomerRequestDto requestDto);
+        Task<UpdateCustomerResponseDto> UpdateWalletBalance(UpdateWalletBalanceDto balanceDto);
         bool DebitCredit(decimal backOfficeCost, decimal vendorCost, string backOfficeWallet, string destinationWallet, string sourceWallet, decimal totalAmount);
         Task<ServiceResponseDto> BookService(ServiceDto service);
-
+        Task<AddCardResponse> RegisterCard(AddCardDto addCard);
+        Task<AddCardResponse> DeleteCard(long id);
+        Task<AddCardResponse> PayVendor(PayVendorDto payVendor);
+        Task<WalletBalanceResponseDto> GetCustomerWalletBalance(CustomerWalletBalanceRequestDto walletBalance);
         Task<CustomerRequestResponseDto> CustomerRequestDetails(string vendorId);
         Task<float> GetTravelTime(float distance);
         Task<AcceptRequestDto> AcceptRequest(string bookingId);
@@ -56,7 +60,7 @@ namespace Resqu.Core.Interface
         Task<List<ProductListDto>> ProductList();
         Task<List<ServiceCategoryListDto>> ServiceCategoryList();
         Task<List<ServiceCategoryDto>> ServiceCategoryByExpertise(int expertiseId);
-        Task<string> GenerateFirebaseToken();
+        Task<string> GenerateFirebaseToken(string customerGuid);
     }
 
     public interface IVendor

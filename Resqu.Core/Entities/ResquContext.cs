@@ -16,11 +16,16 @@ namespace Resqu.Core.Entities
         public DbSet<ServiceType> ServiceTypes { get; set; }
         public DbSet<VendorProcessService> VendorProcessServices { get; set; }
         public DbSet<CustomerRequestService> CustomerRequestServices { get; set; }
+        public DbSet<Card> Cards { get; set; }
         public DbSet<VendorProcessServiceType> VendorProcessServiceTypes { get; set; }
         public DbSet<VendorSpecialization> VendorSpecializations { get; set; }
         public DbSet<Customer> Customers { get; set; }
+        public DbSet<WalletInfo> WalletInfos { get; set; }
+        public DbSet<CustomerInflow> CustomerInflows { get; set; }
         public DbSet<BackOfficeRole> BackOfficeRoles { get; set; }
         public DbSet<BackOfficeUser> BackOfficeUsers { get; set; }
+        public DbSet<CompanyCharge> CompanyCharges { get; set; }
+        public DbSet<PaymentHistory> PaymentHistorys { get; set; }
         public DbSet<Otp> Otps { get; set; }
         public DbSet<Vendor> Vendors { get; set; }
         public DbSet<VendorServiceSubCategory> VendorServiceSubCategories { get; set; }

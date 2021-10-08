@@ -89,3 +89,4 @@ C:\Users\HFET\source\repos\Resqu.API\Resqu.API\bin\Debug\net5.0\jose-jwt.dll
 C:\Users\HFET\source\repos\Resqu.API\Resqu.API\bin\Debug\net5.0\Microsoft.Bcl.AsyncInterfaces.dll
 C:\Users\HFET\source\repos\Resqu.API\Resqu.API\bin\Debug\net5.0\BouncyCastle.Crypto.dll
 C:\Users\HFET\source\repos\Resqu.API\Resqu.API\bin\Debug\net5.0\System.Text.Json.dll
+C:\Users\HFET\source\repos\Resqu.API\Resqu.API\bin\Debug\net5.0\System.Net.WebSockets.WebSocketProtocol.dll

@@ -21,6 +21,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.SignalR;
 
 namespace Resqu.API
 {
@@ -37,6 +38,7 @@ namespace Resqu.API
         public void ConfigureServices(IServiceCollection services)
         {
             //services.AddSession();
+            //services.AddSignalR();
             services.AddControllers();
             services.AddDbContext<ResquContext>(options => options.UseSqlServer(Configuration.GetConnectionString("ResquContext")));
             services.AddScoped<ICustomer, CustomerService>();
@@ -47,6 +49,7 @@ namespace Resqu.API
             services.AddSingleton<IJwtAuthManager, JwtAuthManager>();
             services.AddScoped<IOtp, OtpService>();
             services.AddScoped<IWallet, WalletService>();
+            //services.AddScoped<IRequestHub, RequestHub>();
             services.AddScoped<ICacheService, RedisCacheService>();
             services.AddSingleton<IConnectionMultiplexer>(x => ConnectionMultiplexer.Connect(Configuration.GetSection("Redis:Server").Value));
 
@@ -130,6 +133,7 @@ namespace Resqu.API
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+                //endpoints.MapHub<RequestHub>("/requestHub");
             });
         }
     }

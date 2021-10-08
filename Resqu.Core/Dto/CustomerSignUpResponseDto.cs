@@ -47,6 +47,16 @@ namespace Resqu.Core.Dto
         public string Email { get; set; }
     }
 
+    public class UpdateWalletBalanceDto
+    {
+        [Required]
+        public string CustomerId { get; set; }
+        [Required]
+        public double Amount { get; set; }
+        [Required]
+        public string Channel { get; set; }
+    }
+
     public class Vendor
     {
 
@@ -85,6 +95,13 @@ namespace Resqu.Core.Dto
 
     }
 
+    public class CustomerWalletBalanceRequestDto
+    {
+        public string UserName { get; set; }
+        public string Password { get; set; }
+
+    }
+
     public class PayoutRequestDto
     {
         public string BankName { get; set; }
@@ -107,6 +124,7 @@ namespace Resqu.Core.Dto
         public string FullName { get; set; }
         public string UserId { get; set; }
         public decimal Balance { get; set; }
+        public string MobileNo { get; set; }
         public string Response { get; set; }
         public bool Status { get; set; }
 
@@ -651,6 +669,7 @@ namespace Resqu.Core.Dto
         public string PhoneNumber { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
+        public string CustomerGuid { get; set; }
 
         public string EmailAddress { get; set; }
        // public string RegulatoryIdentity { get; set; }

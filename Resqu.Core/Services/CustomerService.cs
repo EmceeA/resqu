@@ -42,6 +42,55 @@ namespace Resqu.Core.Services
             _http = http;
         }
 
+
+        public async Task<AddCardResponse> RegisterCard(AddCardDto addCard)
+        {
+            try
+            {
+                var card = new Card
+                {
+                    Active = false,
+                    CardNo = addCard.CardNo,
+                    CustomerId = _http.HttpContext.Session.GetString("customerPhone"),
+                    Cvv = addCard.Cvv,
+                    DateCreated = DateTime.Now,
+                    ExpiryMonth = addCard.ExpiryMonth,
+                    ExpiryYear = addCard.ExpiryYear,
+                    HolderName = addCard.HolderName,
+                };
+
+                var checkExist = _context.Cards.Where(e => e.CustomerId == card.CustomerId && e.CardNo == card.CardNo).Any();
+                if (checkExist)
+                {
+                    return new AddCardResponse
+                    {
+                        ResponseCode = "23",
+                        ResponseMessage = "Card Already Added",
+                        ResponseStatus = false
+                    };
+                }
+                _context.Add(card);
+
+                await _context.SaveChangesAsync();
+                return new AddCardResponse
+                {
+                    ResponseCode = "00",
+                    ResponseMessage = "Card Successfully Added",
+                    ResponseStatus = true
+                };
+            }
+            catch (Exception ex)
+            {
+                return new AddCardResponse
+                {
+                    ResponseCode = "99",
+                    ResponseMessage = "Error Card Not Added",
+                    ResponseStatus = true
+                };
+                throw;
+            }
+        }
+
         public async Task<CustomerSignInResponse> SignInCustomer(CustomerSignInRequest signInModel)
         {
             CustomerSignInResponse response = null;
@@ -145,6 +194,7 @@ namespace Resqu.Core.Services
             _context.SaveChanges();
             return new CustomerSignInResponse
             {
+                CustomerGuid = getUserDetail.CustomerGuid,
                 EmailAddress = getUserDetail.EmailAddress,
                 FirstName = getUserDetail.FirstName,
                 LastName = getUserDetail.LastName,
@@ -211,13 +261,22 @@ namespace Resqu.Core.Services
                         _context.SaveChanges();
                     }
 
-                   
+
 
                     //Email(signUpModel.Email, $"Your One Time Password is {oneTimePassword.OtpNumber}");
                     //var getOtpByNumber = await _context.Otps.Where(d => d.Phone == signUpModel.PhoneNumber).Select(c => c.OtpNumber).FirstOrDefaultAsync();
                     //if (getOtpByNumber != null && getOtpByNumber == signUpModel.Otp)
                     //{
-                    await _context.Customers.AddAsync(new Resqu.Core.Entities.Customer
+
+                    var createDedicatedNuban = await CreateDedicatedNubanAccount(new DedicatedNubanAccountRequest
+                    {
+                        bankName = _config.GetSection("WalletAPI:DedicatedBank").Value,
+                        customer = createDedicatedAccount.data.id
+                    });
+                    
+
+                    
+                    var input = new Resqu.Core.Entities.Customer
                     {
                         FirstName = signUpModel.FirstName,
                         LastName = signUpModel.LastName,
@@ -227,14 +286,54 @@ namespace Resqu.Core.Services
                         AccountId = createDedicatedAccount.data.id,
                         EmailAddress = signUpModel.Email,
                         IsCustomerCreated = true,
-                        IsDedicatedCreated = false
-                    });
-                    //var dedicated = CreateDedicatedNubanAccount(new DedicatedNubanAccountRequest
-                    //{
-                    //    bankName = "wema-bank",
-                    //    customer = createDedicatedAccount.data.id
-                    //});
+                        IsDedicatedCreated = false,
+                        CustomerGuid = Guid.NewGuid().ToString(),
+                        WalletId = "REZQ" + Guid.NewGuid().ToString().Replace("-", "").ToUpper(),
+                        CustomerCode = createDedicatedAccount.data.customer_code
+                    };
+                    await _context.Customers.AddAsync(input);
+
+                    if (createDedicatedNuban.status == false)
+                    {
+                        var walletInfom = new WalletInfo
+                        {
+                            Balance = 0.00,
+                            CustomerId = input.AccountId.ToString(),
+                            CustomerName = input.FirstName + " " + input.LastName,
+                            DateCreated = DateTime.Now,
+                            WalletId = input.WalletId,
+                            PhoneNumber = input.PhoneNumber,
+                            DedicatedNuban = ""
+                        };
+                        await _context.WalletInfos.AddAsync(walletInfom);
+                        await _context.SaveChangesAsync();
+                        return new CustomerSignUpResponseDto
+                        {
+                            FirstName = signUpModel.FirstName,
+                            LastName = signUpModel.LastName,
+                            PhoneNumber = signUpModel.PhoneNumber,
+                            EmailAddress = signUpModel.Email,
+                            Status = "Success"
+                        };
+                    }
+
+
+
+                    var walletInfo = new WalletInfo
+                    {
+                        Balance = 0.00,
+                        CustomerId = input.AccountId.ToString(),
+                        CustomerName = input.FirstName + " " + input.LastName,
+                        DateCreated = DateTime.Now,
+                        WalletId = input.WalletId,
+                        PhoneNumber = input.PhoneNumber,
+                        DedicatedNuban = createDedicatedNuban.data.account_number
+                    };
+
+
+                    await _context.WalletInfos.AddAsync(walletInfo);
                     await _context.SaveChangesAsync();
+
                     return new CustomerSignUpResponseDto
                     {
                         FirstName = signUpModel.FirstName,
@@ -243,7 +342,7 @@ namespace Resqu.Core.Services
                         EmailAddress = signUpModel.Email,
                         Status = "Success"
                     };
-                    //}
+                   
                 }
                 
                 //09064615283
@@ -254,11 +353,14 @@ namespace Resqu.Core.Services
             }
             catch (Exception ex)
             {
-
-                throw;
+                return new CustomerSignUpResponseDto
+                {
+                    Status = ex.Message
+                };
             }
-            
         }
+
+        
 
 
 
@@ -943,6 +1045,32 @@ namespace Resqu.Core.Services
             return balance;
         }
 
+
+        public async Task<WalletBalanceResponseDto> GetCustomerWalletBalance(CustomerWalletBalanceRequestDto walletBalance)
+        {
+            var customerDetails = await _context.Customers.Where(s => s.EmailAddress == walletBalance.UserName  && s.Pin == EncodePin(walletBalance.Password)).SingleOrDefaultAsync();
+            if (customerDetails == null)
+            {
+                return new WalletBalanceResponseDto
+                {
+                    Response = "Wallet does not exist",
+                    Status = false
+                };
+            }
+
+            var balance =  await _context.WalletInfos.Where(c => c.PhoneNumber == customerDetails.PhoneNumber).Select(e => new WalletBalanceResponseDto
+            {
+                Balance = Convert.ToDecimal(e.Balance),
+                FullName = e.CustomerName,
+                Response = "Success",
+                Status = true,
+                UserId = e.CustomerId,
+                WalletNo = e.WalletId,
+                MobileNo = e.PhoneNumber
+            }).FirstOrDefaultAsync();
+            return balance;
+        }
+
         public async Task<PayoutResponseDto> PayOut(PayoutRequestDto payout)
         {
 
@@ -955,7 +1083,6 @@ namespace Resqu.Core.Services
             var restRequest = new RestRequest(Method.POST);
             restRequest.AddHeader("Authorization", $"Bearer {_config.GetSection("WalletAPI:SecretKey").Value}");
             restRequest.AddHeader("Content-Type", "application/json");
-            restRequest.AddHeader("Cookie", "sails.sid=s%3ACtTz966NlJosAffqG13riHFNP8woUYuc.lrEQgc4u5itWxaAQoMU9zyVPSpDkEOB0vylLHA3HhwU");
             var reqestParams = new
             {
                 email = request.Email,
@@ -970,7 +1097,7 @@ namespace Resqu.Core.Services
 
         public async Task<DedicatedNubanAccountResponse> CreateDedicatedNubanAccount(DedicatedNubanAccountRequest request)
         {
-            var client = new RestClient(_config.GetSection("WalletAPI:CreateAccount").Value);
+            var client = new RestClient(_config.GetSection("WalletAPI:CreateDedicatedNuban").Value);
             var restRequest = new RestRequest(Method.POST);
             restRequest.AddHeader("Authorization", $"Bearer {_config.GetSection("WalletAPI:SecretKey").Value}");
             restRequest.AddHeader("Content-Type", "application/json");
@@ -1523,11 +1650,16 @@ namespace Resqu.Core.Services
             _context.SaveChanges();
             return true;
         }
-        public async Task<string> GenerateFirebaseToken()
+
+        public async Task<string> SendNotification(string message)
         {
             try
             {
-                var name  = FirebaseApp.DefaultInstance;
+                var name = FirebaseApp.DefaultInstance;
+
+                var dev = new FirebaseAdmin.Messaging.Notification();
+                dev.Body = message;
+                dev.Title = "SERVICE REQUEST";
                 FirebaseApp.Create(new AppOptions()
                 {
                     Credential = GoogleCredential.FromFile(@"C:\Users\HFET\source\repos\Resqu.API\Resqu.Core\File\rezq-project-37b56a01bbe5.json"),
@@ -1544,6 +1676,186 @@ namespace Resqu.Core.Services
                 string customToken = await FirebaseAuth.DefaultInstance.CreateCustomTokenAsync(uid);
                 return customToken;
             }
+        }
+        public async Task<string> GenerateFirebaseToken(string customerGuid)
+        {
+            try
+            {
+                var name  = FirebaseApp.DefaultInstance;
+                var dev = new FirebaseAdmin.Messaging.Notification();
+                
+                FirebaseApp.Create(new AppOptions()
+                {
+                    Credential = GoogleCredential.FromFile(@"C:\Users\HFET\source\repos\Resqu.API\Resqu.Core\File\rezq-project-37b56a01bbe5.json"),
+                    ServiceAccountId = "rezq-project@appspot.gserviceaccount.com",
+                });
+
+                string customToken = await FirebaseAuth.DefaultInstance.CreateCustomTokenAsync(customerGuid);
+                return customToken;
+            }
+            catch (Exception ex)
+            {
+                var uid = Guid.NewGuid().ToString();
+                string customToken = await FirebaseAuth.DefaultInstance.CreateCustomTokenAsync(uid);
+                return customToken;
+            }
+
+        }
+
+        public async Task<AddCardResponse> DeleteCard(long id)
+        {
+            var checkCard = _context.Cards.Where(e => e.Id == id).FirstOrDefault();
+            if (checkCard == null)
+            {
+                return new AddCardResponse
+                {
+                    ResponseCode = "99",
+                    ResponseMessage = "Card Does not Exist",
+                    ResponseStatus = false
+                };
+            }
+
+            _context.Cards.Remove(checkCard);
+            await _context.SaveChangesAsync();
+            return new AddCardResponse
+            {
+                ResponseCode = "00",
+                ResponseMessage = "Card Deleted Successfully",
+                ResponseStatus = true
+            };
+        }
+
+        public async Task<UpdateCustomerResponseDto> UpdateWalletBalance(UpdateWalletBalanceDto balanceDto)
+        {
+
+            var getWalletDetails =await _context.WalletInfos.Where(e => e.CustomerId == balanceDto.CustomerId).FirstOrDefaultAsync();
+            if (getWalletDetails == null)
+            {
+                return new UpdateCustomerResponseDto
+                {
+                    Message = "Account does not exist",
+                    Status = false
+                };
+            }
+
+            var customerInflow = new CustomerInflow
+            {
+                Amount = balanceDto.Amount,
+                Channel = balanceDto.Channel,
+                CustomerId = balanceDto.CustomerId,
+                CustomerName = getWalletDetails.CustomerName,
+                DateCreated = DateTime.Now,
+                PhoneNumber = getWalletDetails.PhoneNumber,
+                TransactionType = TransactionTypes.INFLOW,
+                TransactionTypeDescription = TransactionTypes.CREDIT,
+                Narration = balanceDto.Channel + "-" + balanceDto.Amount.ToString() + "-" +balanceDto.CustomerId + "-"+ Guid.NewGuid().ToString().Replace("-","").ToUpper(),
+                WalletId = getWalletDetails.WalletId
+            };
+            customerInflow.CurrentBalance += balanceDto.Amount;
+            await _context.CustomerInflows.AddAsync(customerInflow);
+
+
+            await _context.SaveChangesAsync();
+
+            getWalletDetails.Balance += balanceDto.Amount;
+
+            await _context.SaveChangesAsync();
+
+            return new UpdateCustomerResponseDto
+            {
+                Message = "Success",
+                Status = true
+            };
+
+
+        }
+
+        
+
+        public async Task<AddCardResponse> PayVendor(PayVendorDto payVendor)
+        {
+            var sourceWallet = await _context.WalletInfos.Where(e => e.WalletId == payVendor.SourceWallet).FirstOrDefaultAsync();
+
+            if (sourceWallet == null)
+            {
+                return new AddCardResponse
+                {
+                    ResponseCode = ResponseCodes.Response33Code,
+                    ResponseMessage = ResponseCodes.Response33Message.Replace("@object","Source Wallet"),
+                };
+            }
+
+
+            if (sourceWallet.Balance < payVendor.Amount)
+            {
+                return new AddCardResponse
+                {
+                    ResponseCode = ResponseCodes.Response88Code,
+                    ResponseMessage = ResponseCodes.Response88Message,
+                };
+            }
+
+
+            var destinationWallet = await _context.WalletInfos.Where(e => e.WalletId == payVendor.DestinationWallet).FirstOrDefaultAsync();
+
+
+            if (destinationWallet == null)
+            {
+                return new AddCardResponse
+                {
+                    ResponseCode = ResponseCodes.Response33Code,
+                    ResponseMessage = ResponseCodes.Response33Message.Replace("@object", "Destination Wallet"),
+                };
+            }
+
+            //
+            //Call PayStack API here to do debit and credit
+            
+            sourceWallet.Balance -= payVendor.Amount;
+            destinationWallet.Balance += payVendor.Amount;
+            var customer = new CustomerInflow
+            {
+                Amount = payVendor.Amount,
+                Channel = "REZQ",
+                CurrentBalance = sourceWallet.Balance,
+                CustomerId = sourceWallet.CustomerId,
+                CustomerName = sourceWallet.CustomerName,
+                DateCreated = DateTime.Now,
+                Narration = "REZQ" + "-" + $"{Guid.NewGuid().ToString().Replace("-", "").ToUpper()}-{sourceWallet.CustomerId}",
+                PhoneNumber = sourceWallet.PhoneNumber,
+                TransactionType = TransactionTypes.CREDIT,
+                TransactionTypeDescription = TransactionTypes.OUTFLOW,
+                WalletId = sourceWallet.WalletId
+            };
+
+
+            var vendor = new CustomerInflow
+            {
+                Amount = payVendor.Amount,
+                Channel = "REZQ",
+                CurrentBalance = destinationWallet.Balance,
+                CustomerId = destinationWallet.CustomerId,
+                CustomerName = destinationWallet.CustomerName,
+                DateCreated = DateTime.Now,
+                Narration = "REZQ" + "-" + $"{Guid.NewGuid().ToString().Replace("-", "").ToUpper()}-{sourceWallet.CustomerId}",
+                PhoneNumber = destinationWallet.PhoneNumber,
+                TransactionType = TransactionTypes.DEBIT,
+                TransactionTypeDescription = TransactionTypes.INFLOW,
+                WalletId = destinationWallet.WalletId
+            };
+
+            List<CustomerInflow> customers = new List<CustomerInflow>();
+            customers.Add(customer);
+            customers.Add(vendor);
+
+            await _context.CustomerInflows.AddRangeAsync(customers);
+            await _context.SaveChangesAsync();
+
+            return new AddCardResponse
+            {
+                ResponseCode = ResponseCodes.Response00Code,
+                ResponseMessage = ResponseCodes.Response00Message
+            };
 
         }
     }
