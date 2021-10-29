@@ -224,7 +224,8 @@ namespace Resqu.Core.Services
                 {
                     Email = signUpModel.Email,
                     FirstName = signUpModel.FirstName,
-                    LastName = signUpModel.LastName
+                    LastName = signUpModel.LastName,
+                    Phone = signUpModel.PhoneNumber
                 });
                 if (createDedicatedAccount.message != "Customer created" && createDedicatedAccount.status != true)
                 {
@@ -267,13 +268,21 @@ namespace Resqu.Core.Services
                     //var getOtpByNumber = await _context.Otps.Where(d => d.Phone == signUpModel.PhoneNumber).Select(c => c.OtpNumber).FirstOrDefaultAsync();
                     //if (getOtpByNumber != null && getOtpByNumber == signUpModel.Otp)
                     //{
-
-                    var createDedicatedNuban = await CreateDedicatedNubanAccount(new DedicatedNubanAccountRequest
+                    var req = new DedicatedNubanAccountRequest
                     {
-                        bankName = _config.GetSection("WalletAPI:DedicatedBank").Value,
+                        preferred_bank = _config.GetSection("WalletAPI:DedicatedBank").Value,
                         customer = createDedicatedAccount.data.id
-                    });
-                    
+                    };
+                    var createDedicatedNuban = await CreateDedicatedNubanAccount(req);
+
+
+                    if (createDedicatedNuban.status == false)
+                    {
+                        return new CustomerSignUpResponseDto
+                        {
+                            Status = "Unable to Create a Dedicated Nuban Account",
+                        };
+                    }
 
                     
                     var input = new Resqu.Core.Entities.Customer
@@ -339,7 +348,14 @@ namespace Resqu.Core.Services
                         Email = createDedicatedNuban.data.customer.email
                     };
 
-
+                    var checkWalletInfo = _context.WalletInfos.Where(e => e.Email == input.EmailAddress && e.PhoneNumber == input.PhoneNumber).Any();
+                    if (checkWalletInfo)
+                    {
+                        return new CustomerSignUpResponseDto
+                        {
+                            Status = "User Wallet Already Exist"
+                        };
+                    }
                     await _context.WalletInfos.AddAsync(walletInfo);
                     await _context.SaveChangesAsync();
 
@@ -1095,8 +1111,9 @@ namespace Resqu.Core.Services
             var reqestParams = new
             {
                 email = request.Email,
-                firstName = request.FirstName,
-                lastName = request.LastName
+                first_name = request.FirstName,
+                last_name = request.LastName,
+                phone = request.Phone
             };
             var body = JsonConvert.SerializeObject(reqestParams);
             restRequest.AddParameter("application/json", body, ParameterType.RequestBody);
@@ -1110,7 +1127,7 @@ namespace Resqu.Core.Services
             var restRequest = new RestRequest(Method.POST);
             restRequest.AddHeader("Authorization", $"Bearer {_config.GetSection("WalletAPI:SecretKey").Value}");
             restRequest.AddHeader("Content-Type", "application/json");
-            restRequest.AddHeader("Cookie", "sails.sid=s%3ACtTz966NlJosAffqG13riHFNP8woUYuc.lrEQgc4u5itWxaAQoMU9zyVPSpDkEOB0vylLHA3HhwU");
+
             var body = JsonConvert.SerializeObject(request);
 
             restRequest.AddParameter("application/json", body, ParameterType.RequestBody);

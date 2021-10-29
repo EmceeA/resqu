@@ -166,6 +166,7 @@ namespace Resqu.Core.Dto
         public string Email { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
+        public string Phone { get; set; }
     }
 
     // Root myDeserializedClass = JsonConvert.DeserializeObject<Root>(myJsonResponse); 
@@ -248,7 +249,7 @@ namespace Resqu.Core.Dto
     }
     public class DedicatedNubanAccountRequest
     {
-        public string bankName { get; set; }
+        public string preferred_bank { get; set; }
         public int customer { get; set; }
     }
 
