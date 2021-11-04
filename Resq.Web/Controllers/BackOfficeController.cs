@@ -624,6 +624,56 @@ namespace Resq.Web.Controllers
             return View(allCustomer);
         }
 
+        public async Task<IActionResult> UpdateService(long? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var transaction = await _context.ResquServices.FindAsync(id);
+            if (transaction == null)
+            {
+                return NotFound();
+            }
+            return View(transaction);
+        }
+
+        // POST: BackOffice/Edit/5
+        // To protect from overposting attacks, enable the specific properties you want to bind to.
+        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> UpdateService(long id, [Bind("VendorAmount,PlatformCharge,TotalAmount,PhoneNumber,Status,TransactionRef,ServiceType,TransactionType,SubCategory,ServiceDate,CustomerName,VendorName,PaymentType,Id")] Transaction transaction)
+        {
+            if (id != transaction.Id)
+            {
+                return NotFound();
+            }
+
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    _context.Update(transaction);
+                    await _context.SaveChangesAsync();
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (!TransactionExists(transaction.Id))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+                return RedirectToAction(nameof(Index));
+            }
+            return View(transaction);
+        }
+
         public ActionResult VendorRequestHistory(int? id)
         {
             if (HttpContext.Session.GetString("userName") == null)

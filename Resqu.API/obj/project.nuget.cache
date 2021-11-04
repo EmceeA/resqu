@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "O2hKDuA3F4o2U0BJ4urn9s2zDVTAJAPWKJm9i3VHtVPj4SkiLC11lZW3u6Z4d/Q3fPxavKa+39vhdPs63qZOZA==",
+  "dgSpecHash": "cCutO5Caz7JtASwHfxxn4Unwi3Y8JJ2P/FL3UqHNHHOQrCa0RjquPgFSjIQTvrkEM4ZDzOu8MgCRVraO1Uc/Ww==",
   "success": true,
   "projectFilePath": "C:\\Users\\HFET\\source\\repos\\Resqu.API\\Resqu.API\\Resqu.API.csproj",
   "expectedPackageFiles": [
@@ -54,6 +54,7 @@
     "C:\\Users\\HFET\\.nuget\\packages\\microsoft.entityframeworkcore.design\\5.0.5\\microsoft.entityframeworkcore.design.5.0.5.nupkg.sha512",
     "C:\\Users\\HFET\\.nuget\\packages\\microsoft.entityframeworkcore.relational\\5.0.5\\microsoft.entityframeworkcore.relational.5.0.5.nupkg.sha512",
     "C:\\Users\\HFET\\.nuget\\packages\\microsoft.entityframeworkcore.sqlserver\\5.0.5\\microsoft.entityframeworkcore.sqlserver.5.0.5.nupkg.sha512",
+    "C:\\Users\\HFET\\.nuget\\packages\\microsoft.entityframeworkcore.tools\\5.0.1\\microsoft.entityframeworkcore.tools.5.0.1.nupkg.sha512",
     "C:\\Users\\HFET\\.nuget\\packages\\microsoft.extensions.apidescription.server\\3.0.0\\microsoft.extensions.apidescription.server.3.0.0.nupkg.sha512",
     "C:\\Users\\HFET\\.nuget\\packages\\microsoft.extensions.caching.abstractions\\5.0.0\\microsoft.extensions.caching.abstractions.5.0.0.nupkg.sha512",
     "C:\\Users\\HFET\\.nuget\\packages\\microsoft.extensions.caching.memory\\5.0.0\\microsoft.extensions.caching.memory.5.0.0.nupkg.sha512",

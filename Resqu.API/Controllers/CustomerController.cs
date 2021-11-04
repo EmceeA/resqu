@@ -387,14 +387,14 @@ namespace Resqu.API.Controllers
             return Ok(payment);
         }
 
-        [HttpGet]
+        [HttpPost]
         public async Task<IActionResult> TransferToWallet(TransferToWalletRequestDto transfer)
         {
             var walletTransfer = await _customer.TransferToWallet(transfer);
             return Ok(walletTransfer);
         }
 
-        [HttpGet]
+        [HttpPost]
         public async Task<IActionResult> GetWalletBalance(WalletBalanceRequestDto walletBalance)
         {
             var balance = await _customer.GetWalletBalance(walletBalance);
@@ -461,6 +461,7 @@ namespace Resqu.API.Controllers
                     FirstName = register.FirstName,
                     LastName = register.LastName,
                     Response = register.Response,
+                    CustomerGuid = register.CustomerGuid,
                     FirebaseToken = await _customer.GenerateFirebaseToken(register.CustomerGuid),
                     Status = register.Status
 

@@ -5,7 +5,6 @@
     Layout = "~/Views/Shared/_LayoutServices.cshtml";
 }
 
-
 <div class="main-content">
     <div class="container-fluid">
         <div class="row">
@@ -19,28 +18,28 @@
                     <div class="row align-items-center justify-content-between">
                         <div class="col-lg-4 col-xl-3">
                             @*<div class="row align-items-center">
-                                <div class="col-lg-3">
-                                    <h6>Filter:</h6>
-                                </div>
-                                <div class="col-lg-6 col-xl-5 px-0">
-                                    <div class="form-group mb-0">
-                                        <select class="filter-field"></select>
+                                    <div class="col-lg-3">
+                                        <h6>Filter:</h6>
                                     </div>
-                                </div>
-                            </div>*@
+                                    <div class="col-lg-6 col-xl-5 px-0">
+                                        <div class="form-group mb-0">
+                                            <select class="filter-field"></select>
+                                        </div>
+                                    </div>
+                                </div>*@
                         </div>
                         <div class="col-lg-3">
                             <h4 class="text-center">TOTAL: @Model.Count() Customers</h4>
                         </div>
                         <div class="col-lg-5 col-xl-5">
                             @*<div class="row">
-                                <div class="col-lg-8">
-                                    <input type="text" class="input-field-search">
-                                </div>
-                                <div class="col-lg-4">
-                                    <button class="btn btn-search">Search</button>
-                                </div>
-                            </div>*@
+                                    <div class="col-lg-8">
+                                        <input type="text" class="input-field-search">
+                                    </div>
+                                    <div class="col-lg-4">
+                                        <button class="btn btn-search">Search</button>
+                                    </div>
+                                </div>*@
                         </div>
                     </div>
                 </div>
@@ -51,18 +50,18 @@
             <div class="col-lg-12">
                 <div class="bg-white py-5 mb-5">
                     <div class="table-responsive">
-                        <table>
-                            <tbody>
+                        <!--<table>-->
+                            @*<tbody>
                                 <tr>
-                                    <td>Minimum age:</td>
+                                    <td>Start Date:</td>
                                     <td><input type="date" id="min" name="min"></td>
                                 </tr>
                                 <tr>
-                                    <td>Maximum age:</td>
+                                    <td>End Date:</td>
                                     <td><input type="date" id="max" name="max"></td>
                                 </tr>
-                            </tbody>
-                        </table>
+                            </tbody>*@
+                        <!--</table>-->
                         <table class="table table-vendors" id="table_id">
                             <thead>
                                 <tr>

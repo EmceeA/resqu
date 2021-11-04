@@ -72,7 +72,6 @@
 <div id="openpopup" style="display:none" class="modal"></div>
 <script>
     function details(id) {
-        alert("Details Clicked");
         $("#openpopup").show({effect:'fade',duration:1000});
         var detail = $("#openpopup");
         detail.load('/BackOffice/ServiceDetails?serviceId=' + id, function () {
