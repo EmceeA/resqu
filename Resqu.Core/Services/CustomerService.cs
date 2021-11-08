@@ -56,6 +56,22 @@ namespace Resqu.Core.Services
         }
 
 
+        public async Task<List<CardDetails>> GetCardByUserId(string phone)
+        {
+            List<CardDetails> cardDetails = new List<CardDetails>();
+            var cards = await _context.Cards.Where(e => e.CustomerId == phone).Select(s => new CardDetails
+            {
+                CardName = s.HolderName,
+                CardNo = s.CardNo.Replace(s.CardNo.Substring(5,5),"*"),
+                Cvv = s.Cvv,
+                ExpiryMonth = s.ExpiryMonth,
+                ExpiryYear = s.ExpiryYear,
+               
+
+            }).ToListAsync();
+            cardDetails.AddRange(cards);
+            return cardDetails;
+        }
         public async Task<AddCardResponse> RegisterCard(AddCardDto addCard)
         {
             try

@@ -401,7 +401,12 @@ namespace Resqu.API.Controllers
         }
 
 
-
+        [HttpGet]
+        public async Task<IActionResult> GetCardByUserId(string phone)
+        {
+            var card = await _customer.GetCardByUserId(phone);
+            return Ok(card);
+        }
 
 
 
@@ -415,6 +420,8 @@ namespace Resqu.API.Controllers
             }
             return BadRequest(card);
         }
+
+
         [HttpPost]
         public async Task<IActionResult> CustomerSignIn(CustomerSignInRequest signUp)
         {

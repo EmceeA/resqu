@@ -13,6 +13,16 @@ namespace Resqu.Core.Dto
         public string ResponseCode { get; set; }
         public bool ResponseStatus { get; set; }
     }
+
+    public class CardDetails
+    {
+        public string CardNo { get; set; }
+        public string CardName { get; set; }
+        public string Cvv { get; set; }
+        public string ExpiryMonth { get; set; }
+        public string ExpiryYear { get; set; }
+        
+    }
     public class AddCardDto
     {
         public string CardNo { get; set; }
