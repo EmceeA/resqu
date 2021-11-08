@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Resqu.Core.Dto;
 using Resqu.Core.Interface;
@@ -18,16 +20,76 @@ namespace Resqu.API.Controllers
         private readonly IVendor _vendor;
         private readonly ILogger<VendorController> _logger;
         private readonly IJwtAuthManager _jwtAuthManager;
-        public VendorController(IVendor vendor, ILogger<VendorController> logger, IJwtAuthManager jwtAuthManager)
+        private readonly IHttpContextAccessor _http;
+        public VendorController(IVendor vendor, ILogger<VendorController> logger, IJwtAuthManager jwtAuthManager, IHttpContextAccessor http)
         {
             _vendor = vendor;
             _logger = logger;
             _jwtAuthManager = jwtAuthManager;
+            _http = http;
         }
+
+
+        [HttpPost]
+        [Authorize]
+        public async Task<IActionResult> VendorGoOnline()
+        {
+            var mobileNo = _http.HttpContext.Session.GetString("mobileNo");
+            var online = await _vendor.GoOnline(mobileNo);
+            return Ok(online);
+        }
+
+        [HttpPost]
+        [Authorize]
+        public async Task<IActionResult> VendorGoOffline()
+        {
+            var mobileNo = _http.HttpContext.Session.GetString("mobileNo");
+            var online = await _vendor.GoOffline(mobileNo);
+            return Ok(online);
+        }
+
+        [HttpPost]
+        [Authorize]
+        public async Task<IActionResult> EndService(string bookingId)
+        {
+            var result = await _vendor.EndService(bookingId);
+            return Ok(result);
+        }
+
+
+        [HttpPost]
+        [Authorize]
+        public async Task<IActionResult> StartService(string bookingId)
+        {
+            var result = await _vendor.StartService(bookingId);
+            return Ok(result);
+        }
+
+
+
+        [HttpGet]
+        [Authorize]
+        public async Task<IActionResult> RejectRequest(string bookingId)
+        {
+            var result = await _vendor.RejectRequest(bookingId);
+            return Ok(result);
+        }
+
+        [HttpGet]
+        [Authorize]
+        public async Task<IActionResult> AcceptRequest(string bookingId)
+        {
+            var result = await _vendor.AcceptRequest(bookingId);
+            return Ok(result);
+        }
+
+
+
         [HttpPost]
         public async Task<IActionResult> VendorLogin(VendorLoginRequestDto vendorLogin)
         {
             var result = await _vendor.VendorLogin(vendorLogin);
+            _http.HttpContext.Session.SetString("mobileNo", result.VendorDetails.PhoneNo);
             var claims = new[]
         {
             new Claim(ClaimTypes.Name,vendorLogin.Phone),
@@ -45,4 +107,6 @@ namespace Resqu.API.Controllers
             return BadRequest(result);
         }
     }
+
+    
 }

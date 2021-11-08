@@ -45,4 +45,4 @@ namespace Resqu.Core.Dto
         public VendorDetails VendorDetails { get; set; }
 
     }
-}
+}       

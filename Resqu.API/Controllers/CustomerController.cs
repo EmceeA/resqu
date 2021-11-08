@@ -93,7 +93,7 @@ namespace Resqu.API.Controllers
         }
 
         [HttpPost]
-        //[Authorize]
+        [Microsoft.AspNetCore.Authorization.Authorize]
         public async Task<ActionResult> ValidateOtp(OtpDto requestDto)
         {
 
@@ -115,7 +115,7 @@ namespace Resqu.API.Controllers
 
 
         [HttpPost]
-        //[Authorize]
+        [Microsoft.AspNetCore.Authorization.Authorize]
         public async Task<ActionResult> GenerateOtp(string phoneNo)
         {
 
@@ -131,7 +131,7 @@ namespace Resqu.API.Controllers
         }
 
         [HttpPost]
-
+        [Microsoft.AspNetCore.Authorization.Authorize]
         public async Task<IActionResult> EstimatePrice(EstimatePriceRequestDto service)
         {
             if (!ModelState.IsValid)
@@ -145,7 +145,7 @@ namespace Resqu.API.Controllers
 
 
         [HttpPost]
-
+        [Microsoft.AspNetCore.Authorization.Authorize]
         public async Task<IActionResult> BookService(ServiceDto service)
         {
             if (!ModelState.IsValid)
@@ -159,7 +159,7 @@ namespace Resqu.API.Controllers
         }
 
         [HttpPost]
-
+        [Microsoft.AspNetCore.Authorization.Authorize]
         public async Task<IActionResult> DeleteCard(long id)
         {
             var result = await _customer.DeleteCard(id);
@@ -168,6 +168,7 @@ namespace Resqu.API.Controllers
         }
 
         [HttpPost]
+        [Microsoft.AspNetCore.Authorization.Authorize]
         public async Task<IActionResult> BookNow(string bookingId)
         {
             var result = await _customer.BookNow(bookingId);
@@ -201,43 +202,27 @@ namespace Resqu.API.Controllers
 
 
 
-        [HttpGet]
-        public async Task<IActionResult> AcceptRequest(string bookingId)
-        {
-            var result = await _customer.AcceptRequest(bookingId);
-            return Ok(result);
-        }
+        
 
 
-        [HttpGet]
-        public async Task<IActionResult> GoOffline(string phone)
-        {
-            var result = await _customer.GoOffline(phone);
-            return Ok(result);
-        }
+        //[HttpGet]
+        //public async Task<IActionResult> GoOffline(string phone)
+        //{
+        //    var result = await _customer.GoOffline(phone);
+        //    return Ok(result);
+        //}
 
-        [HttpGet]
-        public async Task<IActionResult> StartService(string bookingId)
-        {
-            var result = await _customer.StartService(bookingId);
-            return Ok(result);
-        }
+        
+
+        
 
 
-        [HttpGet]
-        public async Task<IActionResult> EndService(string bookingId)
-        {
-            var result = await _customer.EndService(bookingId);
-            return Ok(result);
-        }
-
-
-        [HttpGet]
-        public async Task<IActionResult> GoOnline(string phone)
-        {
-            var result = await _customer.GoOnline(phone);
-            return Ok(result);
-        }
+        //[HttpGet]
+        //public async Task<IActionResult> GoOnline(string phone)
+        //{
+        //    var result = await _customer.GoOnline(phone);
+        //    return Ok(result);
+        //}
 
         [HttpGet]
         public async Task<IActionResult> ServiceCategoryByExpertise(int expertiseId)
@@ -246,12 +231,7 @@ namespace Resqu.API.Controllers
             return Ok(result);
         }
 
-        [HttpGet]
-        public async Task<IActionResult> RejectRequest(string bookingId)
-        {
-            var result = await _customer.RejectRequest(bookingId);
-            return Ok(result);
-        }
+        
 
         [HttpGet]
         public async Task<IActionResult> GetLatitudeLongitudeByAddress(string address)
@@ -274,17 +254,17 @@ namespace Resqu.API.Controllers
             return Ok(result);
         }
 
-        [HttpPost]
-        public async Task<IActionResult> EndService(string bookingId, string paymentType)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
+        //[HttpPost]
+        //public async Task<IActionResult> EndService(string bookingId, string paymentType)
+        //{
+        //    if (!ModelState.IsValid)
+        //    {
+        //        return BadRequest(ModelState);
+        //    }
 
-            var result = await _customer.EndService(bookingId,paymentType);
-            return Ok(result);
-        }
+        //    var result = await _customer.EndService(bookingId,paymentType);
+        //    return Ok(result);
+        //}
 
         [HttpGet]
 
@@ -363,7 +343,7 @@ namespace Resqu.API.Controllers
             var payment = await _customer.MakePayment(bookingId);
             return Ok(payment);
         }
-
+            
 
         [HttpPost]
         public async Task<IActionResult> RateVendor(RateVendorDto rate)

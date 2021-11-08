@@ -28,10 +28,7 @@ namespace Resqu.Core.Interface
         Task<WalletBalanceResponseDto> GetCustomerWalletBalance(CustomerWalletBalanceRequestDto walletBalance);
         Task<CustomerRequestResponseDto> CustomerRequestDetails(string vendorId);
         Task<float> GetTravelTime(float distance);
-        Task<AcceptRequestDto> AcceptRequest(string bookingId);
-        Task<UpdateCustomerResponseDto> RejectRequest(string bookingId);
-        Task<UpdateCustomerResponseDto> GoOnline(string mobileNo);
-        Task<UpdateCustomerResponseDto> GoOffline(string mobileNo);
+        
         Task<RootObject> GetAddress(double lat, double lon);
         Task<Location> GetLatitudeLongitudeByAddress(string address);
 
@@ -50,12 +47,10 @@ namespace Resqu.Core.Interface
         Task<TransferToWalletResponseDto> TransferToWallet(TransferToWalletRequestDto transfer);
         Task<WalletBalanceResponseDto> GetWalletBalance(WalletBalanceRequestDto walletBalance);
         Task<PayoutResponseDto> PayOut(PayoutRequestDto payout);
-        Task<EndServiceDto> EndService(string bookingId,string paymentType);
+        //Task<EndServiceDto> EndService(string bookingId,string paymentType);
         Task<MakePaymentResponse> MakeCashPayment(string bookingId, string paymentType);
         Task<MakePaymentResponse> MakeCardPayment(string bookingId, string paymentType, MakeCardRequest cardRequest);
         Task<MakePaymentResponse> MakePayment(string bookingId);
-        Task<OtpConfirmationResponseDto> StartService(string bookingId);
-        Task<OtpConfirmationResponseDto> EndService(string bookingId);
         Task<List<ServiceListDto>> ServiceList();
         Task<List<ProductListDto>> ProductList();
         Task<List<ServiceCategoryListDto>> ServiceCategoryList();
@@ -65,12 +60,18 @@ namespace Resqu.Core.Interface
 
     public interface IVendor
     {
-        Task<CustomerSignUpResponseDto> RegisterVendor(CustomerSignUpRequestDto signUpModel);
         Task<VendorLoginResponseDto> VendorLogin(VendorLoginRequestDto vendorLogin);
         Task<string> GenerateFirebaseToken();
 
-
+        Task<UpdateCustomerResponseDto> GoOnline(string mobileNo);
+        Task<UpdateCustomerResponseDto> GoOffline(string mobileNo);
         //Task<CustomerSignUpResponseDto> RegisterVendor(CustomerSignUpRequestDto signUpModel);
+
+        Task<EndServiceResponse> EndService(string bookingId);
+        Task<OtpConfirmationResponseDto> StartService(string bookingId);
+        Task<AcceptRequestDto> AcceptRequest(string bookingId);
+
+        Task<UpdateCustomerResponseDto> RejectRequest(string bookingId);
 
 
     }

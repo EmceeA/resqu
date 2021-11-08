@@ -1,4 +1,5 @@
 ﻿using Resq.Web.ViewModels;
+using Resqu.Core.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,5 +13,13 @@ namespace Resq.Web.Interface
         public string CreateVendor(CreateVendorViewModel createVendor);
         public string GenerateCode();
 
+
+    }
+
+
+    public interface IProductVendor
+    {
+        Task<List<ProductVendor>> GetProductVendors();
+        Task<bool> CreateProductVendor(CreateProductVendorDto createProduct);
     }
 }

@@ -21,14 +21,19 @@ namespace Resq.Web.Controllers
         private readonly IHttpContextAccessor _http;
         private IBackOffice _back;
         private readonly Resq.Web.Interface.IVendor _vendor;
+        private readonly Resq.Web.Interface.IProductVendor _productvendor;
         private readonly IWebHostEnvironment _hosting;
-        public BackOfficeController(ResquContext context, IBackOffice back, Resq.Web.Interface.IVendor vendor, IWebHostEnvironment hosting,IHttpContextAccessor http)
+        public BackOfficeController(ResquContext context, 
+            IBackOffice back, Resq.Web.Interface.IVendor vendor, 
+            IWebHostEnvironment hosting,IHttpContextAccessor http,
+            Resq.Web.Interface.IProductVendor productvendor)
         {
             _context = context;
             _back = back;
             _vendor = vendor;
             _hosting = hosting;
             _http = http;
+            _productvendor = productvendor;
             //_http = http;
         }
 
@@ -165,6 +170,8 @@ namespace Resq.Web.Controllers
         {
             return View();
         }
+
+        
 
         [HttpPost]
         public async Task<IActionResult> Login(UserLoginDto loginDto)
@@ -519,6 +526,54 @@ namespace Resq.Web.Controllers
             return View(products);
         }
 
+        [HttpGet]
+        public async Task<IActionResult> GetProductVendors()
+        {
+            ViewBag.ServicePageUrls = _context.BackOfficeRoles.Where(b => b.RoleName == HttpContext.Session.GetString("role")).Select(p => new Resqu.Core.Entities.RoleUrl
+            {
+                PageName = p.PageName,
+                PageUrl = p.PageUrl,
+                PageNameClass = p.PageNameClass,
+                PageUrlClass = p.PageUrlClass,
+                ActionName = p.ActionName,
+                ControllerName = p.ControllerName
+            }).ToList();
+            ViewBag.ProfilePicture = _context.BackOfficeUsers.Where(d => d.UserName == HttpContext.Session.GetString("userName")).Select(e => e.ProfilePicture).FirstOrDefault();
+            ViewBag.FullName = _context.BackOfficeUsers.Where(d => d.UserName == HttpContext.Session.GetString("userName")).Select(e => e.FirstName + " " + e.LastName).FirstOrDefault();
+            var result = await _productvendor.GetProductVendors();
+            return View(result);
+        }
+
+
+        [HttpGet]
+        public async Task<IActionResult> CreateProductVendor()
+        {
+            ViewBag.ServicePageUrls = _context.BackOfficeRoles.Where(b => b.RoleName == HttpContext.Session.GetString("role")).Select(p => new Resqu.Core.Entities.RoleUrl
+            {
+                PageName = p.PageName,
+                PageUrl = p.PageUrl,
+                PageNameClass = p.PageNameClass,
+                PageUrlClass = p.PageUrlClass,
+                ActionName = p.ActionName,
+                ControllerName = p.ControllerName
+            }).ToList();
+            ViewBag.ProfilePicture = _context.BackOfficeUsers.Where(d => d.UserName == HttpContext.Session.GetString("userName")).Select(e => e.ProfilePicture).FirstOrDefault();
+            ViewBag.FullName = _context.BackOfficeUsers.Where(d => d.UserName == HttpContext.Session.GetString("userName")).Select(e => e.FirstName + " " + e.LastName).FirstOrDefault();
+            return View();
+        }
+
+
+        [HttpPost]
+        public async Task<IActionResult> CreateProductVendor(CreateProductVendorDto createProduct)
+        {
+            var result = await _productvendor.CreateProductVendor(createProduct);
+            if (result == false)
+            {
+                ViewBag.Unable = "Unable to create vendor product";
+                return View();
+            }
+            return RedirectToAction("GetProductVendors");
+        }
         [HttpPost]
         public IActionResult CreateProduct(ProductDto productDto)
         {

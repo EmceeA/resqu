@@ -65,10 +65,10 @@ namespace Resqu.Core.Services
                     Active = false,
                     CardNo = addCard.CardNo,
                     CustomerId = _http.HttpContext.Session.GetString("customerPhone"),
-                    Cvv = addCard.Cvv,
+                    Cvv = addCard.Cvv.ToString(),
                     DateCreated = DateTime.Now,
-                    ExpiryMonth = addCard.ExpiryMonth,
-                    ExpiryYear = addCard.ExpiryYear,
+                    ExpiryMonth = addCard.ExpiryMonth.ToString(),
+                    ExpiryYear = addCard.ExpiryYear.ToString(),
                     HolderName = addCard.HolderName,
                 };
 
@@ -538,16 +538,6 @@ namespace Resqu.Core.Services
             var phoneNumber = _http.HttpContext.Session.GetString("customerPhone");
             var serviceName = _context.CustomerRequestServices.Where(e => e.Id == service.ServiceId).Select(p => p.ServiceName).FirstOrDefault();
             var serviceSubCategoryName = _context.VendorProcessServiceTypes.Where(e => e.Id == service.SubCategoryId).FirstOrDefault();
-            ////var getNearestVendor = await CalculateShortestDistance(service.CustomerAddress, null, serviceSubCategoryName.ServiceTypeName, serviceName);
-            //if (getNearestVendor == null)
-            //{
-            //    return null;
-            //}
-            //if (getNearestVendor.Distance > 5)
-            //{
-            //    return null;
-            //}
-            //var getExpertisePrice = _context.VendorProcessServiceTypes.Where(e => e.Id == service.SubCategoryId).Select(u => u.Cost).FirstOrDefault();
             var issues = _context.Issues.Where(e => e.Id == service.IssueId).FirstOrDefault();
             var serviceModel = new ResquService
             {
@@ -565,6 +555,7 @@ namespace Resqu.Core.Services
                 Description = service.Description,
                 Status = "Price Estimated",
                 DateCreated = DateTime.Now,
+                CreatedBy = _context.Customers.Where(e => e.PhoneNumber == phoneNumber).Select(s => s.FirstName + " " + s.LastName).FirstOrDefault(),
                 //CustomerLocation = service.CustomerAddress,
                 CustomerPhone = phoneNumber,
                 //VendorId = getNearestVendor.VendorId.ToString(),
@@ -609,32 +600,36 @@ namespace Resqu.Core.Services
             }
             var getExpertisePrice = _context.VendorProcessServiceTypes.Where(e => e.Id == getBookingDetails.SubCategoryId).Select(u => u.Cost).FirstOrDefault();
             var issues = _context.Issues.Where(e => e.Id == getBookingDetails.IssueId).FirstOrDefault();
-            var serviceModel = new ResquService
-            {
-                ServiceId = getBookingDetails.ServiceId,
-                IssueId = getBookingDetails.IssueId,
-                IssuePrice = issues.Price.ToString(),
-                IssueDescription = issues.Description,
-                ServiceName = serviceName,
-                SubCategoryId = serviceSubCategoryName.Id,
-                SubCategoryName = serviceSubCategoryName.ServiceTypeName,
-                SubCategoryPrice = serviceSubCategoryName.Cost,
-                Price = serviceSubCategoryName.Cost + issues.Price,
-                BookingId = bookingId,
-                IsStarted = false,
-                Description = getBookingDetails.Description,
-                Status = "Service Booked",
-                DateCreated = DateTime.Now,
-                CustomerLocation = service.CustomerAddress,
-                CustomerPhone = phoneNumber,
-                VendorId = getNearestVendor.VendorId.ToString(),
-                VendorName = getNearestVendor.VendorName,
-                VendorPhone = getNearestVendor.Phone,
-                CustomerId = _context.Customers.Where(w => w.PhoneNumber == phoneNumber).Select(e => e.Id).FirstOrDefault().ToString(),
-                CustomerName = _context.Customers.Where(w => w.PhoneNumber == phoneNumber).Select(e => e.FirstName + " " + e.LastName).FirstOrDefault()
-            };
+            var serviceModel = _context.ResquServices.Where(d => d.BookingId == bookingId).FirstOrDefault();
+            serviceModel.Status = "SERVICE BOOKED";
+            serviceModel.DateModified = DateTime.Now;
+            serviceModel.VendorId = getNearestVendor.VendorId.ToString();
+            serviceModel.VendorName = getNearestVendor.VendorName;
+            serviceModel.VendorPhone = getNearestVendor.Phone;
+            //var serviceModel = new ResquService
+            //{
+            //    ServiceId = getBookingDetails.ServiceId,
+            //    IssueId = getBookingDetails.IssueId,
+            //    IssuePrice = issues.Price.ToString(),
+            //    IssueDescription = issues.Description,
+            //    ServiceName = serviceName,
+            //    SubCategoryId = serviceSubCategoryName.Id,
+            //    SubCategoryName = serviceSubCategoryName.ServiceTypeName,
+            //    SubCategoryPrice = serviceSubCategoryName.Cost,
+            //    Price = serviceSubCategoryName.Cost + issues.Price,
+            //    BookingId = bookingId,
+            //    IsStarted = false,
+            //    Description = getBookingDetails.Description,
+            //    Status = "Service Booked",
+            //    DateCreated = DateTime.Now,
+            //    CustomerLocation = service.CustomerAddress,
+            //    CustomerPhone = phoneNumber,
+            //    
+            //    CustomerId = _context.Customers.Where(w => w.PhoneNumber == phoneNumber).Select(e => e.Id).FirstOrDefault().ToString(),
+            //    CustomerName = _context.Customers.Where(w => w.PhoneNumber == phoneNumber).Select(e => e.FirstName + " " + e.LastName).FirstOrDefault()
+            //};
 
-            _context.ResquServices.Add(serviceModel);
+            //_context.ResquServices.Add(serviceModel);
             _context.SaveChanges();
             return new ServiceResponseDto
             {
@@ -948,17 +943,17 @@ namespace Resqu.Core.Services
             
             //var getSourceWallet = _context.Wallets.FirstOrDefault(f => f.WalletNo == sourceWallet);
 
-            var getSourceWallet = _context.Wallets.FirstOrDefault(f => f.WalletNo == sourceWallet);
+            var getSourceWallet = _context.WalletInfos.FirstOrDefault(f => f.WalletId == sourceWallet);
+            
+            getSourceWallet.Balance -= Convert.ToDouble(totalAmount);
 
-            getSourceWallet.Balance = getSourceWallet.Balance - totalAmount;
+            var getVendorWallet = _context.WalletInfos.FirstOrDefault(f => f.WalletId == destinationWallet);
 
-            var getVendorWallet = _context.Wallets.FirstOrDefault(f => f.WalletNo == destinationWallet);
+                getVendorWallet.Balance += Convert.ToDouble(vendorCost);
 
-            getVendorWallet.Balance = getVendorWallet.Balance + vendorCost;
+            var getBackOfficeWallet = _context.WalletInfos.FirstOrDefault(f => f.WalletId == backOfficeWallet);
 
-            var getBackOfficeWallet = _context.Wallets.FirstOrDefault(f => f.WalletNo == backOfficeWallet);
-
-            getBackOfficeWallet.Balance = getBackOfficeWallet.Balance + backOfficeCost;
+            getBackOfficeWallet.Balance += Convert.ToDouble(backOfficeCost);
 
             _context.SaveChanges();
             return true;
@@ -969,11 +964,15 @@ namespace Resqu.Core.Services
         public async Task<MakePaymentResponse> MakePayment(string bookingId)
         {
             var payment = _context.ResquServices.Where(r => r.BookingId == bookingId).FirstOrDefault();
-            var vendorCost = Convert.ToDecimal(payment.TotalPrice) * (Convert.ToInt32(_config.GetSection("ResqPercentage").Value) / 100);
+            var price = Convert.ToDecimal(payment.Price);
+            var perc = _config.GetSection("ResqPercentage").Value;
+            var percentage = Convert.ToDecimal(float.Parse(perc)*0.01);
+            var vendorCost = price * percentage;
 
-            var getCustomerId = _context.Customers.Where(c => c.PhoneNumber == payment.CustomerPhone).Select(e => e.Id).FirstOrDefault().ToString();
-            var checkCustomerBalance = _context.Wallets.Where(g => g.UserId == getCustomerId).Select(e => e.Balance).FirstOrDefault();
-            if (checkCustomerBalance < Convert.ToDecimal(payment.TotalPrice))
+            //var getCustomerIdInfo  = _context.Customers.Where(u=>u.)
+            var getCustomerId = _context.Customers.Where(c => c.PhoneNumber == payment.CustomerPhone).FirstOrDefault();
+            var checkCustomerBalance = _context.WalletInfos.Where(g => g.CustomerCode == getCustomerId.CustomerCode).Select(e => e.Balance).FirstOrDefault();
+            if (Convert.ToDecimal(checkCustomerBalance) < Convert.ToDecimal(payment.Price))
             {
                 return new MakePaymentResponse
                 {
@@ -984,11 +983,11 @@ namespace Resqu.Core.Services
             var makeWallet = new MakeWalletRequest
             {
                 VendorCost = vendorCost,
-                BackOfficeCost = Convert.ToDecimal(payment.TotalPrice) - vendorCost,
-                BackOfficeWallet = _context.Wallets.Where(e => e.UserId == "BackOffice").Select(v => v.WalletNo).FirstOrDefault(),
-                DestinationWallet = _context.Wallets.Where(e=>e.UserId == payment.VendorId).Select(v=>v.WalletNo).FirstOrDefault(),
-                Amount = Convert.ToDecimal(payment.TotalPrice),
-                SourceWallet = _context.Wallets.Where(e => e.UserId == getCustomerId).Select(v => v.WalletNo).FirstOrDefault(),
+                BackOfficeCost = Convert.ToDecimal(payment.Price) - vendorCost,
+                BackOfficeWallet = _context.WalletInfos.Where(e => e.CustomerId == "59904441").Select(v => v.WalletId).FirstOrDefault(),
+                DestinationWallet = _context.WalletInfos.Where(e=>e.PhoneNumber == payment.VendorPhone).Select(v=>v.WalletId).FirstOrDefault(),
+                Amount = Convert.ToDecimal(payment.Price),
+                SourceWallet = _context.WalletInfos.Where(e => e.CustomerCode == getCustomerId.CustomerCode).Select(v => v.WalletId).FirstOrDefault(),
             };
 
             var makePayment = DebitCredit(makeWallet.BackOfficeCost, makeWallet.VendorCost, makeWallet.BackOfficeWallet, makeWallet.DestinationWallet, makeWallet.SourceWallet, makeWallet.Amount);
@@ -1440,92 +1439,10 @@ namespace Resqu.Core.Services
             return Task.FromResult<float>(timeInMinutes);
         }
 
-        public async Task<AcceptRequestDto> AcceptRequest(string bookingId)
-        {
-            var getBookingDetails = await _context.ResquServices.Where(e => e.BookingId == bookingId).FirstOrDefaultAsync();
-            _http.HttpContext.Session.SetString("bookingId", bookingId);
-            getBookingDetails.IsVendorAccepted = true;
-            _context.SaveChanges();
-            return new AcceptRequestDto
-            {
-                BookingId = getBookingDetails.BookingId,
-                CustomerName = getBookingDetails.CustomerName,
-                Location = getBookingDetails.CustomerLocation,
-                ServiceDescription = getBookingDetails.Description,
-                ServiceName = getBookingDetails.ServiceName,
-                Message = "Accepted",
-                Status = true
-            };
-        }
+        
+        
 
-        public async Task<UpdateCustomerResponseDto> RejectRequest(string bookingId)
-        {
-            var getBookingDetails = await _context.ResquServices.Where(e => e.BookingId == bookingId).FirstOrDefaultAsync();
-            getBookingDetails.IsVendorRejected = true;
-            _context.SaveChanges();
-            return new UpdateCustomerResponseDto
-            {
-                Message = "Rejected",
-                Status = true
-            };
-        }
-
-        public async Task<UpdateCustomerResponseDto> GoOnline(string mobileNo)
-        {
-            var getVendor = await _context.Vendors.Where(x => x.PhoneNo == mobileNo).FirstOrDefaultAsync();
-            if (getVendor.AvailabilityStatus == "Online")
-            {
-                return new UpdateCustomerResponseDto
-                {
-                    Message = "Availability Status already Updated to Online",
-                    Status = false
-                };
-            }
-            if (getVendor  != null && (getVendor.AvailabilityStatus == "Offline" || getVendor.AvailabilityStatus == null))
-            {
-                getVendor.AvailabilityStatus = "Online";
-                _context.SaveChanges();
-                return new UpdateCustomerResponseDto
-                {
-                    Message = "Availability Status Updated to Online",
-                    Status = true
-                };
-            }
-            return new UpdateCustomerResponseDto
-            {
-                Message = "An Error Occurred",
-                Status = false
-            };
-            
-        }
-
-        public async Task<UpdateCustomerResponseDto> GoOffline(string mobileNo)
-        {
-            var getVendor = await _context.Vendors.Where(x => x.PhoneNo == mobileNo).FirstOrDefaultAsync();
-            if (getVendor != null && getVendor.AvailabilityStatus == "Offline")
-            {
-                return new UpdateCustomerResponseDto
-                {
-                    Message = "Availability Status already Updated to Offline",
-                    Status = false
-                };
-            }
-            if (getVendor != null && getVendor.AvailabilityStatus == "Online")
-            {
-                getVendor.AvailabilityStatus = "Offline";
-                _context.SaveChanges();
-                return new UpdateCustomerResponseDto
-                {
-                    Message = "Availability Status Updated to Offline",
-                    Status = true
-                };
-            }
-            return new UpdateCustomerResponseDto
-            {
-                Message = "An Error Occurred",
-                Status = false
-            };
-        }
+       
 
         public async Task<List<ServiceCategoryDto>> ServiceCategoryByExpertise(int expertiseId)
         {
@@ -1547,94 +1464,8 @@ namespace Resqu.Core.Services
             return serviceCats;
         }
 
-        public async Task<OtpConfirmationResponseDto> StartService(string bookingId)
-        {
-            try
-            {
-                var start = await _context.ResquServices.Where(w => w.BookingId == bookingId).FirstOrDefaultAsync();
-
-                if (start.IsVendorAccepted != true)
-                {
-                    return new OtpConfirmationResponseDto
-                    {
-                        Message = "Kindly accept the request before starting",
-                        Status = false
-                    };
-                }
-
-
-                start.DateStarted = DateTime.Now;
-                start.IsStarted = true;
-                await _context.SaveChangesAsync();
-                return new OtpConfirmationResponseDto
-                {
-                    Message = "Started Successfully",
-                    Status = true
-                };
-            }
-            catch (Exception ex)
-            {
-                return new OtpConfirmationResponseDto
-                {
-                    Message = $"Error {ex}",
-                    Status = false
-                };
-            }
-            
-        }
-
-        public async Task<OtpConfirmationResponseDto> EndService(string bookingId)
-        {
-            try
-            {
-                var end = await _context.ResquServices.Where(w => w.BookingId == bookingId).FirstOrDefaultAsync();
-
-                if (end.IsVendorAccepted != true)
-                {
-                    return new OtpConfirmationResponseDto
-                    {
-                        Message = "Kindly accept the request before starting",
-                        Status = false
-                    };
-                }
-
-                if (end.IsStarted != true)
-                {
-                    return new OtpConfirmationResponseDto
-                    {
-                        Message = "The Service Needs to be started before it can end",
-                        Status = false
-                    };
-                }
-
-                if (end.IsVendorAccepted == true && end.IsStarted == true)
-                {
-                    end.DateEnded = DateTime.Now;
-                    end.IsEnded = true;
-                    await _context.SaveChangesAsync();
-                    return new OtpConfirmationResponseDto
-                    {
-                        Message = "Ended Successfully",
-                        Status = true
-                    };
-                }
-
-                return new OtpConfirmationResponseDto
-                {
-                    Message = "Outside the condition",
-                    Status = false
-                };
-               
-            }
-            catch (Exception ex)
-            {
-                return new OtpConfirmationResponseDto
-                {
-                    Message = $"Error {ex}",
-                    Status = false
-                };
-            }
-        }
+        
+        
 
         //public async Task<double> CalculateServiceCost(string bookingId)
         //{

@@ -122,13 +122,13 @@ namespace Resqu.API
                 app.UseDeveloperExceptionPage();
                 
             }
+            app.UseAuthentication();
             app.UseSwagger();
             app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Resqu.API v1"));
             app.UseHttpsRedirection();
             app.UseSession();
             app.UseRouting();
             app.UseCors("AllowAll");
-            app.UseAuthentication();
             app.UseAuthorization();
             app.UseEndpoints(endpoints =>
             {

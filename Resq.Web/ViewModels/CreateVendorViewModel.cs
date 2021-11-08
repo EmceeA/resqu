@@ -8,6 +8,15 @@ using System.Threading.Tasks;
 
 namespace Resq.Web.ViewModels
 {
+    public class CreateProductVendorDto
+    {
+        [Required]
+        public string VendorName { get; set; }
+        [Required]
+        public string VendorAddress { get; set; }
+        [Required]
+        public string VendorPhone { get; set; }
+    }
     public class CreateVendorViewModel
     {
         public int? ServiceName { get; set; }

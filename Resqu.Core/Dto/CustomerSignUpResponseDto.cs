@@ -259,6 +259,14 @@ namespace Resqu.Core.Dto
         public bool Status { get; set; }
     }
 
+    public class EndServiceResponse
+    {
+        public string Message { get; set; }
+        public string BookingId { get; set; }
+        public string Price { get; set; }
+        public bool Status { get; set; }
+    }
+
     public class OtpGenerateResponseDto
     {
         public string Token { get; set; }

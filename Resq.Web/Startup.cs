@@ -35,6 +35,7 @@ namespace Resq.Web
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddTransient<Resq.Web.Interface.IVendor, VendorService>();
+            services.AddTransient<Resq.Web.Interface.IProductVendor, ProductVendorService>();
             services.AddTransient<Resqu.Core.Interface.IBackOffice, BackOfficeService>();
             //services.AddScoped<Resqu.Core.Interface.IProduct, ProductService>();
             services.AddTransient<IProduct, ProductService>();
@@ -84,7 +85,7 @@ namespace Resq.Web
             {
                 endpoints.MapControllerRoute(
                     name: "default",
-                    pattern: "{controller=BackOffice}/{action=AddServiceDetail}/{id?}");
+                    pattern: "{controller=BackOffice}/{action=Index}/{id?}");
                 endpoints.MapRazorPages();
             });
         }
