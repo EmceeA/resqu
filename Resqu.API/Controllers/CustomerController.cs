@@ -402,9 +402,9 @@ namespace Resqu.API.Controllers
 
 
         [HttpGet]
-        public async Task<IActionResult> GetCardByUserId(string phone)
+        public async Task<IActionResult> GetCardByUserId(string userId)
         {
-            var card = await _customer.GetCardByUserId(phone);
+            var card = await _customer.GetCardByUserId(userId);
             return Ok(card);
         }
 
