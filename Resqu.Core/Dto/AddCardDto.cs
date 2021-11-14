@@ -23,6 +23,35 @@ namespace Resqu.Core.Dto
         public string ExpiryYear { get; set; }
         
     }
+
+
+    public class WalletDetails
+    {
+        public string WalletId { get; set; }
+       
+        public string Balance { get; set; }
+        
+        public string AccountName { get; set; }
+        
+        public string Bank { get; set; }
+        
+
+    }
+
+
+    public class WalletDto
+    {
+        public string CustomerName { get; set; }
+        public string WalletId { get; set; }
+        public double Balance { get; set; }
+        public string CustomerId { get; set; }
+        public string PhoneNumber { get; set; }
+        public string DedicatedNuban { get; set; }
+        public string Bank { get; set; }
+        public string AccountName { get; set; }
+        public string Email { get; set; }
+        public string CustomerCode { get; set; }
+    }
     public class AddCardDto
     {
         public string CardNo { get; set; }

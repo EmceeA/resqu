@@ -1,0 +1,104 @@
+﻿@model IEnumerable<Resqu.Core.Entities.Transaction>
+@using Resq.Web.ViewModels
+@{
+    ViewData["Title"] = "SearchVendorInflowTransactions";
+    Layout = "~/Views/Shared/_LayoutServices.cshtml";
+}
+
+<style>
+    @@media screen and (min-width: 676px) {
+        .modal-dialog {
+            max-width: 1500px;
+            /* New width for default modal */
+        }
+    }
+</style>
+<div class="main-content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-lg-12 mt-4">
+                <h4>Vendor Inflows</h4>
+            </div>
+        </div>
+        <div class="row mt-4">
+            <div class="col-lg-12">
+                <div class="bg-white add-service-div p-4">
+                    <div class="row align-items-center justify-content-between">
+                        <div class="col-lg-4 col-xl-3">
+
+                        </div>
+                        <div class="col-lg-3">
+                            <h4 class="text-center">TOTAL: @ViewBag.Transactions </h4>
+                        </div>
+                        @{
+                            var models = new BackOfficeInflowSearch();
+                            await Html.RenderPartialAsync("_SearchBarBacOfficeInflowPartial", models);
+
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row mt-4">
+        <div class="col-lg-12">
+            <div class="bg-white py-5 mb-5">
+                <div class="table-responsive">
+
+                    <table class="table table-bordered table-striped">
+                        <thead>
+                            <tr>
+                                <th>S/N</th>
+                                <th>Type</th>
+                                <th>Category</th>
+                                <th>Product Type</th>
+                                <th>Service Date</th>
+                                <th>Amount</th>
+                                <th>Customer Name</th>
+                                <th>Vendor Name</th>
+                                @*<th>Purchase From</th>*@
+                                <th>Payment Type</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @{int index = 0;}
+                            @foreach (var item in Model)
+                            {
+
+
+                                <tr>
+                                    <td>
+                                        @{index++;}
+                                        @index
+                                    </td>
+
+                                    @if (item.VendorTransactionType == "CR")
+                                    {
+                                        <td>
+                                            Inflow
+                                        </td>
+
+                                    }
+                                    else if (item.VendorTransactionType == "DR")
+                                    {
+                                        <td>
+                                            Outflow
+                                        </td>
+                                    }
+
+                                    <td>@item.SubCategory</td>
+                                    <td>@item.ServiceType</td>
+                                    <td>@item.ServiceDate</td>
+                                    <td>@item.VendorAmount</td>
+                                    <td>@item.CustomerName</td>
+                                    <td>@item.VendorName</td>
+                                    <td>@item.PaymentType</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -16,7 +16,7 @@ namespace Resqu.Core.Migrations
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
-                .HasAnnotation("ProductVersion", "5.0.5")
+                .HasAnnotation("ProductVersion", "5.0.6")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
             modelBuilder.Entity("Resqu.Core.Entities.BackOfficeRole", b =>
@@ -1033,8 +1033,8 @@ namespace Resqu.Core.Migrations
                     b.Property<string>("RatingComment")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("ServiceDate")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<DateTime>("ServiceDate")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("ServiceType")
                         .HasColumnType("nvarchar(max)");

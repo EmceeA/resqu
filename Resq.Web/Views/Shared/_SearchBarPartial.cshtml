@@ -1,0 +1,10 @@
+﻿@model Resq.Web.ViewModels.SearchWalletViewModel
+<div class="search-bar">
+    @using (Html.BeginForm("SearchWallets", "BackOffice"))
+    {
+        <input id="WalletId" name="WalletId" type="text" value="" class="form-control" placeholder="Wallet Id" required/>
+        <input id="AccountName" name="AccountName" type="text" value="" class="form-control" placeholder="Account Name" required/>
+        
+        <input class="btn btn-primary" type="submit" value="Search"/>
+    }
+</div>

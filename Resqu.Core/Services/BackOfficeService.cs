@@ -478,7 +478,7 @@ namespace Resqu.Core.Services
 
             }
             getCurrentVendor.VendorPicture = UploadImage(vendor);
-            getCurrentVendor.CustomerRequestServiceId = vendor.ExpertiseId;
+            
             getCurrentVendor.FirstName = vendor.FirstName;
             getCurrentVendor.MiddleName = vendor.MiddleName;
             getCurrentVendor.LastName = vendor.LastName;

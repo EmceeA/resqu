@@ -22,7 +22,7 @@ namespace Resq.Web.Controllers
         public async Task<IActionResult> Index()
         {
             return View(await _context.Transactions.ToListAsync());
-        }
+        }   
 
         // GET: Transactions/Details/5
         public async Task<IActionResult> Details(long? id)

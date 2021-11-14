@@ -1,0 +1,14 @@
+﻿@model Resq.Web.ViewModels.BackOfficeInflowSearch
+<div class="search-bar">
+    @using (Html.BeginForm("SearchBackOfficeInflowTransactions", "BackOffice"))
+    {
+        
+        
+        <input id="SearchKey" name="SearchKey" type="text" value="" class="col-md-6" placeholder="Please Input Search Text" required />
+        <input id="StartDate" name="StartDate" type="date" value="" class="col-md-6" placeholder="Start Date" required />
+        <input id="EndDate" name="EndDate" type="date" value="" class="col-md-6" placeholder="End Date" required />
+
+        <input class="btn btn-lg" type="submit" value="Search" id="search" />
+    }
+</div>
+

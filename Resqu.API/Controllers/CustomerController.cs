@@ -406,9 +406,9 @@ namespace Resqu.API.Controllers
         {
             var card = await _customer.GetCardByUserId(userId);
             return Ok(card);
-        }
+        }   
 
-
+        
 
         [HttpPost]
         public async Task<IActionResult> AddCard(AddCardDto addCardDto)
@@ -419,6 +419,15 @@ namespace Resqu.API.Controllers
                 return Ok(card);
             }
             return BadRequest(card);
+        }
+
+
+        [HttpGet]
+        public async Task<IActionResult> GetWalletByUserId(string userId)
+        {
+            var card = await _customer.GetWalletByUserId(userId);
+            return Ok(card);
+            
         }
 
 

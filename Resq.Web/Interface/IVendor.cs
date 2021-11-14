@@ -1,4 +1,5 @@
 ﻿using Resq.Web.ViewModels;
+using Resqu.Core.Dto;
 using Resqu.Core.Entities;
 using System;
 using System.Collections.Generic;
@@ -21,5 +22,12 @@ namespace Resq.Web.Interface
     {
         Task<List<ProductVendor>> GetProductVendors();
         Task<bool> CreateProductVendor(CreateProductVendorDto createProduct);
+    }
+
+    public interface ICustomerWallet
+    {
+        Task<List<WalletDto>> GetAllWallets();
+        Task<List<ResquService>> ServiceRequests();
+        
     }
 }

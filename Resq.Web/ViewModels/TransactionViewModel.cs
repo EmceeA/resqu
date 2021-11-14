@@ -1,6 +1,7 @@
 ﻿using Resqu.Core.Entities;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -37,8 +38,34 @@ namespace Resq.Web.ViewModels
         public int  SubCategory { get; set; }
     }
 
+    public class SearchVendorViewModel
+    {
+        [Required]
+        public string VendorName { get; set; }
+    }
+
+    public class SearchWalletViewModel
+    {
+        public string WalletId { get; set; }
+        public string AccountName { get; set; }
+    }
+
+    public class BackOfficeInflowSearch
+    {
+        public DateTime StartDate { get; set; }
+        public DateTime EndDate { get; set; }
+        public string SearchKey { get; set; }
+    }
+    public class SearchTransactionViewModel
+    {
+       
+        public DateTime StartDate { get; set; }
+        public DateTime EndDate { get; set; }
+
+    }
     public class TopVendor
     {
+        public int VendorId { get; set; }
         public string Picture { get; set; }
         public string VendorName { get; set; }
         public int NumberOfRequest { get; set; }

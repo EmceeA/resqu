@@ -1,0 +1,9 @@
+﻿@model Resq.Web.ViewModels.SearchVendorViewModel
+<div class="search-bar">
+    @using (Html.BeginForm("SearchProductVendors", "BackOffice"))
+    {
+        <input id="VendorName" name="VendorName" type="text" value="" class="form-control" placeholder="Vendor Name" required/>
+        <input class="btn btn-primary" type="submit" value="Search" id="search"/>
+    }
+</div>
+

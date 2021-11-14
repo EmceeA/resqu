@@ -91,9 +91,10 @@
                                         </div>
 
                                         <div class="col-lg-4 col-xl-3">
-                                            <button class="btn view-btn text-light">
+                                            <a href="../../BackOffice/VendorRequestHistory/@review.VendorId" class="btn view-btn text-light" target="_blank">View &#62;</a>
+                                            @*<button class="">
                                                 View &#62;
-                                            </button>
+                                            </button>*@
                                         </div>
                                         
                                     </div>
@@ -161,7 +162,8 @@
                                     <p class="mb-0 font-sm2">@ViewBag.Email</p>
                                 </div>
                                 <div class="vertical-line"></div>
-                                <a href="../../BackOffice/Logout" class="text-blue font-sm2 px-2">Logout</a>
+                            <a  asp-action="Logout" asp-controller="BackOffice" class="text-blue font-sm2 px-2">LogOut</a>
+                                @*<a href="../../BackOffice/Logout" >Logout</a>*@
                             </div>
                         </div>
                         <div class="reviews-div mt-5 px-3">

@@ -1007,6 +1007,7 @@ C:\Users\HFET\source\repos\Resqu.API\Resq.Web\obj\Release\net5.0\PubTmp\Out\wwwr
 C:\Users\HFET\source\repos\Resqu.API\Resq.Web\obj\Release\net5.0\PubTmp\Out\wwwroot\images\21da388a-54ec-4c24-b899-96bd9309a22f_WIN_20210324_19_02_28_Pro.jpg
 C:\Users\HFET\source\repos\Resqu.API\Resq.Web\obj\Release\net5.0\PubTmp\Out\wwwroot\images\2ca3aa93-677c-4590-9862-72c6d218b665_landing.jpg
 C:\Users\HFET\source\repos\Resqu.API\Resq.Web\obj\Release\net5.0\PubTmp\Out\wwwroot\images\2fa42c5d-9dd7-4a8b-83f1-a561d103c7d7_WIN_20210324_19_02_28_Pro.jpg
+C:\Users\HFET\source\repos\Resqu.API\Resq.Web\obj\Release\net5.0\PubTmp\Out\wwwroot\images\37f7b22c-6956-4b05-9f13-aca104ca6b06_WIN_20210306_21_43_02_Pro.jpg
 C:\Users\HFET\source\repos\Resqu.API\Resq.Web\obj\Release\net5.0\PubTmp\Out\wwwroot\images\41805e40-888f-4f62-9e40-5eb89f75a02a_WIN_20210322_09_13_22_Pro.jpg
 C:\Users\HFET\source\repos\Resqu.API\Resq.Web\obj\Release\net5.0\PubTmp\Out\wwwroot\images\46228d06-27b2-4421-9c6d-eebcd8b476c0_WIN_20210304_21_49_02_Pro.jpg
 C:\Users\HFET\source\repos\Resqu.API\Resq.Web\obj\Release\net5.0\PubTmp\Out\wwwroot\images\48c68fd0-02ba-4cac-bc71-3218bf28d237_repo2.PNG
@@ -1018,6 +1019,7 @@ C:\Users\HFET\source\repos\Resqu.API\Resq.Web\obj\Release\net5.0\PubTmp\Out\wwwr
 C:\Users\HFET\source\repos\Resqu.API\Resq.Web\obj\Release\net5.0\PubTmp\Out\wwwroot\images\663ab952-8523-4e68-8885-de9fcf56e115_WIN_20210324_19_02_28_Pro.jpg
 C:\Users\HFET\source\repos\Resqu.API\Resq.Web\obj\Release\net5.0\PubTmp\Out\wwwroot\images\6bf2c11f-60fa-4e69-9d1b-6b2ec982d325_plug.jfif
 C:\Users\HFET\source\repos\Resqu.API\Resq.Web\obj\Release\net5.0\PubTmp\Out\wwwroot\images\70ff8a72-6b00-4842-b386-a92e7ab30af8_REQUIREMENTDAL.PNG
+C:\Users\HFET\source\repos\Resqu.API\Resq.Web\obj\Release\net5.0\PubTmp\Out\wwwroot\images\71c2c831-c6b1-49dd-804f-249e21dd8898_WIN_20210304_21_49_02_Pro.jpg
 C:\Users\HFET\source\repos\Resqu.API\Resq.Web\obj\Release\net5.0\PubTmp\Out\wwwroot\images\738e4cec-a433-423a-899e-cee25ab73c25_sig.PNG
 C:\Users\HFET\source\repos\Resqu.API\Resq.Web\obj\Release\net5.0\PubTmp\Out\wwwroot\images\795e0af4-1ffd-4bc8-b52f-22554ce65bc8_AA.jfif
 C:\Users\HFET\source\repos\Resqu.API\Resq.Web\obj\Release\net5.0\PubTmp\Out\wwwroot\images\7c7c9105-e85a-408f-aa08-a3bd37965652_WIN_20210303_02_32_02_Pro.jpg
@@ -1027,6 +1029,7 @@ C:\Users\HFET\source\repos\Resqu.API\Resq.Web\obj\Release\net5.0\PubTmp\Out\wwwr
 C:\Users\HFET\source\repos\Resqu.API\Resq.Web\obj\Release\net5.0\PubTmp\Out\wwwroot\images\890bb4d4-4e48-4865-b371-73fc69b8725f_bjay.jpg
 C:\Users\HFET\source\repos\Resqu.API\Resq.Web\obj\Release\net5.0\PubTmp\Out\wwwroot\images\9a6e64b8-6b13-40d7-bed7-7eac233b0eef_WIN_20210427_16_57_19_Pro.jpg
 C:\Users\HFET\source\repos\Resqu.API\Resq.Web\obj\Release\net5.0\PubTmp\Out\wwwroot\images\9c32124e-d319-437c-ac05-cfc0f3101526_WIN_20210303_02_32_02_Pro.jpg
+C:\Users\HFET\source\repos\Resqu.API\Resq.Web\obj\Release\net5.0\PubTmp\Out\wwwroot\images\9ce29d29-25e4-406f-940d-fca95eef0053_WIN_20210306_21_43_00_Pro.jpg
 C:\Users\HFET\source\repos\Resqu.API\Resq.Web\obj\Release\net5.0\PubTmp\Out\wwwroot\images\9d2ea2eb-e671-4d82-bb56-55b518e38671_logo.png
 C:\Users\HFET\source\repos\Resqu.API\Resq.Web\obj\Release\net5.0\PubTmp\Out\wwwroot\images\9f7c8a34-70c7-48c3-91da-a23b0439190f_WIN_20210304_21_49_00_Pro.jpg
 C:\Users\HFET\source\repos\Resqu.API\Resq.Web\obj\Release\net5.0\PubTmp\Out\wwwroot\images\a12d9f44-6830-4a16-a81d-a3afb3f42c0f_WIN_20210322_09_13_22_Pro.jpg

@@ -1,0 +1,13 @@
+﻿@model Resq.Web.ViewModels.SearchTransactionViewModel
+<div class="search-bar">
+    @using (Html.BeginForm("TransactionListSearch", "BackOffice"))
+    {
+        
+        
+        <input id="StartDate" name="StartDate" type="date" value="" class="col-md-6" placeholder="Start Date" required />
+        <input id="EndDate" name="EndDate" type="date" value="" class="col-md-6" placeholder="End Date" required />
+
+        <input class="btn btn-lg" type="submit" value="Search" id="search" />
+    }
+</div>
+

@@ -1,4 +1,5 @@
 ﻿@model IEnumerable<Resqu.Core.Entities.Transaction>
+@using Resq.Web.ViewModels
 @{
     ViewData["Title"] = "TransactionList";
     Layout = "~/Views/Shared/_LayoutServices.cshtml";
@@ -24,106 +25,92 @@
                     <div class="row align-items-center justify-content-between">
                         <div class="col-lg-4 col-xl-3">
                             @*<div class="row align-items-center">
-                                <div class="col-lg-3">
-                                    <h6>Filter:</h6>
-                                </div>
-                                <div class="col-lg-6 col-xl-5 px-0">
-                                    <div class="form-group mb-0">
-                                        <select class="filter-field">
-                                            <option value="1">Inflows</option>
-                                            <option value="2">Outflows</option>
-                                        </select>
-                                    </div>
-                                </div>
-                            </div>*@
+                <div class="col-lg-3">
+                    <h6>Filter:</h6>
+                </div>
+                <div class="col-lg-6 col-xl-5 px-0">
+                    <div class="form-group mb-0">
+                        <select class="filter-field">
+                            <option value="1">Inflows</option>
+                            <option value="2">Outflows</option>
+                        </select>
+                    </div>
+                </div>
+            </div>*@
                         </div>
                         <div class="col-lg-3">
                             <h4 class="text-center">TOTAL: @ViewBag.Transactions </h4>
                         </div>
-                        @*<div class="col-lg-5 col-xl-5">
-                            <div class="row">
-                                <div class="col-lg-8">
-                                    <input type="text" class="input-field-search">
-                                </div>
-                                <div class="col-lg-4">
-                                    <button class="btn btn-search">Search</button>
-                                </div>
-                            </div>*@
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="row mt-4">
-            <div class="col-lg-12">
-                <div class="bg-white py-5 mb-5">
-                    <div class="table-responsive">
-                        <table>
-                        <tbody>
-                            <tr>
-                                <td>Minimum age:</td>
-                                <td><input type="date" id="min" name="min"></td>
-                            </tr>
-                            <tr>
-                                <td>Maximum age:</td>
-                                <td><input type="date" id="max" name="max"></td>
-                            </tr>
-                        </tbody></table>
-                        <table class="table table-vendors" id="table_id">
-                            <thead>
-                                <tr>
-                                    <th>S/N</th>
-                                    <th>Type</th>
-                                    <th>Category</th>
-                                    <th>Product Type</th>
-                                    <th>Service Date</th>
-                                    <th>Amount</th>
-                                    <th>Customer Name</th>
-                                    <th>Vendor Name</th>
-                                    @*<th>Purchase From</th>*@
-                                    <th>Payment Type</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @{int index = 0;}
-                                @foreach (var item in Model)
-                                {
+                        @{
+                            var models = new SearchTransactionViewModel();
+                            await Html.RenderPartialAsync("_SearchBarTransactionPartial", models);
 
-
-                                    <tr>
-                                        <td>
-                                            @{index++;}
-                                            @index
-                                        </td>
-
-                                        @if (item.CustomerTransactionType == "DR" && item.VendorTransactionType == "CR")
-                                        {
-                                            <td>
-                                                Inflow
-                                            </td>
-
-                                        }
-                                        else if (item.CustomerTransactionType == "CR" && item.VendorTransactionType == "DR")
-                                        {
-                                            <td>
-                                                Outflow
-                                            </td>
-                                        }
-
-                                        <td>@item.SubCategory</td>
-                                        <td>@item.ServiceType</td>
-                                        <td>@item.ServiceDate</td>
-                                        <td>@item.TotalAmount</td>
-                                        <td>@item.CustomerName</td>
-                                        <td>@item.VendorName</td>
-                                        <td>@item.PaymentType</td>
-                                    </tr>
-                                }
-                            </tbody>
-                        </table>
+                        }
                     </div>
                 </div>
             </div>
         </div>
     </div>
+    <div class="row mt-4">
+        <div class="col-lg-12">
+            <div class="bg-white py-5 mb-5">
+                <div class="table-responsive">
+                   
+                    <table class="table table-bordered table-striped">
+                        <thead>
+                            <tr>
+                                <th>S/N</th>
+                                <th>Type</th>
+                                <th>Category</th>
+                                <th>Product Type</th>
+                                <th>Service Date</th>
+                                <th>Amount</th>
+                                <th>Customer Name</th>
+                                <th>Vendor Name</th>
+                                @*<th>Purchase From</th>*@
+                                <th>Payment Type</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @{int index = 0;}
+                            @foreach (var item in Model)
+                            {
+
+
+                            <tr>
+                                <td>
+                                    @{index++;}
+                                    @index
+                                </td>
+
+                                @if (item.BackOfficeTransactionType == "CR" && item.VendorTransactionType == "CR")
+                                {
+                                    <td>
+                                        Inflow
+                                    </td>
+
+                                }
+                                else if (item.BackOfficeTransactionType == "DR")
+                                {
+                                    <td>
+                                        Outflow
+                                    </td>
+                                }
+
+                                <td>@item.SubCategory</td>
+                                <td>@item.ServiceType</td>
+                                <td>@item.ServiceDate</td>
+                                <td>@item.TotalAmount</td>
+                                <td>@item.CustomerName</td>
+                                <td>@item.VendorName</td>
+                                <td>@item.PaymentType</td>
+                            </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 </div>

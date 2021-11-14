@@ -7,6 +7,7 @@ namespace Resqu.Core.Interface
 {
     public interface ICustomer
     {
+        Task<WalletDetails> GetWalletByUserId(string userId);
         Task<List<CardDetails>> GetCardByUserId(string phone);
         Task<List<GetAllServiceDto>> GetAllServices();
         Task<List<GetAllServiceDto>> GetServiceByName(GetServiceByNameRequest request);

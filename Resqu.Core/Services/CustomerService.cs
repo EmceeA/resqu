@@ -781,7 +781,7 @@ namespace Resqu.Core.Services
             }
 
 
-
+            
 
 
         }
@@ -976,7 +976,17 @@ namespace Resqu.Core.Services
         }
 
         
-
+        public async Task<WalletDetails> GetWalletByUserId(string userId)
+        {
+            var wallet = await _context.WalletInfos.Where(r => r.PhoneNumber == userId).FirstOrDefaultAsync();
+            
+            var walletDetails = new WalletDetails();
+            walletDetails.AccountName = wallet.CustomerName;
+            walletDetails.Balance = wallet.Balance.ToString();
+            walletDetails.Bank = wallet.Bank;
+            walletDetails.WalletId = wallet.WalletId;
+            return walletDetails;
+        }
         public async Task<MakePaymentResponse> MakePayment(string bookingId)
         {
             var payment = _context.ResquServices.Where(r => r.BookingId == bookingId).FirstOrDefault();
@@ -1022,8 +1032,9 @@ namespace Resqu.Core.Services
                 VendorAmount = makeWallet.VendorCost,
                 PlatformCharge = makeWallet.BackOfficeCost,
                 PaymentType = "WALLET",
-
-                ServiceDate = DateTime.Now.ToString("yyyy-MM-ddd hh:MMMM"),
+                TransactionRef = Guid.NewGuid().ToString().Replace("-","")+ new Random().Next(100,80000000).ToString(),
+                //PhoneNumber = payment.CustomerPhone,
+                ServiceDate = DateTime.Now.ToString(),
                 VendorName = payment.VendorName,
                 Status = "Completed",
                 VendorId = int.Parse(payment.VendorId),
